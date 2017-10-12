@@ -3,6 +3,7 @@ import express from "express";
 import webSocket from "websocket";
 import mime from "mime";
 import temp from "temp";
+import open from "open";
 
 // Automatically track and cleanup files at exit
 temp.track();
@@ -19,7 +20,16 @@ app.get("/", function(req, res) {
     .readFile(tmpFile)
     .then(result => res.send(result))
     .catch(
-      err => (console.error(err), res.status(500).send("No markdown modified"))
+      err => (
+        console.error(err),
+        res
+          .status(500)
+          .send(
+            "<script type=module src='" +
+              AUTO_REFRESH_MODULE +
+              "'></script><p>No markdown modified</p>"
+          )
+      )
     );
 });
 app.get(AUTO_REFRESH_MODULE, (req, res) => {
@@ -47,6 +57,7 @@ app.get("/media/:media", (req, res) => {
 
 let server = app.listen(3000, function() {
   console.log("Listening on port 3000!");
+  open("http://127.0.0.1:3000");
 });
 
 let wsServer = new webSocket.server({
