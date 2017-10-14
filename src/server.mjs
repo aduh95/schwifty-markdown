@@ -6,7 +6,6 @@ import open from "open";
 import * as serveMedia from "./mediaHandler";
 
 const app = express();
-const SERVED_FILES_FOLDER = "./utils";
 
 export const CSS_FILE = "/github-markdown.css";
 export const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
@@ -35,20 +34,11 @@ app.get("/", function(req, res) {
     );
 });
 
-app.get(AUTO_REFRESH_MODULE, (req, res) => {
-  fs
-    .readFile(SERVED_FILES_FOLDER + AUTO_REFRESH_MODULE)
-    .then(result =>
-      res.set("Content-Type", "application/javascript").send(result)
-    )
-    .catch(err => (console.error(err), res.status(404).end("Not Found")));
-});
-app.get(CSS_FILE, (req, res) => {
-  fs
-    .readFile(SERVED_FILES_FOLDER + CSS_FILE)
-    .then(result => res.set("Content-Type", "text/css").send(result))
-    .catch(err => (console.error(err), res.status(404).end("Not Found")));
-});
+app.get(
+  AUTO_REFRESH_MODULE,
+  serveMedia.serverFile(AUTO_REFRESH_MODULE, "application/javascript")
+);
+app.get(CSS_FILE, serveMedia.serverFile(CSS_FILE, "text/css"));
 
 export const MEDIA_GET_URL = "/media/";
 app.get(MEDIA_GET_URL + ":media", (req, res) => {
