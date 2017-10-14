@@ -1,18 +1,20 @@
 import fs from "fs-extra";
 import express from "express";
 import webSocket from "websocket";
-import mime from "mime";
 import temp from "temp";
 import open from "open";
-
-// Automatically track and cleanup files at exit
-temp.track();
+import * as serveMedia from "./mediaHandler";
 
 const app = express();
+const SERVED_FILES_FOLDER = "./utils";
+
 export const CSS_FILE = "/github-markdown.css";
 export const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
 export let wsConnection = null;
 export const tmpFile = temp.path({ suffix: ".html" });
+
+// Automatically track and cleanup files at exit
+temp.track();
 
 app.get("/", function(req, res) {
   res.set("Content-Type", "text/html");
@@ -23,7 +25,7 @@ app.get("/", function(req, res) {
       err => (
         console.error(err),
         res
-          .status(500)
+          .status(503)
           .send(
             "<script type=module src='" +
               AUTO_REFRESH_MODULE +
@@ -32,9 +34,10 @@ app.get("/", function(req, res) {
       )
     );
 });
+
 app.get(AUTO_REFRESH_MODULE, (req, res) => {
   fs
-    .readFile("." + AUTO_REFRESH_MODULE)
+    .readFile(SERVED_FILES_FOLDER + AUTO_REFRESH_MODULE)
     .then(result =>
       res.set("Content-Type", "application/javascript").send(result)
     )
@@ -42,17 +45,18 @@ app.get(AUTO_REFRESH_MODULE, (req, res) => {
 });
 app.get(CSS_FILE, (req, res) => {
   fs
-    .readFile("." + CSS_FILE)
+    .readFile(SERVED_FILES_FOLDER + CSS_FILE)
     .then(result => res.set("Content-Type", "text/css").send(result))
     .catch(err => (console.error(err), res.status(404).end("Not Found")));
 });
-app.get("/media/:media", (req, res) => {
-  fs
-    .readFile(req.params.media)
-    .then(result =>
-      res.set("Content-Type", mime.getType(req.params.media)).send(result)
-    )
-    .catch(err => (console.error(err), res.status(404).end("Not Found")));
+
+export const MEDIA_GET_URL = "/media/";
+app.get(MEDIA_GET_URL + ":media", (req, res) => {
+  serveMedia.localFile(req.params.media, res);
+});
+export const PLANTUML_GET_URL = "/pu/";
+app.get(PLANTUML_GET_URL + ":media", (req, res) => {
+  serveMedia.plantuml(req.params.media, res);
 });
 
 let server = app.listen(3000, function() {

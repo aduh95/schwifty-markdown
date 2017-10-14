@@ -6,11 +6,12 @@
     "jsdom": "^11.3.0",
     "mime": "^2.0.3",
     "node-pandoc": "^0.3.0",
+    "node-plantuml": "^0.5.0",
     "open": "^0.0.5",
     "temp": "^0.8.3",
     "websocket": "^1.0.24"
   },
-  "licence": "MIT",
+  "license": "MIT",
   "scripts": {
     "start": "node --experimental-modules index.mjs"
   }
