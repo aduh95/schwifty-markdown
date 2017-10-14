@@ -474,9 +474,10 @@ h1 {
   margin-bottom: 16px;
 }
 .markdown-body table {
-  display: block;
+  /* display: block;
   width: 100%;
-  overflow: auto;
+  overflow: auto; */
+  margin: 0 auto 16px;
 }
 .markdown-body table th {
   font-weight: 600;
