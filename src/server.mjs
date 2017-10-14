@@ -7,8 +7,9 @@ import * as serveMedia from "./mediaHandler";
 
 const app = express();
 
-export const CSS_FILE = "/github-markdown.css";
-export const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
+const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
+export const CSS_FILES = ["/github-markdown.css"];
+export const JS_MODULES = [AUTO_REFRESH_MODULE, "/generate-toc.mjs"];
 export let wsConnection = null;
 export const tmpFile = temp.path({ suffix: ".html" });
 
@@ -34,11 +35,12 @@ app.get("/", function(req, res) {
     );
 });
 
-app.get(
-  AUTO_REFRESH_MODULE,
-  serveMedia.serverFile(AUTO_REFRESH_MODULE, "application/javascript")
-);
-app.get(CSS_FILE, serveMedia.serverFile(CSS_FILE, "text/css"));
+for (let jsFile of JS_MODULES) {
+  app.get(jsFile, serveMedia.serverFile(jsFile, "application/javascript"));
+}
+for (let cssFile of CSS_FILES) {
+  app.get(cssFile, serveMedia.serverFile(cssFile, "text/css"));
+}
 
 export const MEDIA_GET_URL = "/media/";
 app.get(MEDIA_GET_URL + ":media", serveMedia.localFile());

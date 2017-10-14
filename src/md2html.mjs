@@ -3,8 +3,8 @@ import path from "path";
 import pandoc from "./pandoc.mjs";
 import DOM from "jsdom";
 import {
-  AUTO_REFRESH_MODULE,
-  CSS_FILE,
+  JS_MODULES,
+  CSS_FILES,
   MEDIA_GET_URL,
   PLANTUML_GET_URL,
   wsConnection,
@@ -21,15 +21,20 @@ let stylification = file => buffer => {
   let dom = new DOM.JSDOM(
     "<main class='markdown-body'>" + buffer.toString("utf8") + "</main>"
   );
-  let style = dom.window.document.createElement("link");
-  style.href = CSS_FILE;
-  style.rel = "stylesheet";
-  dom.window.document.head.appendChild(style);
 
-  let script = dom.window.document.createElement("script");
-  script.type = "module";
-  script.src = AUTO_REFRESH_MODULE;
-  dom.window.document.head.appendChild(script);
+  for (let cssFile of CSS_FILES) {
+    let style = dom.window.document.createElement("link");
+    style.href = cssFile;
+    style.rel = "stylesheet";
+    dom.window.document.head.appendChild(style);
+  }
+
+  for (let jsFile of JS_MODULES) {
+    let script = dom.window.document.createElement("script");
+    script.type = "module";
+    script.src = jsFile;
+    dom.window.document.head.appendChild(script);
+  }
 
   let images = dom.window.document.querySelectorAll("img");
   for (let img of images) {
