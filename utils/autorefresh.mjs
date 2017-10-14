@@ -1,12 +1,17 @@
+/**
+ * @author aduh95
+ * Really simple WebSocket client module
+ * 
+ * Its goal is to reload the page anytime the server send something
+ * and to close it once the server closes the connection.
+ */
+
 const socket = new WebSocket("ws://" + window.location.host + "/");
 
-// Connection opened
-socket.addEventListener("open", function(event) {
-  socket.send("Hello Server!");
-});
+// Listen for messages to reload the page
+socket.addEventListener("message", () => window.location.reload());
 
-// Listen for messages
-socket.addEventListener("message", function(event) {
-  console.log("Message from server ", event.data);
-  window.location.reload();
-});
+// When server closes the connection, let's close the tab
+socket.addEventListener("close", () => window.close());
+
+export default socket;
