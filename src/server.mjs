@@ -41,13 +41,9 @@ app.get(
 app.get(CSS_FILE, serveMedia.serverFile(CSS_FILE, "text/css"));
 
 export const MEDIA_GET_URL = "/media/";
-app.get(MEDIA_GET_URL + ":media", (req, res) => {
-  serveMedia.localFile(req.params.media, res);
-});
+app.get(MEDIA_GET_URL + ":media", serveMedia.localFile());
 export const PLANTUML_GET_URL = "/pu/";
-app.get(PLANTUML_GET_URL + ":media", (req, res) => {
-  serveMedia.plantuml(req.params.media, res);
-});
+app.get(PLANTUML_GET_URL + ":media", serveMedia.plantuml());
 
 let server = app.listen(3000, function() {
   console.log("Listening on port 3000!");
