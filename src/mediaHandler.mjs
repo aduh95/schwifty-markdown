@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import crypto from "crypto";
 import mime from "mime";
+import path from "path";
 import plantumlCompile from "node-plantuml";
 
 const SERVED_FILES_FOLDER = "./utils";
@@ -8,7 +9,6 @@ const SERVED_FILES_FOLDER = "./utils";
 let sha1file = file =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
-    console.log(file);
 
     let input = fs.createReadStream(file);
     input.on("readable", () => {
@@ -21,22 +21,21 @@ let sha1file = file =>
   });
 
 export const plantuml = () => (req, res) => {
-  const HEADER = "@startuml\n!include ";
-  const FOOTER = "\n@enduml";
-
   let media = req.params.media;
   res.set("Content-Type", "image/svg+xml");
 
   sha1file(media).then(sha1 => {
-    console.log(sha1);
     if (req.get("If-None-Match") === sha1) {
       res.status(304).end();
     } else {
       res.set("ETag", sha1);
-      let gen = plantumlCompile.generate(HEADER + media + FOOTER, {
-        format: "svg",
-      });
-      gen.out.pipe(res);
+      console.log("Generating plantuml SVG", media);
+      plantumlCompile
+        .generate(media, {
+          format: "svg",
+          include: path.dirname(media),
+        })
+        .out.pipe(res);
     }
   });
 };
