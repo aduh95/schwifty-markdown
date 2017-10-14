@@ -38,6 +38,7 @@ let stylification = file => buffer => {
   let tables = dom.window.document.querySelectorAll("table");
   for (let table of tables) {
     table.style.removeProperty("width");
+    table.querySelector("colgroup").remove();
   }
   let embed = dom.window.document.querySelectorAll("embed");
   for (let node of embed) {
@@ -58,7 +59,7 @@ let fileWatcher = file => (previous, current) => {
         .then(html => fs.writeFile(tmpFile, html))
         .then(() => {
           wsConnection && wsConnection.send("refresh");
-          console.log("refresh browser");
+          console.log("Sending socket to refresh browser");
         });
     });
   }
