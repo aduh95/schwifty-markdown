@@ -32,6 +32,7 @@ let stylification = file => buffer => {
   for (let jsFile of JS_MODULES) {
     let script = dom.window.document.createElement("script");
     script.type = "module";
+    script.async = true;
     script.src = jsFile;
     dom.window.document.head.appendChild(script);
   }

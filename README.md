@@ -2,7 +2,13 @@
 
 This library allows you to generate Markdown files to HTML in your browser.
 
-It understands all markdown syntax supported by Pandoc, and generates for you SVG version of your plantuml diagrams.
+It understands all markdown syntax supported by Pandoc, and generates for you SVG version of your plantuml diagrams.  
+If you add the following tag in your markdown file, a clean table of content will be generated linking to the headings of your document:
+
+```markdown
+<nav id="generated-toc"></nav>
+```
+
 
 ### Install locally
 
@@ -16,16 +22,19 @@ First, you have to ensure that these dependencies are installed and available on
 
 To begin with, you need to download the dependecies using `yarn` or `npm` :
 
-```shell
+```sh
 yarn install
 ```
 
 ### Run the server
 
-```shell
+```sh
 yarn start path/to/directory/to/listen
 ```
 
-You can open your browser at [localhost:3000](http://localhost:3000).  
+Your default browser should open at [localhost:3000](http://localhost:3000).  
 Then, as soon as you save a `.md` file, it will be loaded in your browser.
+
+**N.B.:** Be sure that the support for [ES6 Modules is available for your browser](https://caniuse.com/#feat=es6-module)
+to able to use the generated table of content and the automatic refresh.
 

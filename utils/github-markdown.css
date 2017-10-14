@@ -11,7 +11,7 @@ body {
   padding: 45px;
   text-align: justify;
 }
-pre,
+pre:not(.sourceCode),
 h1 {
   text-align: center;
 }
