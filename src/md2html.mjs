@@ -37,8 +37,11 @@ let stylification = file => buffer => {
   }
   let tables = dom.window.document.querySelectorAll("table");
   for (let table of tables) {
+    let colgroup = table.querySelector("colgroup");
+    if (colgroup !== null) {
+      colgroup.remove();
+    }
     table.style.removeProperty("width");
-    table.querySelector("colgroup").remove();
   }
   let embed = dom.window.document.querySelectorAll("embed");
   for (let node of embed) {
