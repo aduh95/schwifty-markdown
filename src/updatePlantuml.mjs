@@ -26,8 +26,7 @@ const getLastVersion = etag => {
   }
 
   http.get(distantJar, res => {
-    console.log("statusCode:", res.statusCode);
-    console.log("etag:", res.headers.etag);
+    console.log("SourceForge statusCode:", res.statusCode);
 
     if (200 === res.statusCode) {
       let writestream = fs.createWriteStream(jar);
@@ -35,7 +34,10 @@ const getLastVersion = etag => {
       fs.writeFile(
         etagFile,
         res.headers.etag,
-        err => err && console.error(err)
+        err =>
+          err
+            ? console.error(err)
+            : console.log("Plantuml has been updated to the last version!")
       );
     }
   });

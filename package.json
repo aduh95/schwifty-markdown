@@ -1,5 +1,20 @@
 {
   "name": "schwifty-markdown",
+  "keywords": ["markdown", "pandoc", "toc", "table of content", "plantuml"],
+  "author": {
+    "email": "duhamelantoine1995@gmail.com",
+    "name": "Antoine du HAMEL",
+    "url": "https://aduh95.github.io"
+  },
+  "license": "MIT",
+  "main": "index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aduh95/schwifty-markdown.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aduh95/schwifty-markdown/issues"
+  },
   "dependencies": {
     "express": "^4.16.2",
     "fs-extra": "^4.0.2",
@@ -11,8 +26,11 @@
     "temp": "^0.8.3",
     "websocket": "^1.0.24"
   },
-  "license": "MIT",
   "scripts": {
-    "start": "node --experimental-modules index.mjs"
+    "start": "node --experimental-modules index.mjs",
+    "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
+  },
+  "engines": {
+    "node": ">=8.5.0"
   }
 }
