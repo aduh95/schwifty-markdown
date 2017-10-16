@@ -30,12 +30,21 @@ export const plantuml = () => (req, res) => {
     } else {
       res.set("ETag", sha1);
       console.log("Generating plantuml SVG", media);
-      plantumlCompile
-        .generate(media, {
-          format: "svg",
-          include: path.dirname(media),
-        })
-        .out.pipe(res);
+      try {
+        plantumlCompile
+          .generate(media, {
+            format: "svg",
+            include: path.dirname(media),
+          })
+          .out.pipe(res);
+      } catch (err) {
+        console.error(err);
+        res
+          .status(500)
+          .end(
+            "<svg xmlns='http://www.w3.org/2000/svg' width='150' height='30'><text fill='red' x='10' y='20'>Plantuml failed</text></svg>"
+          );
+      }
     }
   });
 };

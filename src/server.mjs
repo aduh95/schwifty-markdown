@@ -49,7 +49,7 @@ app.get(PLANTUML_GET_URL + ":media", serveMedia.plantuml());
 
 let server = app.listen(3000, function() {
   console.log("Listening on port 3000!");
-  open("http://127.0.0.1:3000");
+  open("http://localhost:3000");
 });
 
 let wsServer = new webSocket.server({
