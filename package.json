@@ -27,9 +27,10 @@
     "websocket": "^1.0.24"
   },
   "scripts": {
-    "start": "node --experimental-modules index.mjs",
-    "postinstall":
-      "node src/checkDependencies.js && node --experimental-modules src/updatePlantuml.mjs"
+    "start":
+      "node src/checkDependencies.js && node --experimental-modules index.mjs",
+    "preinstall": "node src/checkDependencies.js",
+    "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
   },
   "engines": {
     "node": ">=8.5.0"
