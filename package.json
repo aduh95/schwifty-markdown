@@ -28,7 +28,8 @@
   },
   "scripts": {
     "start": "node --experimental-modules index.mjs",
-    "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
+    "postinstall":
+      "node src/checkDependencies.js && node --experimental-modules src/updatePlantuml.mjs"
   },
   "engines": {
     "node": ">=8.5.0"
