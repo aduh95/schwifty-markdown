@@ -17,6 +17,7 @@ First, you have to ensure that these dependencies are installed and available on
 * [Pandoc](http://pandoc.org/installing.html)
 * [Yarn](yarnpkg.com) or [npm](npmjs.com)
 * [Node (v8.5+)](nodejs.org)
+* *(If you include plantuml diagrams)* [Java](java.com)
 * *(optional)* [Graphviz](graphviz.org) (to generate all plantuml diagram types)
 
 
