@@ -46,6 +46,8 @@ export const MEDIA_GET_URL = "/media/";
 app.get(MEDIA_GET_URL + ":media", serveMedia.localFile());
 export const PLANTUML_GET_URL = "/pu/";
 app.get(PLANTUML_GET_URL + ":media", serveMedia.plantuml());
+export const MARKDOWN_GET_URL = "/md/";
+app.get(MARKDOWN_GET_URL + ":media", serveMedia.markdown());
 
 let server = app.listen(3000, "localhost", function() {
   console.log("Listening on port 3000!");

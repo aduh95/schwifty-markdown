@@ -6,6 +6,7 @@ import {
   JS_MODULES,
   CSS_FILES,
   MEDIA_GET_URL,
+  MARKDOWN_GET_URL,
   PLANTUML_GET_URL,
   wsConnection,
   tmpFile,
@@ -55,22 +56,35 @@ let stylification = file => buffer => {
     image.src = pathServerication(file, node.src, PLANTUML_GET_URL);
     node.parentNode.replaceChild(image, node);
   }
+  let links = dom.window.document.querySelectorAll("a");
+  for (let link of links) {
+    link.href = pathServerication(
+      file,
+      link.href,
+      link.href.endsWith(".md") ? MARKDOWN_GET_URL : MEDIA_GET_URL
+    );
+  }
 
   return dom.serialize();
 };
 
+const sendRefreshSignal = () => {
+  wsConnection && wsConnection.send("refresh");
+  console.log("Sending socket to refresh browser");
+};
+
+const generate = file =>
+  pandoc(file, tmpFile).then(() => {
+    fs
+      .readFile(tmpFile)
+      .then(stylification(file))
+      .then(html => fs.writeFile(tmpFile, html))
+      .then(sendRefreshSignal);
+  });
+
 let fileWatcher = file => (previous, current) => {
   if (previous.mtime !== current.mtime) {
-    pandoc(file, tmpFile).then(() => {
-      fs
-        .readFile(tmpFile)
-        .then(stylification(file))
-        .then(html => fs.writeFile(tmpFile, html))
-        .then(() => {
-          wsConnection && wsConnection.send("refresh");
-          console.log("Sending socket to refresh browser");
-        });
-    });
+    generate(file);
   }
 };
 let dirWatcher = (eventType, filename) => {
@@ -101,3 +115,5 @@ let watchDirRecursive = dir => {
 };
 
 watchDirRecursive(watchDir);
+
+export default generate;

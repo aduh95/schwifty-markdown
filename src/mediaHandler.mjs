@@ -3,6 +3,7 @@ import crypto from "crypto";
 import mime from "mime";
 import path from "path";
 import plantumlCompile from "node-plantuml";
+import renderMarkdown from "./md2html";
 
 const SERVED_FILES_FOLDER = "./utils";
 
@@ -47,6 +48,10 @@ export const plantuml = () => (req, res) => {
       }
     }
   });
+};
+
+export const markdown = () => (req, res) => {
+  renderMarkdown(req.params.media);
 };
 
 export const localFile = () => (req, res) => {
