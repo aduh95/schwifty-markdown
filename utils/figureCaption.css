@@ -4,6 +4,10 @@ body {
 
 figure,
 .figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   counter-increment: figure-caption;
 }
 figcaption::before,

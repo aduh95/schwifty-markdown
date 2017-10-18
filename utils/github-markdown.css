@@ -587,8 +587,3 @@ h1 {
 .markdown-body hr {
   border-bottom-color: #eee;
 }
-.markdown-body .figure {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}

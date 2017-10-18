@@ -12,6 +12,8 @@ import {
   tmpFile,
 } from "./server";
 
+const SCHWIFTY_MARKDOWN = "Schwifty Markdown";
+
 let watchDir = path.resolve(process.argv[2] || "./test.md");
 
 let pathServerication = (file, relativePath, prefix) =>
@@ -22,27 +24,36 @@ let stylification = file => buffer => {
   let dom = new DOM.JSDOM(
     "<main class='markdown-body'>" + buffer.toString("utf8") + "</main>"
   );
+  let document = dom.window.document;
+
+  let charset = document.createElement("meta");
+  charset.setAttribute("charset", "utf-8");
+  document.head.appendChild(charset);
+
+  const title = document.createElement("title");
+  title.appendChild(document.createTextNode(SCHWIFTY_MARKDOWN));
+  document.head.appendChild(title);
 
   for (let cssFile of CSS_FILES) {
-    let style = dom.window.document.createElement("link");
+    let style = document.createElement("link");
     style.href = cssFile;
     style.rel = "stylesheet";
-    dom.window.document.head.appendChild(style);
+    document.head.appendChild(style);
   }
 
   for (let jsFile of JS_MODULES) {
-    let script = dom.window.document.createElement("script");
+    let script = document.createElement("script");
     script.type = "module";
-    script.async = true;
     script.src = jsFile;
-    dom.window.document.head.appendChild(script);
+    script.setAttribute("async", "async");
+    document.head.appendChild(script);
   }
 
-  let images = dom.window.document.querySelectorAll("img");
+  let images = document.querySelectorAll("img");
   for (let img of images) {
     img.src = pathServerication(file, img.src, MEDIA_GET_URL);
   }
-  let tables = dom.window.document.querySelectorAll("table");
+  let tables = document.querySelectorAll("table");
   for (let table of tables) {
     let colgroup = table.querySelector("colgroup");
     if (colgroup !== null) {
@@ -50,13 +61,14 @@ let stylification = file => buffer => {
     }
     table.style.removeProperty("width");
   }
-  let embed = dom.window.document.querySelectorAll("embed");
+  let embed = document.querySelectorAll("embed");
   for (let node of embed) {
-    let image = dom.window.document.createElement("img");
+    let image = document.createElement("img");
     image.src = pathServerication(file, node.src, PLANTUML_GET_URL);
+    image.alt = node.nextElementSibling.textContent;
     node.parentNode.replaceChild(image, node);
   }
-  let links = dom.window.document.querySelectorAll("a");
+  let links = document.querySelectorAll("a");
   for (let link of links) {
     link.href = pathServerication(
       file,
@@ -65,7 +77,7 @@ let stylification = file => buffer => {
     );
   }
 
-  return dom.serialize();
+  return "<!DOCTYPE html>\n" + dom.serialize();
 };
 
 const sendRefreshSignal = () => {
