@@ -47,7 +47,7 @@ app.get(MEDIA_GET_URL + ":media", serveMedia.localFile());
 export const PLANTUML_GET_URL = "/pu/";
 app.get(PLANTUML_GET_URL + ":media", serveMedia.plantuml());
 
-let server = app.listen(3000, function() {
+let server = app.listen(3000, "localhost", function() {
   console.log("Listening on port 3000!");
   open("http://localhost:3000");
 });

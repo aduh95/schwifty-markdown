@@ -26,7 +26,7 @@ export const plantuml = () => (req, res) => {
 
   sha1file(media).then(sha1 => {
     if (req.get("If-None-Match") === sha1) {
-      res.status(304).end();
+      res.sendStatus(304);
     } else {
       res.set("ETag", sha1);
       console.log("Generating plantuml SVG", media);
@@ -52,15 +52,15 @@ export const plantuml = () => (req, res) => {
 export const localFile = () => (req, res) => {
   let media = req.params.media;
 
-  fs
-    .readFile(media)
+  res
+    .serverFile(media)
     .then(result => res.set("Content-Type", mime.getType(media)).send(result))
-    .catch(err => (console.error(err), res.status(404).end("Not Found")));
+    .catch(err => (console.error(err), res.sendStatus(404)));
 };
 
 export const serverFile = (file, mime) => (req, res) => {
   fs
     .readFile(SERVED_FILES_FOLDER + file)
     .then(result => res.set("Content-Type", mime).send(result))
-    .catch(err => (console.error(err), res.status(404).end("Not Found")));
+    .catch(err => (console.error(err), res.sendStatus(404)));
 };
