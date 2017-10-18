@@ -50,12 +50,7 @@ export const plantuml = () => (req, res) => {
 };
 
 export const localFile = () => (req, res) => {
-  let media = req.params.media;
-
-  res
-    .serverFile(media)
-    .then(result => res.set("Content-Type", mime.getType(media)).send(result))
-    .catch(err => (console.error(err), res.sendStatus(404)));
+  res.sendFile(req.params.media);
 };
 
 export const serverFile = (file, mime) => (req, res) => {
