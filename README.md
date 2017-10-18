@@ -2,12 +2,17 @@
 
 This library allows you to generate Markdown files to HTML in your browser.
 
-It understands all markdown syntax supported by Pandoc, and generates for you SVG version of your plantuml diagrams.  
-If you add the following tag in your markdown file, a clean table of content will be generated linking to the headings of your document:
+### Features
 
-```markdown
-<nav id="generated-toc"></nav>
-```
+* Renders markdown files to HTML using Github CSS.
+* Indexes your figures
+* Generates a table of content for your Markdown file if you add the following tag:
+
+    ```markdown
+    <nav id="generated-toc"></nav>
+    ```
+
+* Renders your plantuml diagrams to SVG on the fly
 
 
 ### Install locally

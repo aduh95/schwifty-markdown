@@ -1,0 +1,12 @@
+body {
+  counter-reset: figure-caption;
+}
+
+figure,
+.figure {
+  counter-increment: figure-caption;
+}
+figcaption::before,
+.caption::before {
+  content: "Fig. " counter(figure-caption) ": ";
+}

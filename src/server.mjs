@@ -8,7 +8,7 @@ import * as serveMedia from "./mediaHandler";
 const app = express();
 
 const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
-export const CSS_FILES = ["/github-markdown.css"];
+export const CSS_FILES = ["/github-markdown.css", "/figureCaption.css"];
 export const JS_MODULES = [AUTO_REFRESH_MODULE, "/generate-toc.mjs"];
 export let wsConnection = null;
 export const tmpFile = temp.path({ suffix: ".html" });
