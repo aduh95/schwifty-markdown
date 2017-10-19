@@ -39,9 +39,8 @@ yarn start path/to/directory/to/listen
 ```
 
 Schwifty is going to listen for changes in all the markdown files within the
-`path/to/directory/to/listen` and its subdirectories. As soon a file is saved, 
-your default browser should open at [localhost:3000](http://localhost:3000) or reload.  
-Then, as soon as you save a `.md` file, it will be rendered in your browser.
+`path/to/directory/to/listen` and its subdirectories. As soon a `.md` file is saved, 
+your default browser should open at [localhost:3000](http://localhost:3000) or reload to render your document.
 
 **N.B.:** Be sure that the support for [ES6 Modules is available for your browser](//caniuse.com/#feat=es6-module)
 to able to use the generated table of content and the automatic refresh.
