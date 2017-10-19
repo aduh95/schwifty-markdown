@@ -11,43 +11,48 @@ let sha1file = file =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
 
-    let input = fs.createReadStream(file);
-    input.on("readable", () => {
-      const data = input.read();
-      if (data) hash.update(data);
-      else {
-        resolve(hash.digest("hex"));
-      }
-    });
+    if (fs.existsSync(file)) {
+      let input = fs.createReadStream(file);
+      input.on("readable", () => {
+        const data = input.read();
+        if (data) hash.update(data);
+        else {
+          resolve(hash.digest("hex"));
+        }
+      });
+    } else {
+      reject(new Error("ENOENT: no such file or directory"));
+    }
   });
 
 export const plantuml = () => (req, res) => {
   let media = req.params.media;
   res.set("Content-Type", "image/svg+xml");
 
-  sha1file(media).then(sha1 => {
-    if (req.get("If-None-Match") === sha1) {
-      res.sendStatus(304);
-    } else {
-      res.set("ETag", sha1);
-      console.log("Generating plantuml SVG", media);
-      try {
+  sha1file(media)
+    .then(sha1 => {
+      if (req.get("If-None-Match") === sha1) {
+        res.sendStatus(304);
+      } else {
+        res.set("ETag", sha1);
+        console.log("Generating plantuml SVG", media);
+
         plantumlCompile
           .generate(media, {
             format: "svg",
             include: path.dirname(media),
           })
           .out.pipe(res);
-      } catch (err) {
-        console.error(err);
-        res
-          .status(500)
-          .end(
-            "<svg xmlns='http://www.w3.org/2000/svg' width='150' height='30'><text fill='red' x='10' y='20'>Plantuml failed</text></svg>"
-          );
       }
-    }
-  });
+    })
+    .catch(err => {
+      console.error(err);
+      res
+        .status(500)
+        .end(
+          "<svg xmlns='http://www.w3.org/2000/svg' width='150' height='30'><text fill='red' x='10' y='20'>Plantuml failed</text></svg>"
+        );
+    });
 };
 
 export const markdown = () => (req, res) => {
