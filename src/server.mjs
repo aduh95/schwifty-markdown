@@ -13,6 +13,9 @@ export const CSS_FILES = ["/github-markdown.css", "/figureCaption.css"];
 export const JS_MODULES = [AUTO_REFRESH_MODULE, "/generate-toc.mjs"];
 export const tmpFile = temp.path({ suffix: ".html" });
 
+// Socket connected, fully-open, ready to send and receive frames
+const STATE_OPEN = "open";
+
 const app = express();
 
 app.get("/", function(req, res) {
@@ -65,8 +68,11 @@ wsServer.on("connect", connection => {
 });
 
 export const refreshBrowser = () => {
+  let connectionState = wsConnection && wsConnection.state === STATE_OPEN;
   console.log(
-    wsConnection ? "Sending socket to refresh browser" : "Opening browser"
+    connectionState ? "Sending socket to refresh browser" : "Opening browser"
   );
-  wsConnection ? wsConnection.send("refresh") : open("http://localhost:3000");
+  connectionState
+    ? wsConnection.send("refresh")
+    : open("http://localhost:3000");
 };
