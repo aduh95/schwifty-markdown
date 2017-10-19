@@ -68,11 +68,13 @@ let stylification = file => buffer => {
   }
   let links = document.querySelectorAll("a");
   for (let link of links) {
-    link.href = pathServerication(
-      file,
-      link.href,
-      link.href.endsWith(".md") ? MARKDOWN_GET_URL : MEDIA_GET_URL
-    );
+    if (!/^(?:[a-z]+:)?\/\//i.test(link.href)) {
+      link.href = pathServerication(
+        file,
+        link.href,
+        link.href.endsWith(".md") ? MARKDOWN_GET_URL : MEDIA_GET_URL
+      );
+    }
   }
 
   return "<!DOCTYPE html>\n" + dom.serialize();
