@@ -232,25 +232,27 @@ let generateStyle = (style, generate_from) => {
   }
 };
 
-window.document.addEventListener(
-  "DOMContentLoaded",
-  function() {
-    // Identify our TOC element, and what it applies to
-    let tocElement = this.getElementById(ID_TOC_ELEMENT);
-    if (!tocElement) {
-      return;
-    }
+const init = function() {
+  // Identify our TOC element, and what it applies to
+  let tocElement = this.getElementById(ID_TOC_ELEMENT);
+  if (!tocElement || tocElement.hasChildNodes()) {
+    return;
+  }
 
-    let generate_from = getFirstHeaderLevel(tocElement, this.body);
-    if (generate_from) {
-      let style = this.createElement("style");
-      this.head.appendChild(style);
-      generateStyle(style, generate_from);
+  let generate_from = getFirstHeaderLevel(tocElement, this.body);
+  if (generate_from) {
+    let style = this.createElement("style");
+    this.head.appendChild(style);
+    generateStyle(style, generate_from);
 
-      tocElement.appendChild(
-        generate(this, getHeadings(generate_from, tocElement), generate_from)
-      );
-    }
-  },
-  { once: true }
-);
+    tocElement.appendChild(
+      generate(this, getHeadings(generate_from, tocElement), generate_from)
+    );
+  }
+};
+
+if (window.document.readyState === "loading") {
+  window.document.addEventListener("DOMContentLoaded", init);
+} else {
+  init.apply(window.document);
+}
