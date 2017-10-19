@@ -65,11 +65,11 @@ wsServer.on("connect", connection => {
 });
 
 export const refreshBrowser = () => {
-  let connectionState = wsConnection && wsConnection.connected;
-  console.log(
-    connectionState ? "Sending socket to refresh browser" : "Opening browser"
-  );
-  connectionState
-    ? wsConnection.send("refresh")
-    : open("http://localhost:3000");
+  if (wsConnection && wsConnection.connected) {
+    console.log("Sending socket to refresh browser");
+    wsConnection.send("refresh");
+  } else {
+    console.log("Opening browser");
+    open("http://localhost:3000");
+  }
 };
