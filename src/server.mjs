@@ -1,20 +1,19 @@
+import temp from "temp";
+import open from "open";
 import fs from "fs-extra";
 import express from "express";
 import webSocket from "websocket";
-import temp from "temp";
-import open from "open";
 import * as serveMedia from "./mediaHandler";
 
-const app = express();
+// Automatically track and cleanup files at exit
+temp.track();
 
 const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
 export const CSS_FILES = ["/github-markdown.css", "/figureCaption.css"];
 export const JS_MODULES = [AUTO_REFRESH_MODULE, "/generate-toc.mjs"];
-export let wsConnection = null;
 export const tmpFile = temp.path({ suffix: ".html" });
 
-// Automatically track and cleanup files at exit
-temp.track();
+const app = express();
 
 app.get("/", function(req, res) {
   res.set("Content-Type", "text/html");
@@ -51,9 +50,9 @@ app.get(MARKDOWN_GET_URL + ":media", serveMedia.markdown());
 
 let server = app.listen(3000, "localhost", function() {
   console.log("Listening on port 3000!");
-  open("http://localhost:3000");
 });
 
+let wsConnection = null;
 let wsServer = new webSocket.server({
   httpServer: server,
   autoAcceptConnections: true,
@@ -64,3 +63,8 @@ wsServer.on("connect", connection => {
 
   connection.ping(1);
 });
+
+export const refreshBrowser = () => {
+  wsConnection ? wsConnection.send("refresh") : open("http://localhost:3000");
+  console.log("Sending socket to refresh browser");
+};

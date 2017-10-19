@@ -1,1 +1,1 @@
-import "./src/md2html";
+import "./src/mdWatcher";
