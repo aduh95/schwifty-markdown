@@ -1,12 +1,7 @@
 {
   "name": "schwifty-markdown",
-  "keywords": [
-    "markdown",
-    "pandoc",
-    "toc",
-    "table of content",
-    "plantuml"
-  ],
+  "version": "0.1.0",
+  "keywords": ["markdown", "pandoc", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
     "name": "Antoine du HAMEL",
@@ -21,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/aduh95/schwifty-markdown/issues"
   },
+  "bin": {
+    "schwifty": "bin/schwifty.js"
+  },
   "dependencies": {
     "express": "expressjs/express#5.0",
     "fs-extra": "^4.0.2",
@@ -29,11 +27,14 @@
     "node-pandoc": "^0.3.0",
     "node-plantuml": "^0.5.0",
     "open": "^0.0.5",
+    "shell-escape": "^0.2.0",
     "temp": "^0.8.3",
-    "websocket": "^1.0.24"
+    "websocket": "^1.0.24",
+    "yargs": "^9.0.1"
   },
   "scripts": {
-    "start": "node src/checkDependencies.js && node --experimental-modules index.mjs",
+    "start":
+      "node src/checkDependencies.js && node --experimental-modules index.mjs",
     "preinstall": "node src/checkDependencies.js",
     "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
   },
