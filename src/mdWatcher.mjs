@@ -2,11 +2,6 @@ import fs from "fs-extra";
 import path from "path";
 import md2html from "./md2html";
 
-if (process.argc < 2) {
-  console.error("You must provied a path to listen to");
-  process.exit(1);
-}
-
 const fileWatcher = file => (previous, current) => {
   if (previous.mtime !== current.mtime) {
     md2html(file);
@@ -19,7 +14,7 @@ const dirWatcher = (eventType, filename) => {
   }
 };
 
-let mdCounter = 0;
+export let watchCounter = 0;
 
 const watchFile = file =>
   fs
@@ -28,7 +23,7 @@ const watchFile = file =>
       if (stat.isDirectory()) {
         return watchDirRecursive(file);
       } else if (file.endsWith(".md")) {
-        mdCounter++;
+        watchCounter++;
         fs.watchFile(file, fileWatcher(file));
         return Promise.resolve();
       }
@@ -47,11 +42,4 @@ const watchDirRecursive = dir => {
   });
 };
 
-watchFile(path.resolve(process.argv[2])).then(() => {
-  console.log(
-    mdCounter +
-      " markdown file" +
-      (mdCounter > 1 ? "s are" : " is") +
-      " being watched."
-  );
-});
+export default watchFile;
