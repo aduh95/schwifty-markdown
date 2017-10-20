@@ -19,6 +19,8 @@ const argv = require("yargs")
     "$0 file.md",
     "Starts Schwifty server and listen to all changes on `file.md`"
   )
+  .boolean("q")
+  .alias("q", ["quiet", "no-output"])
   .boolean("u")
   .alias("u", "update-plantuml")
   .describe("u", "Update the plantuml JAR if a new version is available")
@@ -29,18 +31,20 @@ const NODE = "node";
 const FLAGS = "--experimental-modules";
 const SRC_DIR = "src";
 
-const workingDir = path.resolve(path.join(__dirname, ".."));
+const WORKING_DIR = path.resolve(path.join(__dirname, ".."));
+const PACKAGE_FILE = path.join(WORKING_DIR, "package.json");
+
 const watchable = path.resolve(argv._.pop() || ".");
 
 if (argv.u) {
   console.log("Updating plantuml");
-  fs.readFile("package.json").then(json => {
+  fs.readFile(PACKAGE_FILE).then(json => {
     let data = JSON.parse(json);
 
     exec(
       data.scripts.postinstall,
       {
-        cwd: workingDir,
+        cwd: WORKING_DIR,
       },
       (err, stdout) => {
         if (err) {
@@ -63,21 +67,23 @@ if (argv.u) {
   const FgRed = "\x1b[31m";
   const FgYellow = "\x1b[33m";
   const FgReset = "\x1b[0m";
-  fs.readFile("package.json").then(json => {
+  fs.readFile(PACKAGE_FILE).then(json => {
     let data = JSON.parse(json);
 
     let process = exec(data.scripts.start + " " + shellescape([watchable]), {
-      cwd: workingDir,
+      cwd: WORKING_DIR,
     });
 
     process.on("error", err => console.error(err));
 
-    process.stderr.on("data", data =>
-      console.error(
-        (/warning/i.test(data) ? FgYellow : FgRed) + data.trim() + FgReset
-      )
-    );
-    process.stdout.on("data", data => console.log(data.trim()));
+    if (!argv.q) {
+      process.stderr.on("data", data =>
+        console.error(
+          (/warning/i.test(data) ? FgYellow : FgRed) + data.trim() + FgReset
+        )
+      );
+      process.stdout.on("data", data => console.log(data.trim()));
+    }
   });
 } else {
   console.log("No such file or directory");
