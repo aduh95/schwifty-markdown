@@ -26,8 +26,6 @@ const getLastVersion = etag => {
   }
 
   http.get(distantJar, res => {
-    console.log("SourceForge statusCode:", res.statusCode);
-
     if (200 === res.statusCode) {
       let writestream = fs.createWriteStream(jar);
       res.pipe(writestream);
@@ -37,7 +35,19 @@ const getLastVersion = etag => {
         err =>
           err
             ? console.error(err)
-            : console.log("Plantuml has been updated to the last version!")
+            : console.log(
+                JSON.stringify({
+                  success: true,
+                  statusCode: res.statusCode,
+                })
+              )
+      );
+    } else {
+      console.log(
+        JSON.stringify({
+          success: false,
+          statusCode: res.statusCode,
+        })
       );
     }
   });
