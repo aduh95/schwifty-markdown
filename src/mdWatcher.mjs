@@ -7,8 +7,6 @@ if (process.argc < 2) {
   process.exit(1);
 }
 
-let watchDir = path.resolve(process.argv[2]);
-
 const fileWatcher = file => (previous, current) => {
   if (previous.mtime !== current.mtime) {
     md2html(file);
@@ -17,29 +15,43 @@ const fileWatcher = file => (previous, current) => {
 const dirWatcher = (eventType, filename) => {
   if (eventType === "rename") {
     fs.watchFile(filename, fileWatcher);
+    console.log("Now watching " + filename);
   }
 };
 
+let mdCounter = 0;
+
+const watchFile = file =>
+  fs
+    .stat(file)
+    .then(stat => {
+      if (stat.isDirectory()) {
+        return watchDirRecursive(file);
+      } else if (file.endsWith(".md")) {
+        mdCounter++;
+        fs.watchFile(file, fileWatcher(file));
+        return Promise.resolve();
+      }
+    })
+    .catch(err => console.warn(err));
 const watchDirRecursive = dir => {
-  fs.readdir(dir).then(files => {
+  fs.watch(dir, { persistant: true, recursive: false }, dirWatcher);
+
+  return fs.readdir(dir).then(files => {
+    let promises = [];
     for (let file of files) {
       if (file.startsWith(".")) continue;
-
-      file = path.join(dir, file);
-      fs
-        .stat(file)
-        .then(
-          stat =>
-            stat.isDirectory()
-              ? watchDirRecursive(file)
-              : file.endsWith(".md")
-                ? fs.watchFile(file, fileWatcher(file))
-                : null
-        )
-        .catch(err => console.warn(err));
+      promises.push(watchFile(path.join(dir, file)));
     }
+    return Promise.all(promises);
   });
-  fs.watch(dir, { persistant: true, recursive: false }, dirWatcher);
 };
 
-watchDirRecursive(watchDir);
+watchFile(path.resolve(process.argv[2])).then(() => {
+  console.log(
+    mdCounter +
+      " markdown file" +
+      (mdCounter > 1 ? "s are" : " is") +
+      " being watched."
+  );
+});
