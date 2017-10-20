@@ -5,7 +5,7 @@ import path from "path";
 import plantumlCompile from "node-plantuml";
 import renderMarkdown from "./md2html";
 
-const SERVED_FILES_FOLDER = "./utils";
+const SERVED_FILES_FOLDER = path.resolve("./utils");
 
 let sha1file = file =>
   new Promise((resolve, reject) => {
@@ -46,7 +46,11 @@ export const plantuml = () => (req, res) => {
       res
         .status(500)
         .end(
-          "<svg xmlns='http://www.w3.org/2000/svg' width='350' height='30'><text fill='red' x='10' y='20'>Plantuml rendering failed, see console for more info!</text></svg>"
+          "<svg xmlns='http://www.w3.org/2000/svg' width='350' height='30'>" +
+            "<text fill='red' x='10' y='20'>" +
+            "Plantuml rendering failed, see console for more info!" +
+            "</text>" +
+            "</svg>"
         );
     });
 };
