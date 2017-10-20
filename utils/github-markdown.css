@@ -10,6 +10,9 @@ pre:not(.sourceCode),
 h1 {
   text-align: center;
 }
+table {
+  text-align: initial;
+}
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
