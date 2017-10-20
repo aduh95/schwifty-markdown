@@ -30,7 +30,7 @@ const FLAGS = "--experimental-modules";
 const SRC_DIR = "src";
 
 const workingDir = path.resolve(path.join(__dirname, ".."));
-const watchable = path.resolve(argv._.pop());
+const watchable = path.resolve(argv._.pop() || ".");
 
 if (argv.u) {
   console.log("Updating plantuml");
@@ -62,6 +62,7 @@ if (argv.u) {
 } else if (fs.existsSync(watchable)) {
   const FgRed = "\x1b[31m";
   const FgYellow = "\x1b[33m";
+  const FgReset = "\x1b[0m";
   fs.readFile("package.json").then(json => {
     let data = JSON.parse(json);
 
@@ -72,7 +73,9 @@ if (argv.u) {
     process.on("error", err => console.error(err));
 
     process.stderr.on("data", data =>
-      console.error((/warning/i.test(data) ? FgYellow : FgRed) + data.trim())
+      console.error(
+        (/warning/i.test(data) ? FgYellow : FgRed) + data.trim() + FgReset
+      )
     );
     process.stdout.on("data", data => console.log(data.trim()));
   });
