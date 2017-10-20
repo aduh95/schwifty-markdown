@@ -2,7 +2,12 @@ import fs from "fs-extra";
 import path from "path";
 import md2html from "./md2html";
 
-let watchDir = path.resolve(process.argv[2] || "./test.md");
+if (process.argc < 2) {
+  console.error("You must provied a path to listen to");
+  process.exit(1);
+}
+
+let watchDir = path.resolve(process.argv[2]);
 
 const fileWatcher = file => (previous, current) => {
   if (previous.mtime !== current.mtime) {
@@ -30,7 +35,8 @@ const watchDirRecursive = dir => {
               : file.endsWith(".md")
                 ? fs.watchFile(file, fileWatcher(file))
                 : null
-        );
+        )
+        .catch(err => console.warn(err));
     }
   });
   fs.watch(dir, { persistant: true, recursive: false }, dirWatcher);
