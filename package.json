@@ -1,6 +1,6 @@
 {
   "name": "schwifty-markdown",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "keywords": ["markdown", "pandoc", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",

@@ -26,10 +26,16 @@ First, you have to ensure that these dependencies are installed and available on
 * *(optional)* [Graphviz](//graphviz.org) (to generate all plantuml diagram types)
 
 
-Then, you need to download the package dependecies using `yarn` or `npm` :
+Then, you need to download the package dependecies using `yarn` (you might need to use `sudo`):
 
 ```sh
-yarn install
+yarn global add git+https://github.com/aduh95/schwifty-markdown.git
+```
+
+If you want to use `npm`:
+
+```sh
+npm -g install https://github.com/aduh95/schwifty-markdown/archive/master.tar.gz
 ```
 
 #### Note for Windows Users
@@ -42,7 +48,7 @@ Because there is a small C++ component used for validating UTF-8 data, you will 
 ### Run the server
 
 ```sh
-yarn start path/to/directory/to/listen
+schwifty path/to/directory/to/listen
 ```
 
 Schwifty is going to listen for changes in all the markdown files within the
