@@ -10,19 +10,15 @@ const SERVED_FILES_FOLDER = "./utils";
 let sha1file = file =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
-
-    if (fs.existsSync(file)) {
-      let input = fs.createReadStream(file);
-      input.on("readable", () => {
-        const data = input.read();
-        if (data) hash.update(data);
-        else {
-          resolve(hash.digest("hex"));
-        }
-      });
-    } else {
-      reject(new Error("ENOENT: no such file or directory"));
-    }
+    let input = fs.createReadStream(file);
+    input.on("error", err => reject(err));
+    input.on("readable", () => {
+      const data = input.read();
+      if (data) hash.update(data);
+      else {
+        resolve(hash.digest("hex"));
+      }
+    });
   });
 
 export const plantuml = () => (req, res) => {
@@ -50,7 +46,7 @@ export const plantuml = () => (req, res) => {
       res
         .status(500)
         .end(
-          "<svg xmlns='http://www.w3.org/2000/svg' width='150' height='30'><text fill='red' x='10' y='20'>Plantuml failed</text></svg>"
+          "<svg xmlns='http://www.w3.org/2000/svg' width='350' height='30'><text fill='red' x='10' y='20'>Plantuml rendering failed, see console for more info!</text></svg>"
         );
     });
 };
