@@ -13,6 +13,11 @@ let vendorDir = path.join(
 let jar = path.join(vendorDir, "plantuml.jar");
 let etagFile = path.join(vendorDir, "etag.txt");
 
+if (!fs.existsSync(jar)) {
+  console.warn("Unable to find the JAR");
+  process.exit(0);
+}
+
 const getLastVersion = etag => {
   let distantJar = {
     hostname: HOST,
