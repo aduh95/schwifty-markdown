@@ -16,6 +16,8 @@ let pathServerication = (file, relativePath, prefix) =>
   prefix +
   encodeURIComponent(path.resolve(path.join(path.dirname(file), relativePath)));
 
+let isRelativePath = path => !/^(?:[a-z]+:)?\/\//i.test(path);
+
 let stylification = (file, html) => {
   let dom = new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`);
   let document = dom.window.document;
@@ -50,11 +52,13 @@ let stylification = (file, html) => {
     let figcaption = document.createElement("figcaption");
     figcaption.appendChild(document.createTextNode(img.alt));
 
-    img.src = pathServerication(
-      file,
-      img.src,
-      img.src.endsWith(".pu") ? PLANTUML_GET_URL : MEDIA_GET_URL
-    );
+    if (isRelativePath(img.src)) {
+      img.src = pathServerication(
+        file,
+        img.src,
+        img.src.endsWith(".pu") ? PLANTUML_GET_URL : MEDIA_GET_URL
+      );
+    }
 
     figure.appendChild(img);
     figure.appendChild(figcaption);
@@ -71,7 +75,7 @@ let stylification = (file, html) => {
   }
   let links = document.querySelectorAll("a");
   for (let link of links) {
-    if (!/^(?:[a-z]+:)?\/\//i.test(link.href)) {
+    if (isRelativePath(link.href)) {
       link.href = pathServerication(
         file,
         link.href,
