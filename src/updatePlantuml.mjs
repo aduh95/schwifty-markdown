@@ -4,17 +4,19 @@ import fs from "fs";
 
 const HOST = "netcologne.dl.sourceforge.net";
 
-let vendorDir = path.join(
-  path.resolve("."),
-  "node_modules",
-  "node-plantuml",
-  "vendor"
-);
+let vendorDir = path.join(path.resolve("."), "node_modules");
+if (!fs.existsSync(vendorDir)) {
+  vendorDir = path.resolve("..");
+}
+vendorDir = path.join(vendorDir, "node-plantuml", "vendor");
+
 let jar = path.join(vendorDir, "plantuml.jar");
 let etagFile = path.join(vendorDir, "etag.txt");
 
 if (!fs.existsSync(jar)) {
-  console.warn("Unable to find the JAR");
+  console.warn(
+    JSON.stringify({ success: false, error: "Unable to find the JAR" })
+  );
   process.exit(0);
 }
 
