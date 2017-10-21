@@ -1,6 +1,6 @@
 {
   "name": "schwifty-markdown",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "keywords": ["markdown", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
@@ -27,7 +27,6 @@
     "mime": "^2.0.3",
     "node-plantuml": "^0.5.0",
     "open": "^0.0.5",
-    "shell-escape": "^0.2.0",
     "temp": "^0.8.3",
     "websocket": "^1.0.24",
     "yargs": "^9.0.1"

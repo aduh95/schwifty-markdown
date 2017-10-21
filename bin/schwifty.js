@@ -3,7 +3,8 @@
 const fs = require("fs-extra");
 const path = require("path");
 const { exec } = require("child_process");
-const shellescape = require("shell-escape");
+
+const shellescape = cmd => `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
 
 const argv = require("yargs")
   .usage("Usage: $0 path/to/directory/to/listen")
@@ -70,7 +71,7 @@ if (argv.u) {
   fs.readFile(PACKAGE_FILE).then(json => {
     let data = JSON.parse(json);
 
-    let process = exec(data.scripts.start + " " + shellescape([watchable]), {
+    let process = exec(data.scripts.start + " " + shellescape(watchable), {
       cwd: WORKING_DIR,
     });
 
@@ -86,6 +87,6 @@ if (argv.u) {
     }
   });
 } else {
-  console.log("No such file or directory");
+  console.error("No such file or directory");
   process.exit(1);
 }
