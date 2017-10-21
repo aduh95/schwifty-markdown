@@ -29,6 +29,9 @@ exec(checkProgramInPath("pandoc"), function(err, stdout, stderr) {
 });
 exec(checkProgramInPath("java"), function(err, stdout, stderr) {
   if (err !== null) {
-    console.warn(missingDep, "Java is required for plantuml diagram");
+    console.warn(
+      missingDep,
+      "Warning, Java is required for plantuml diagram rendering"
+    );
   }
 });
