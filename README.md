@@ -19,9 +19,8 @@ This library allows you to generate Markdown files to HTML in your browser.
 
 First, you have to ensure that these dependencies are installed and available on your path:
 
-* [Pandoc](http://pandoc.org/installing.html)
-* [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
 * [Node (v8.5+)](//nodejs.org)
+* [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
 * [Java](//java.com) *(only if you include plantuml diagrams)*
 * *(optional)* [Graphviz](//graphviz.org) (to generate all plantuml diagram types)
 
