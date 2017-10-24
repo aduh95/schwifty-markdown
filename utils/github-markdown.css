@@ -6,13 +6,7 @@ body {
   padding: 45px;
   text-align: justify;
 }
-pre:not(.sourceCode),
-h1 {
-  text-align: center;
-}
-table {
-  text-align: initial;
-}
+
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -358,11 +352,6 @@ table {
   border: 0;
   page-break-after: always;
 }
-@media print {
-  .markdown-body hr {
-    visibility: hidden;
-  }
-}
 .markdown-body blockquote {
   padding: 0 1em;
   color: #6a737d;
@@ -597,4 +586,18 @@ table {
 }
 .markdown-body hr {
   border-bottom-color: #eee;
+}
+
+pre:not(.sourceCode),
+.markdown-body pre:not(.sourceCode) > code {
+  text-align: justify;
+  text-align-last: center;
+  white-space: pre-line;
+}
+
+h1 {
+  text-align: center;
+}
+table {
+  text-align: initial;
 }

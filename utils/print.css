@@ -1,0 +1,27 @@
+@media print {
+  .markdown-body hr {
+    visibility: hidden;
+  }
+  #generated-toc {
+    page-break-after: always;
+    page-break-before: always;
+  }
+  #generated-toc summary {
+    font-size: 2em;
+    text-align: center;
+  }
+  #generated-toc summary::-webkit-details-marker {
+    display: none;
+  }
+  figure {
+    page-break-inside: avoid;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+}

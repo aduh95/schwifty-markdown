@@ -1,12 +1,7 @@
 {
   "name": "schwifty-markdown",
-  "version": "0.5.4",
-  "keywords": [
-    "markdown",
-    "toc",
-    "table of content",
-    "plantuml"
-  ],
+  "version": "0.6.0",
+  "keywords": ["markdown", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
     "name": "Antoine du HAMEL",
@@ -37,7 +32,8 @@
     "yargs": "^9.0.1"
   },
   "scripts": {
-    "start": "node src/checkDependencies.js && node --experimental-modules index.mjs",
+    "start":
+      "node src/checkDependencies.js && node --experimental-modules index.mjs",
     "preinstall": "node src/checkDependencies.js",
     "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
   },

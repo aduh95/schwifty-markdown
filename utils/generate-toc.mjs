@@ -232,12 +232,21 @@ let generateStyle = (style, generate_from) => {
   }
 };
 
+const intiPrintEvent = tocElement => {
+  var mediaQueryList = window.matchMedia("print");
+  mediaQueryList.addListener(
+    mql => (tocElement.querySelector("details").open = mql.matches)
+  );
+};
+
 const init = function() {
   // Identify our TOC element, and what it applies to
   let tocElement = this.getElementById(ID_TOC_ELEMENT);
   if (!tocElement || tocElement.hasChildNodes()) {
     return;
   }
+
+  intiPrintEvent(tocElement);
 
   let generate_from = getFirstHeaderLevel(tocElement, this.body);
   if (generate_from) {
