@@ -85,7 +85,10 @@ let stylification = (file, html) => {
   }
   let codeBlocks = document.querySelectorAll("code");
   for (let code of codeBlocks) {
-    if (code.parentNode.nodeName.toLowerCase() === "pre") {
+    if (
+      /^lang-/.test(code.className) &&
+      code.parentNode.nodeName.toLowerCase() === "pre"
+    ) {
       code.parentElement.classList.add("sourceCode");
     }
   }
