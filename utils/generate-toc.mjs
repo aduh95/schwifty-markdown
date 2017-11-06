@@ -15,7 +15,8 @@
  *  <!-- ... -->
  * 
  *  <!-- The TOC will appear here -->
- *  <nav id="generated-toc"></nav>
+ *  <nav id="toc" data-label="Table of content"></nav>
+ *  <!-- The data-label is optional, and default to "Table of content" -->
  * 
  *  <!-- Rest of document on which the TOC references -->
  * 
@@ -24,7 +25,7 @@
 */
 
 const SUMMARY_TEXT = "Table of content";
-const ID_TOC_ELEMENT = "generated-toc";
+const ID_TOC_ELEMENT = "toc";
 
 let addToArrayIfNotPreviousSibbling = (
   notPreviousSibblings,
@@ -102,12 +103,12 @@ let getFirstHeaderLevel = function(tocElement) {
   );
 };
 
-let generate = function(document, headings, generate_from) {
+let generate = function(document, headings, generate_from, summaryText) {
   let cur_head_lvl = generate_from;
 
   let details = document.createElement("details");
   let summary = document.createElement("summary");
-  summary.appendChild(document.createTextNode(SUMMARY_TEXT));
+  summary.appendChild(document.createTextNode(summaryText || SUMMARY_TEXT));
 
   let cur_list_el = document.createElement("ol");
   details.appendChild(summary);
@@ -255,7 +256,12 @@ const init = function() {
     generateStyle(style, generate_from);
 
     tocElement.appendChild(
-      generate(this, getHeadings(generate_from, tocElement), generate_from)
+      generate(
+        this,
+        getHeadings(generate_from, tocElement),
+        generate_from,
+        tocElement.dataset.label
+      )
     );
   }
 };

@@ -9,7 +9,7 @@ This library allows you to generate Markdown files to HTML in your browser.
 * Generates a table of content for your Markdown file if you add the following tag:
 
     ```markdown
-    <nav id="generated-toc"></nav>
+    <nav id="toc" data-label="Table of content"></nav>
     ```
 
 * Renders your plantuml diagrams to SVG on the fly
