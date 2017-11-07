@@ -60,10 +60,14 @@ let stylification = (file, html) => {
       );
     }
 
-    figure.appendChild(img);
-    figure.appendChild(figcaption);
+    if (img.nextElementSibling || img.previousElementSibling) {
+      parent.insertBefore(figure, img).appendChild(img);
+    } else {
+      figure.appendChild(img);
+      parent.parentNode.replaceChild(figure, parent);
+    }
 
-    parent.parentNode.replaceChild(figure, parent);
+    figure.appendChild(figcaption);
   }
   let tables = document.querySelectorAll("table");
   for (let table of tables) {
