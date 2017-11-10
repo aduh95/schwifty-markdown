@@ -1,7 +1,8 @@
-import fs from "fs-extra";
 import path from "path";
-import parse from "./mdParser";
 import DOM from "jsdom";
+import fs from "fs-extra";
+
+import parseMarkdown from "./mdParser";
 import {
   JS_MODULES,
   CSS_FILES,
@@ -11,25 +12,35 @@ import {
   refreshBrowser,
   tmpFile,
 } from "./server";
+import {
+  CHARSET,
+  PLANTUML_EXTENSION,
+  MARKDOWN_EXTENSION,
+} from "./definitions.mjs";
 
-let pathServerication = (file, relativePath, prefix) =>
+const pathServerication = (file, relativePath, prefix) =>
   prefix +
   encodeURIComponent(path.resolve(path.join(path.dirname(file), relativePath)));
 
-let isRelativePath = path => !/^(?:[a-z]+:)?\/\//i.test(path);
+const isRelativePath = path => !/^(?:[a-z]+:)?\/\//i.test(path);
 
-let stylification = (file, html) => {
-  let dom = new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`);
-  let document = dom.window.document;
-
+const setCharset = document => {
   let charset = document.createElement("meta");
-  charset.setAttribute("charset", "utf-8");
+  charset.setAttribute("charset", CHARSET);
   document.head.appendChild(charset);
 
+  return Promise.resolve();
+};
+
+const setTitle = (document, file) => {
   const title = document.createElement("title");
   title.appendChild(document.createTextNode(path.basename(file)));
   document.head.appendChild(title);
 
+  return Promise.resolve();
+};
+
+const addDependencies = document => {
   for (let cssFile of CSS_FILES) {
     let style = document.createElement("link");
     style.href = cssFile;
@@ -45,6 +56,22 @@ let stylification = (file, html) => {
     document.head.appendChild(script);
   }
 
+  return Promise.resolve();
+};
+
+const fixSharedID = document => {
+  // Force IDs to be different in the titles
+  let titles = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
+  let title_nb = 0;
+  for (let title of titles) {
+    title.id += "-" + title_nb++;
+  }
+
+  return Promise.resolve();
+};
+
+const imagesHandler = (document, file) => {
+  // Handle images and plantuml diagram
   let images = document.querySelectorAll("img");
   for (let img of images) {
     let parent = img.parentNode;
@@ -56,7 +83,7 @@ let stylification = (file, html) => {
       img.src = pathServerication(
         file,
         img.src,
-        img.src.endsWith(".pu") ? PLANTUML_GET_URL : MEDIA_GET_URL
+        img.src.endsWith(PLANTUML_EXTENSION) ? PLANTUML_GET_URL : MEDIA_GET_URL
       );
     }
 
@@ -69,24 +96,29 @@ let stylification = (file, html) => {
 
     figure.appendChild(figcaption);
   }
-  let tables = document.querySelectorAll("table");
-  for (let table of tables) {
-    let colgroup = table.querySelector("colgroup");
-    if (colgroup !== null) {
-      colgroup.remove();
-    }
-    table.style.removeProperty("width");
-  }
+
+  return Promise.resolve();
+};
+
+const linksHandler = (document, file) => {
+  // Handle links to redirect local link to be rendered
   let links = document.querySelectorAll("a");
   for (let link of links) {
     if (isRelativePath(link.href)) {
       link.href = pathServerication(
         file,
         link.href,
-        link.href.endsWith(".md") ? MARKDOWN_GET_URL : MEDIA_GET_URL
+        link.href.endsWith(MARKDOWN_EXTENSION)
+          ? MARKDOWN_GET_URL
+          : MEDIA_GET_URL
       );
     }
   }
+
+  return Promise.resolve();
+};
+
+const codeBlockHandler = document => {
   let codeBlocks = document.querySelectorAll("code");
   for (let code of codeBlocks) {
     if (
@@ -97,14 +129,31 @@ let stylification = (file, html) => {
     }
   }
 
-  return Promise.resolve("<!DOCTYPE html>\n" + dom.serialize());
+  return Promise.resolve();
 };
+
+const normalizeHTML = (file, dom) =>
+  Promise.all(
+    [
+      setCharset,
+      setTitle,
+      addDependencies,
+      fixSharedID,
+      imagesHandler,
+      linksHandler,
+      codeBlockHandler,
+    ].map(fct => fct.call(this, dom.window.document, file))
+  ).then(() => Promise.resolve("<!DOCTYPE html>\n" + dom.serialize()));
+
+const parseHTML = html =>
+  Promise.resolve(new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`));
 
 const generate = file =>
   fs
     .readFile(file)
-    .then(parse)
-    .then(html => stylification(file, html))
+    .then(parseMarkdown)
+    .then(parseHTML)
+    .then(dom => normalizeHTML(file, dom))
     .then(html => fs.writeFile(tmpFile, html))
     .then(refreshBrowser)
     .catch(err => console.error(err));

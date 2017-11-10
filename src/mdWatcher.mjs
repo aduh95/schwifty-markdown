@@ -1,8 +1,8 @@
-import fs from "fs-extra";
 import path from "path";
-import md2html from "./md2html";
+import fs from "fs-extra";
 
-const MARKDOWN_EXTENSION = ".md";
+import md2html from "./md2html";
+import { MARKDOWN_EXTENSION } from "./definitions.mjs";
 
 const fileWatcher = file => (previous, current) => {
   if (previous.mtime !== current.mtime) {
