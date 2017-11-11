@@ -47,14 +47,14 @@ let addToArrayIfNotPreviousSibbling = (
   }
 };
 
-let getHeadings = (generate_from, tocElement) => {
+let getHeadings = (tocElement, generate_from, generate_to) => {
   // add all levels of heading we're paying attention to to the
   // headings_to_treat dictionary, ready to be filled in later
-  let headings_to_treat = ["h6"];
-  for (let i = 5; i >= parseInt(generate_from); i--) {
-    headings_to_treat.push("h" + i);
+  let headings_to_treat = "";
+  for (let i = generate_from | 0; i <= (generate_to | 0); i++) {
+    headings_to_treat += ",h" + i;
   }
-  let headings = document.querySelectorAll(headings_to_treat.join(","));
+  let headings = document.querySelectorAll(headings_to_treat.slice(1));
 
   // make the basic elements of the TOC itself, ready to fill into
   let wantedHeadings = [];
@@ -91,17 +91,8 @@ let findFirstHeaderElement = function(node) {
     return null;
   }
 };
-let getFirstHeaderLevel = function(tocElement) {
-  // You can specify on which header level the TOC should look for
-  // For example, to get only titles lower or equals to h3, use the following:
-  //   <nav id="generated-toc" data-generate-from="3"></nav>
-  // By default, the first heading element found after
-  // the <nav> will be used as reference
-  return parseInt(
-    tocElement.dataset.generateFrom ||
-      findFirstHeaderElement(tocElement).slice(1)
-  );
-};
+let getFirstHeaderLevel = tocElement =>
+  parseInt(findFirstHeaderElement(tocElement).slice(1));
 
 let generate = function(document, headings, generate_from, summaryText) {
   let cur_head_lvl = generate_from;
@@ -169,7 +160,7 @@ let generate = function(document, headings, generate_from, summaryText) {
     } while (currentChild && currentChild.nodeName.toLowerCase() == "a");
 
     if (!currentChild) {
-      allLIs.item(index).className = "missing";
+      li.className = "missing";
     }
   }
 
@@ -195,7 +186,7 @@ let innerText = function(el) {
       : el.innerHTML.replace(/<[^>]+>/g, "");
 };
 
-let generateStyle = (style, generate_from) => {
+let generateStyle = (style, generate_from, deepestLevel) => {
   style.sheet.insertRule(
     "#" + ID_TOC_ELEMENT + " ol{counter-reset: section;list-style-type: none;}"
   );
@@ -205,7 +196,7 @@ let generateStyle = (style, generate_from) => {
       " li::before{counter-increment: section;content: counters(section,'.') '  ';}"
   );
   style.sheet.insertRule(":root{counter-reset: heading" + generate_from + ";}");
-  for (let i = generate_from; i <= 6; i++) {
+  for (let i = generate_from; i <= deepestLevel; i++) {
     let content = "";
     for (let j = generate_from; i >= j; j++) {
       content += "counter(heading" + j + ") '.'";
@@ -250,15 +241,16 @@ const init = function() {
   intiPrintEvent(tocElement);
 
   let generate_from = getFirstHeaderLevel(tocElement, this.body);
+  let generate_to = tocElement.dataset.deepestLevel | 0 || 6;
   if (generate_from) {
     let style = this.createElement("style");
     this.head.appendChild(style);
-    generateStyle(style, generate_from);
+    generateStyle(style, generate_from, generate_to);
 
     tocElement.appendChild(
       generate(
         this,
-        getHeadings(generate_from, tocElement),
+        getHeadings(tocElement, generate_from, generate_to),
         generate_from,
         tocElement.dataset.label
       )
