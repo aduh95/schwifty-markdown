@@ -28,16 +28,12 @@ const setCharset = document => {
   let charset = document.createElement("meta");
   charset.setAttribute("charset", CHARSET);
   document.head.appendChild(charset);
-
-  return Promise.resolve();
 };
 
 const setTitle = (document, file) => {
   const title = document.createElement("title");
   title.appendChild(document.createTextNode(path.basename(file)));
   document.head.appendChild(title);
-
-  return Promise.resolve();
 };
 
 const addDependencies = document => {
@@ -55,8 +51,6 @@ const addDependencies = document => {
     script.setAttribute("async", "async");
     document.head.appendChild(script);
   }
-
-  return Promise.resolve();
 };
 
 const fixSharedID = document => {
@@ -66,8 +60,6 @@ const fixSharedID = document => {
   for (let title of titles) {
     title.id += "-" + title_nb++;
   }
-
-  return Promise.resolve();
 };
 
 const imagesHandler = (document, file) => {
@@ -96,8 +88,6 @@ const imagesHandler = (document, file) => {
 
     figure.appendChild(figcaption);
   }
-
-  return Promise.resolve();
 };
 
 const linksHandler = (document, file) => {
@@ -114,8 +104,6 @@ const linksHandler = (document, file) => {
       );
     }
   }
-
-  return Promise.resolve();
 };
 
 const codeBlockHandler = document => {
@@ -128,22 +116,21 @@ const codeBlockHandler = document => {
       code.parentElement.classList.add("sourceCode");
     }
   }
-
-  return Promise.resolve();
 };
 
-const normalizeHTML = (file, dom) =>
-  Promise.all(
-    [
-      setCharset,
-      setTitle,
-      addDependencies,
-      fixSharedID,
-      imagesHandler,
-      linksHandler,
-      codeBlockHandler,
-    ].map(fct => fct.call(this, dom.window.document, file))
-  ).then(() => Promise.resolve("<!DOCTYPE html>\n" + dom.serialize()));
+const normalizeHTML = (file, dom) => {
+  [
+    setCharset,
+    setTitle,
+    addDependencies,
+    fixSharedID,
+    imagesHandler,
+    linksHandler,
+    codeBlockHandler,
+  ].map(fct => fct.call(this, dom.window.document, file));
+
+  return Promise.resolve("<!DOCTYPE html>\n" + dom.serialize());
+};
 
 const parseHTML = html =>
   Promise.resolve(new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`));
