@@ -14,7 +14,11 @@ export const CSS_FILES = [
   "/figureCaption.css",
   "/print.css",
 ];
-export const JS_MODULES = [AUTO_REFRESH_MODULE, "/generate-toc.mjs"];
+export const JS_MODULES = [
+  AUTO_REFRESH_MODULE,
+  "/generate-toc.mjs",
+  "/local-links.mjs",
+];
 export const tmpFile = temp.path({ suffix: ".html" });
 
 const app = express();

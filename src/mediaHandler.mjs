@@ -56,7 +56,14 @@ export const plantuml = () => (req, res) => {
 };
 
 export const markdown = () => (req, res) => {
-  renderMarkdown(req.params.media);
+  let media = req.params.media;
+
+  if (fs.existsSync(media)) {
+    renderMarkdown(media);
+    res.sendStatus(202);
+  } else {
+    res.sendStatus(404);
+  }
 };
 
 export const localFile = () => (req, res) => {
