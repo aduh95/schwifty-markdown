@@ -15,6 +15,20 @@ describe("Test HTML rendering", function() {
       .should("eq", "");
   });
 
+  it("Tests the TOC generation", function() {
+    cy.request(
+      Cypress.env("host") +
+        "md/" +
+        encodeURIComponent(Cypress.env("testDir") + "/toc.md")
+    );
+    cy.visit(Cypress.env("host")).then(() =>
+      cy
+        .get("#toc")
+        .invoke("text")
+        .should("not.eq", "")
+    );
+  });
+
   it("Try clicking on some links", function() {
     cy.request(
       Cypress.env("host") +
@@ -52,57 +66,5 @@ describe("Test HTML rendering", function() {
           cy.title().should("eq", "empty.md");
         });
       });
-  });
-
-  it("Visits the exemple md file", function() {
-    cy.request(
-      Cypress.env("host") +
-        "md/" +
-        encodeURIComponent(Cypress.env("testDir") + "/example.md")
-    );
-    cy.visit(Cypress.env("host"));
-    cy.title().should("eq", "example.md");
-
-    cy
-      .get("h1")
-      .its("length")
-      .should("eq", 1);
-
-    cy
-      .get("h2")
-      .its("length")
-      .should("eq", 1);
-
-    cy
-      .get("h3")
-      .its("length")
-      .should("eq", 1);
-
-    cy
-      .get("h4")
-      .its("length")
-      .should("eq", 1);
-
-    cy
-      .get("h5")
-      .its("length")
-      .should("eq", 1);
-
-    cy
-      .get("h6")
-      .its("length")
-      .should("eq", 1);
-
-    cy
-      .get("table>thead")
-      .children()
-      .children()
-      .its("length")
-      .should("eq", 2);
-    cy
-      .get("table>tbody")
-      .children()
-      .its("length")
-      .should("eq", 2);
   });
 });
