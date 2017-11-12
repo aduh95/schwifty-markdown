@@ -68,24 +68,27 @@ if (argv.u) {
   const FgRed = "\x1b[31m";
   const FgYellow = "\x1b[33m";
   const FgReset = "\x1b[0m";
-  fs.readFile(PACKAGE_FILE).then(json => {
-    let data = JSON.parse(json);
+  fs
+    .readFile(PACKAGE_FILE)
+    .then(json => {
+      let data = JSON.parse(json);
 
-    let process = exec(data.scripts.start + " " + shellescape(watchable), {
-      cwd: WORKING_DIR,
-    });
+      let subprocess = exec(data.scripts.start + " " + shellescape(watchable), {
+        cwd: WORKING_DIR,
+      });
 
-    process.on("error", err => console.error(err));
+      subprocess.on("error", err => console.error(err));
 
-    if (!argv.q) {
-      process.stderr.on("data", data =>
-        console.error(
-          (/warning/i.test(data) ? FgYellow : FgRed) + data.trim() + FgReset
-        )
-      );
-      process.stdout.on("data", data => console.log(data.trim()));
-    }
-  });
+      if (!argv.q) {
+        subprocess.stderr.on("data", data =>
+          console.error(
+            (/warning/i.test(data) ? FgYellow : FgRed) + data.trim() + FgReset
+          )
+        );
+        subprocess.stdout.on("data", data => console.log(data.trim()));
+      }
+    })
+    .catch(err => console.error(err));
 } else {
   console.error("No such file or directory");
   process.exit(1);
