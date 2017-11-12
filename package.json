@@ -1,6 +1,6 @@
 {
   "name": "schwifty-markdown",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "keywords": ["markdown", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
@@ -34,10 +34,14 @@
   "scripts": {
     "start":
       "node src/checkDependencies.js && node --experimental-modules index.mjs",
+    "test": "node tests/bootstrap.js",
     "preinstall": "node src/checkDependencies.js",
     "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
   },
   "engines": {
     "node": ">=8.5.0"
+  },
+  "devDependencies": {
+    "cypress": "^1.0.3"
   }
 }
