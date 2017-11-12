@@ -39,7 +39,8 @@ npm -g install schwifty-markdown
 
 #### Note for Windows Users
 
-Because there is a small C++ component used for validating UTF-8 data, you will need to install a few other software packages in addition to Node to be able to build this module:
+Because there is a small C++ component used for validating UTF-8 data, you will need to install a
+few other software packages in addition to Node to be able to build this module:
 
  * [Microsoft Visual C++](//support.microsoft.com/fr-fr/help/2977003/the-latest-supported-visual-c-downloads)
  * [Python 2.7](//python.org) (NOT Python 3.x)
@@ -60,6 +61,35 @@ You can also watch only one file if that is more convenient to you:
 
 ```sh
 schwifty path/to/file/to/render
+```
+
+#### Automatic Table Of Content
+
+If the file you are editing in huge, the need to index your headings and have a table of content linking to the differents
+parts of the document. You can have this by using this tag in your markdown file:
+
+```markdown
+<nav id="toc"></nav>
+```
+
+**N.B.:** Schwifty indexes only the headings which come after the `<nav>` tag.
+
+**N.B.:** The tag must only appear once in your document.
+
+By default, the TOC is collapsed into a `<summary>` element. You might want to change its text for i18n.
+Exemple, for a document written in French:
+
+```markdown
+<nav id="toc" data-label="Table des matières"></nav>
+```
+
+Markdown allows you to have up to 6 levels of headings, which allows you to define sub-part, and
+sub-sub-part, etc. in your document. However, you might want the deepest levels not to be included
+in your TOC. You can specify a maximum heading level for your TOC by adding an attribute to the tag:
+
+```markdown
+<!-- This will ask Schwifty to ignore headings of level 5 and 6 -->
+<nav id="toc" data-deepest-level="4"></nav>
 ```
 
 #### Plantuml usage
@@ -96,6 +126,8 @@ This goes on the first page
 This goes on the second one
 ```
 
+#### Figure indexing
+
 By default, Schwifty Markdown indexes all your figures and displays the incremented counter
 before the caption of the figure. If you want to change this behavior, you can add the following
 code in your document:
@@ -107,7 +139,11 @@ figcaption::before{
     display:none;
 }
 </style>
+```
 
+Furthermore, if you want to completely disable the captions below the figures, use the following:
+
+```markdown
 <!-- Remove all the figure captions -->
 <style>
 figcaption{
