@@ -1,4 +1,4 @@
-const { spawn, execFile } = require("child_process");
+const { exec, execFile, spawn } = require("child_process");
 const path = require("path");
 
 let exitCode = 0;
@@ -58,7 +58,14 @@ server.on("error", err => console.error(err));
 server.on("exit", () => console.log("exiting..."));
 server.on("close", () => {
   console.log("closing...");
-  process.exit(exitCode);
+
+  exec("netstat -tulpn | grep :3000", (err, stdout) => {
+    err
+      ? console.error(err)
+      : exec("kill " + stdout.match(/(\d+)\/node/)[1], err => {
+          err ? console.error(err) : process.exit(exitCode);
+        });
+  });
 });
 
 const exitTests = code => {
@@ -66,5 +73,5 @@ const exitTests = code => {
     console.log("Tests terminated not successfully");
   }
   exitCode = code;
-  server.kill("SIGKILL");
+  server.kill("SIGINT");
 };

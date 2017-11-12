@@ -35,6 +35,7 @@
     "start":
       "node src/checkDependencies.js && node --experimental-modules index.mjs",
     "test": "node tests/bootstrap.js",
+    "test-dev": "npx cypress open --env testdir=$(pwd)/tests",
     "preinstall": "node src/checkDependencies.js",
     "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
   },

@@ -39,13 +39,19 @@ describe("Test HTML rendering", function() {
       .get("a[title='dead-link']")
       .click()
       .then($link => {
-        cy.wait(500).then(() => {
+        cy.wait(2000).then(() => {
           expect($link.css("cursor")).to.be.eq("not-allowed");
         });
       });
 
-    cy.get("a[title='local-relative']").click();
-    cy.title().should("eq", "empty.md");
+    cy
+      .get("a[title='local-relative']")
+      .click()
+      .then($link => {
+        cy.wait(5000).then(() => {
+          cy.title().should("eq", "empty.md");
+        });
+      });
   });
 
   it("Visits the exemple md file", function() {
