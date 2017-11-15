@@ -884,6 +884,10 @@ is-path-inside@^1.0.0:
   dependencies:
     path-is-inside "^1.0.1"
 
+is-port-available@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/is-port-available/-/is-port-available-0.1.4.tgz#7984bb9ac5554d8164f58c6f27e63c47de5f66b4"
+
 is-promise@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-2.1.0.tgz#79a2a9ece7f096e80f36d2b2f3bc16c1ff4bf3fa"
