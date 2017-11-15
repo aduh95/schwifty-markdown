@@ -82,8 +82,9 @@ export const refreshBrowser = () => {
     console.log("Sending socket to refresh browser");
     wsConnection.send("refresh");
   } else if (CONFIG.AUTO_OPEN_BROWSER) {
-    console.log(CONFIG);
     console.log("Opening browser");
     open("http://localhost:" + CONFIG.PORT_NUMBER, CONFIG.BROWSER_NAME);
+  } else {
+    console.log("Document ready");
   }
 };
