@@ -1,3 +1,4 @@
+import fs from "fs-extra";
 import path from "path";
 import watch from "./src/mdWatcher";
 import { watchCounter } from "./src/mdWatcher";
@@ -10,15 +11,19 @@ if (process.argc < 2) {
 
 const target = path.resolve(process.argv[2]);
 
-watch(target).then(() => {
-  console.log(
-    watchCounter +
-      " markdown file" +
-      (watchCounter > 1 ? "s are" : " is") +
-      " being watched."
-  );
+watch(target)
+  .then(() => {
+    console.log(
+      watchCounter +
+        " markdown file" +
+        (watchCounter > 1 ? "s are" : " is") +
+        " being watched."
+    );
 
-  if (watchCounter === 1) {
-    md2html(target);
-  }
-});
+    return watchCounter === 1 && fs.stat(target);
+  })
+  .then(stat => {
+    if (stat && !stat.isDirectory()) {
+      md2html(target);
+    }
+  });
