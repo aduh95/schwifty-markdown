@@ -15,20 +15,6 @@ describe("Test HTML rendering", function() {
       .should("eq", "");
   });
 
-  it("Tests the TOC generation", function() {
-    cy.request(
-      Cypress.env("host") +
-        "md/" +
-        encodeURIComponent(Cypress.env("testDir") + "/toc.md")
-    );
-    cy.visit(Cypress.env("host")).then(() =>
-      cy
-        .get("#toc")
-        .invoke("text")
-        .should("not.eq", "")
-    );
-  });
-
   it("Try clicking on some links", function() {
     cy.request(
       Cypress.env("host") +

@@ -1,6 +1,6 @@
 # This should not be in the TOC
 
-<nav id="toc"></nav>
+<nav id="toc" data-label="فهرس"></nav>
 
 # Level 1
 
