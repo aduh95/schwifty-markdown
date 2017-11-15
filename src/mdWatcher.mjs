@@ -4,8 +4,8 @@ import fs from "fs-extra";
 import md2html from "./md2html";
 import { MARKDOWN_EXTENSION } from "./definitions.mjs";
 
-const fileWatcher = file => (previous, current) => {
-  if (previous.mtime !== current.mtime) {
+const fileWatcher = file => evType => {
+  if (fs.existsSync(file)) {
     md2html(file);
   }
 };
@@ -13,11 +13,11 @@ const dirWatcher = dir => (eventType, filename) => {
   if (eventType === "rename" && filename.endsWith(MARKDOWN_EXTENSION)) {
     let file = path.join(dir, filename);
     if (fs.existsSync(file)) {
-      fs.watchFile(file, fileWatcher(file));
+      fs.watch(file, fileWatcher(file));
       console.log("Now watching " + file);
     } else {
-      fs.unwatchFile(file);
-      console.log("Stop watching " + file);
+      // fs.unwatchFile(file);
+      // console.log("Stop watching " + file);
     }
   }
 };
@@ -31,9 +31,8 @@ const watchFile = file =>
       if (stat.isDirectory()) {
         return watchDirRecursive(file);
       } else if (file.endsWith(MARKDOWN_EXTENSION)) {
-        watchCounter++;
-        fs.watchFile(file, fileWatcher(file));
-        return Promise.resolve();
+        fs.watch(file, fileWatcher(file));
+        return Promise.resolve(++watchCounter);
       }
     })
     .catch(err => console.warn(err));
