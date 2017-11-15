@@ -2,13 +2,16 @@ import path from "path";
 import watch from "./src/mdWatcher";
 import { watchCounter } from "./src/mdWatcher";
 import md2html from "./src/md2html";
+import opt from "./src/cli-args";
+import { CONFIG } from "./src/definitions";
 
-if (process.argc < 2) {
-  console.error("You must provied a path to listen to");
-  process.exit(1);
-}
+const argv = opt.demandCommand(1, "You must provied a path to listen to!").argv;
 
-const target = path.resolve(process.argv[2]);
+CONFIG.PORT_NUMBER = argv.p;
+CONFIG.AUTO_OPEN_BROWSER = !argv.n;
+CONFIG.BROWSER_NAME = argv.b || undefined;
+
+const target = path.resolve(argv._.pop());
 
 export default watch(target).then(promiseResolver => {
   console.log(

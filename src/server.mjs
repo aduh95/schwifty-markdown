@@ -4,6 +4,7 @@ import fs from "fs-extra";
 import express from "express";
 import webSocket from "websocket";
 import * as serveMedia from "./mediaHandler";
+import { CONFIG } from "./definitions";
 
 // Automatically track and cleanup files at exit
 temp.track();
@@ -56,28 +57,33 @@ app.get(PLANTUML_GET_URL + ":media", serveMedia.plantuml());
 export const MARKDOWN_GET_URL = "/md/";
 app.get(MARKDOWN_GET_URL + ":media", serveMedia.markdown());
 
-let server = app.listen(3000, "localhost", function() {
-  console.log("Listening on port 3000!");
-});
-
 let wsConnection = null;
-let wsServer = new webSocket.server({
-  httpServer: server,
-  autoAcceptConnections: true,
-});
-wsServer.on("connect", connection => {
-  wsConnection && wsConnection.close();
-  wsConnection = connection;
 
-  connection.ping(1);
+setImmediate(() => {
+  // Waiting for the CONFIG to be loaded before starting the server
+
+  let server = app.listen(CONFIG.PORT_NUMBER, "localhost", function() {
+    console.log(`Listening on port ${CONFIG.PORT_NUMBER}!`);
+  });
+  let wsServer = new webSocket.server({
+    httpServer: server,
+    autoAcceptConnections: true,
+  });
+  wsServer.on("connect", connection => {
+    wsConnection && wsConnection.close();
+    wsConnection = connection;
+
+    connection.ping(1);
+  });
 });
 
 export const refreshBrowser = () => {
   if (wsConnection && wsConnection.connected) {
     console.log("Sending socket to refresh browser");
     wsConnection.send("refresh");
-  } else {
+  } else if (CONFIG.AUTO_OPEN_BROWSER) {
+    console.log(CONFIG);
     console.log("Opening browser");
-    open("http://localhost:3000");
+    open("http://localhost:" + CONFIG.PORT_NUMBER, CONFIG.BROWSER_NAME);
   }
 };

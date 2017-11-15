@@ -4,10 +4,11 @@ const fs = require("fs-extra");
 const path = require("path");
 const { exec } = require("child_process");
 
-const shellescape = cmd => `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
+const shellescape = cmd =>
+  Number.isInteger(cmd) ? cmd : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
 
-const argv = require("yargs")
-  .usage("Usage: $0 path/to/directory/to/listen")
+const argv = require("../src/cli-args")
+  .usage("Usage: $0 [-p 3000] [--browser=firefox] path/to/directory/to/listen")
   .example(
     "$0 .",
     "Starts Schwifty server and listen on all changes on markdown files of the current directory and its subdirectories"
@@ -72,6 +73,18 @@ if (argv.u) {
     .readFile(PACKAGE_FILE)
     .then(json => {
       let data = JSON.parse(json);
+
+      let options = "";
+      for (let option in argv) {
+        if (option === "_" || option.length > 1 || argv[option] === false)
+          continue;
+        try {
+          options += `-${option} ${shellescape(argv[option])}`;
+        } catch (e) {
+          console.error(e);
+          console.log(option, argv[option]);
+        }
+      }
 
       let subprocess = exec(data.scripts.start + " " + shellescape(watchable), {
         cwd: WORKING_DIR,
