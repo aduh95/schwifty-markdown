@@ -147,23 +147,6 @@ let generate = function(document, headings, generate_from, summaryText) {
       })(document.createElement("li"))
     );
   }
-
-  // go through the TOC and find all LIs that are "empty", i.e., contain
-  // only ULs and no links, and give them class="missing"
-  let allLIs = details.getElementsByTagName("li");
-  for (let li of allLIs) {
-    let children = li.children;
-    let index = 0;
-    let currentChild;
-    do {
-      currentChild = children.item(index++);
-    } while (currentChild && currentChild.nodeName.toLowerCase() == "a");
-
-    if (!currentChild) {
-      li.className = "missing";
-    }
-  }
-
   return details;
 };
 
