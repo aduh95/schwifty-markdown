@@ -10,7 +10,7 @@ if (process.argc < 2) {
 
 const target = path.resolve(process.argv[2]);
 
-watch(target).then(promiseResolver => {
+export default watch(target).then(promiseResolver => {
   console.log(
     watchCounter +
       " markdown file" +
@@ -18,7 +18,5 @@ watch(target).then(promiseResolver => {
       " being watched."
   );
 
-  if (promiseResolver === 1) {
-    md2html(target);
-  }
+  return promiseResolver === 1 ? md2html(target) : Promise.resolve(false);
 });
