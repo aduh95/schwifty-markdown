@@ -1,19 +1,13 @@
 import path from "path";
-import watch from "./src/mdWatcher";
+import { CONFIG } from "./src/definitions";
 import { watchCounter } from "./src/mdWatcher";
+import addWatcher from "./src/mdWatcher";
 import md2html from "./src/md2html";
 import opt from "./src/cli-args";
-import { CONFIG } from "./src/definitions";
 
-const argv = opt.demandCommand(1, "You must provied a path to listen to!").argv;
+const schwifty = async target => {
+  let watcher = await addWatcher(target);
 
-CONFIG.PORT_NUMBER = argv.p;
-CONFIG.AUTO_OPEN_BROWSER = !argv.n;
-CONFIG.BROWSER_NAME = argv.b || undefined;
-
-const target = path.resolve(argv._.pop());
-
-export default watch(target).then(promiseResolver => {
   console.log(
     watchCounter +
       " markdown file" +
@@ -21,5 +15,18 @@ export default watch(target).then(promiseResolver => {
       " being watched."
   );
 
-  return promiseResolver === 1 ? md2html(target) : Promise.resolve(false);
-});
+  return watcher === watchCounter && (await md2html(target));
+};
+
+if (opt) {
+  const argv = opt.demandCommand(1, "You must provied a path to listen to!")
+    .argv;
+
+  CONFIG.PORT_NUMBER = argv.p;
+  CONFIG.AUTO_OPEN_BROWSER = !argv.n;
+  CONFIG.BROWSER_NAME = argv.b || undefined;
+
+  schwifty(path.resolve(argv._.pop()));
+}
+
+export default schwifty;
