@@ -39,7 +39,7 @@ describe("Test HTML rendering", function() {
       .get("a[title='dead-link']")
       .click()
       .then($link => {
-        cy.wait(2000).then(() => {
+        cy.wait(500).then(() => {
           expect($link.css("cursor")).to.be.eq("not-allowed");
         });
       });
@@ -48,9 +48,7 @@ describe("Test HTML rendering", function() {
       .get("a[title='local-relative']")
       .click()
       .then($link => {
-        cy.wait(5000).then(() => {
-          cy.title().should("eq", "empty.md");
-        });
+        cy.title().should("eq", "empty.md");
       });
   });
 });
