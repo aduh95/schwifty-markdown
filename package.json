@@ -30,7 +30,7 @@
     "open": "^0.0.5",
     "temp": "^0.8.3",
     "websocket": "^1.0.24",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.1"
   },
   "scripts": {
     "start":
