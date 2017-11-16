@@ -5,7 +5,9 @@ const path = require("path");
 const { exec } = require("child_process");
 
 const shellescape = cmd =>
-  Number.isInteger(cmd) ? cmd : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
+  Number.isInteger(cmd)
+    ? cmd
+    : cmd === true ? "" : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
 
 const argv = require("../src/cli-args")
   .usage("Usage: $0 [--port=3000] [--browser=firefox] [--noBrowser] <path>")
@@ -39,7 +41,6 @@ const argv = require("../src/cli-args")
 
 const NODE = "node";
 const FLAGS = "--experimental-modules";
-const SRC_DIR = "src";
 
 const WORKING_DIR = path.resolve(path.join(__dirname, ".."));
 const PACKAGE_FILE = path.join(WORKING_DIR, "package.json");
