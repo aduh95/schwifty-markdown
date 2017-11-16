@@ -2,7 +2,11 @@
 
 ### Upcoming
 
-- Fork Instant Markdown to integrate with VSCode
+- Integrate into VSCode (like Instant Markdown)
+
+### v1.0.0(2017-11-17)
+
+- Add `highlight.js` for code highlightning (require internet connection)
 
 ### v0.8.0(2017-11-16)
 

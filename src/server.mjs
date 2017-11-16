@@ -19,7 +19,9 @@ export const JS_MODULES = [
   AUTO_REFRESH_MODULE,
   "/generate-toc.mjs",
   "/local-links.mjs",
+  "/highlight.mjs",
 ];
+export const JS_SCRIPT = ["/worker.js"];
 export const tmpFile = temp.path({ suffix: ".html" });
 
 const app = express();
@@ -43,7 +45,7 @@ app.get("/", function(req, res) {
     );
 });
 
-for (let jsFile of JS_MODULES) {
+for (let jsFile of JS_SCRIPT.concat(JS_MODULES)) {
   app.get(jsFile, serveMedia.serverFile(jsFile, "application/javascript"));
 }
 for (let cssFile of CSS_FILES) {
