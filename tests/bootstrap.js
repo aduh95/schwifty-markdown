@@ -36,7 +36,7 @@ const runCypress = () => {
 console.log("Starting Schwifty");
 
 const server = execFile(path.join(__dirname, "..", "bin", "schwifty.js"), [
-  "--no-browser",
+  "-n",
   path.resolve(__dirname),
 ]);
 
