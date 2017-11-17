@@ -1,15 +1,20 @@
 const worker = new Worker("/worker.js");
 
-addEventListener("load", function() {
+const init = function() {
   const codes = document.querySelectorAll(".sourceCode>code");
   const style = document.createElement("link");
-  style.rel = "stylesheet";
+  style.rel = "preload";
+  style.setAttribute("as", "style");
+  style.setAttribute("type", "text/css");
   style.href =
     "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css";
+  style.onload = function() {
+    this.rel = "stylesheet";
+  };
 
   awaitHighlight(codes, 0);
   document.head.appendChild(style);
-});
+};
 
 const awaitHighlight = (codes, index) => {
   let code = codes.item(index);
@@ -25,3 +30,9 @@ const awaitHighlight = (codes, index) => {
     worker.terminate();
   }
 };
+
+if (window.document.readyState === "loading") {
+  window.document.addEventListener("DOMContentLoaded", init);
+} else {
+  init.apply(window.document);
+}
