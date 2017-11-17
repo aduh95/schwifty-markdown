@@ -5,6 +5,7 @@ import fs from "fs-extra";
 import parseMarkdown from "./mdParser";
 import {
   JS_MODULES,
+  JS_SCRIPTS,
   CSS_FILES,
   MEDIA_GET_URL,
   MARKDOWN_GET_URL,
@@ -51,6 +52,14 @@ const addDependencies = document => {
     script.setAttribute("async", "async");
     document.head.appendChild(script);
   }
+
+  for (let jsFile of JS_SCRIPTS) {
+    let script = document.createElement("link");
+    script.rel = "preload";
+    script.setAttribute("as", "script");
+    script.href = jsFile;
+    document.head.appendChild(script);
+  }
 };
 
 const fixSharedID = document => {
@@ -68,6 +77,7 @@ const imagesHandler = (document, file) => {
   for (let img of images) {
     let parent = img.parentNode;
     let figure = document.createElement("figure");
+    let picture = document.createElement("noscript");
     let figcaption = document.createElement("figcaption");
     figcaption.appendChild(document.createTextNode(img.alt));
 
@@ -86,6 +96,7 @@ const imagesHandler = (document, file) => {
       parent.parentNode.replaceChild(figure, parent);
     }
 
+    figure.insertBefore(picture, img).appendChild(img);
     figure.appendChild(figcaption);
   }
 };

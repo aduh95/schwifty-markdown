@@ -20,8 +20,9 @@ export const JS_MODULES = [
   "/generate-toc.mjs",
   "/local-links.mjs",
   "/highlight.mjs",
+  "/lazyload.mjs",
 ];
-export const JS_SCRIPT = ["/worker.js"];
+export const JS_SCRIPTS = ["/worker.js"];
 export const tmpFile = temp.path({ suffix: ".html" });
 
 const app = express();
@@ -45,7 +46,7 @@ app.get("/", function(req, res) {
     );
 });
 
-for (let jsFile of JS_SCRIPT.concat(JS_MODULES)) {
+for (let jsFile of JS_SCRIPTS.concat(JS_MODULES)) {
   app.get(jsFile, serveMedia.serverFile(jsFile, "application/javascript"));
 }
 for (let cssFile of CSS_FILES) {

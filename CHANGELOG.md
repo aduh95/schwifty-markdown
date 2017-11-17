@@ -4,6 +4,10 @@
 
 - Integrate into VSCode (like Instant Markdown)
 
+### v1.0.1(2017-11-17)
+
+- Postpone the loading of images to get syntax highlighting sooner
+
 ### v1.0.0(2017-11-17)
 
 - Add `highlight.js` for code highlightning (require internet connection)
