@@ -1,6 +1,6 @@
 {
   "name": "schwifty-markdown",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "keywords": ["markdown", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
@@ -45,5 +45,8 @@
   },
   "devDependencies": {
     "cypress": "^1.0.3"
+  },
+  "yargs": {
+    "boolean-negation": false
   }
 }

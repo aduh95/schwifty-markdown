@@ -10,7 +10,7 @@ const shellescape = cmd =>
     : cmd === true ? "" : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
 
 const argv = require("../src/cli-args")
-  .usage("Usage: $0 [--port=3000] [--browser=firefox] [--noBrowser] <path>")
+  .usage("Usage: $0 [--port=3000] [--browser=firefox] [--no-browser] <path>")
   .example(
     "$0 .",
     "Starts Schwifty server and listen on all changes on markdown files of the current directory and its subdirectories"

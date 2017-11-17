@@ -7,6 +7,8 @@
 ### v1.0.0(2017-11-17)
 
 - Add `highlight.js` for code highlightning (require internet connection)
+- Fix bug with `--no-browser` option ([yargs#1011](https://github.com/yargs/yargs/issues/1011))
+- Improve test speed
 
 ### v0.8.0(2017-11-16)
 
