@@ -63,6 +63,22 @@ You can also watch only one file if that is more convenient to you:
 schwifty path/to/file/to/render
 ```
 
+#### Syntax highlighting
+
+You can insert snippet of code in your document:
+
+~~~~~~markdown
+```c
+int main(int argc, char* argv) {
+    printf("Hello Wolrld!\n);
+    return 0;
+}
+```
+~~~~~~
+
+Schwifty Markdown uses [highlight.js](https://highlightjs.org/) to highlight your code.
+You have to specify the language you are using, else it will be interpreted as plain text.
+
 #### Automatic Table Of Content
 
 If the file you are editing in huge, the need to index your headings and have a table of content linking to the differents
