@@ -5,7 +5,7 @@ importScripts(
 onmessage = event => {
   let data = event.data;
   if (Array.isArray(data)) {
-    postMessage(self.hljs.highlightAuto(data[1], [data[0]]).value);
+    postMessage(self.hljs.highlightAuto(data.pop(), data).value);
   } else {
     close();
   }
