@@ -1,20 +1,28 @@
 const worker = new Worker("/worker.js");
 
-const init = function() {
-  const codes = document.querySelectorAll(".sourceCode>code");
-  const style = document.createElement("link");
+const preloadCSS = href => {
+  let style = document.createElement("link");
+
   style.rel = "preload";
   style.setAttribute("as", "style");
   style.setAttribute("type", "text/css");
-  style.href =
-    "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css";
+  style.href = href;
   style.onload = function() {
     this.rel = "stylesheet";
   };
 
-  awaitHighlight(codes, 0);
   document.head.appendChild(style);
 };
+const initHighlight = function() {
+  const codes = document.querySelectorAll(".sourceCode>code");
+  if (codes.length) {
+    awaitHighlight(codes, 0);
+    preloadCSS(
+      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
+    );
+  }
+};
+const init = initHighlight;
 
 const awaitHighlight = (codes, index) => {
   let code = codes.item(index);

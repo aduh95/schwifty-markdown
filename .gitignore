@@ -1,4 +1,5 @@
 node_modules/
 package-lock.json
-cypress/screenshots
+/cypress/screenshots
 cypress.env.json
+/utils/papaparse.min.js

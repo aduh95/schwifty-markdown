@@ -11,18 +11,21 @@ temp.track();
 
 const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
 export const CSS_FILES = [
+  "/chartist.css",
   "/github-markdown.css",
   "/figureCaption.css",
   "/print.css",
 ];
 export const JS_MODULES = [
   AUTO_REFRESH_MODULE,
+  "/chart.mjs",
+  "/chartist.mjs",
   "/generate-toc.mjs",
   "/local-links.mjs",
   "/highlight.mjs",
   "/lazyload.mjs",
 ];
-export const JS_SCRIPTS = ["/worker.js"];
+export const JS_SCRIPTS = ["/worker.js", "/papaparse.min.js"];
 export const tmpFile = temp.path({ suffix: ".html" });
 
 const app = express();

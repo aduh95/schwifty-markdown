@@ -1,26 +1,30 @@
 import http from "https";
 import path from "path";
-import fs from "fs";
+import fs from "fs-extra";
 
 const HOST = "netcologne.dl.sourceforge.net";
 
-let vendorDir = path.join(path.resolve("."), "node_modules");
-if (!fs.existsSync(vendorDir)) {
-  vendorDir = path.resolve("..");
+let nodeVendorDir = path.join(path.resolve("."), "node_modules");
+if (!fs.existsSync(nodeVendorDir)) {
+  nodeVendorDir = path.resolve("..");
 }
-vendorDir = path.join(vendorDir, "node-plantuml", "vendor");
 
-let jar = path.join(vendorDir, "plantuml.jar");
-let etagFile = path.join(vendorDir, "etag.txt");
+const copyPapaDistFiles = async () => {
+  const fileName = "papaparse.min.js";
+  const localVendorDir = path.join(path.resolve("."), "utils");
+  let distDir = path.join(nodeVendorDir, "papaparse");
 
-if (!fs.existsSync(jar)) {
-  console.warn(
-    JSON.stringify({ success: false, error: "Unable to find the JAR" })
+  if (!fs.existsSync(localVendorDir)) {
+    await fs.mkdir(localVendorDir);
+  }
+
+  return await fs.copyFile(
+    path.join(distDir, fileName),
+    path.join(localVendorDir, fileName)
   );
-  process.exit(0);
-}
+};
 
-const getLastVersion = etag => {
+const getPlantumlLastVersion = etag => {
   let distantJar = {
     hostname: HOST,
     path: "/project/plantuml/plantuml.jar",
@@ -60,11 +64,27 @@ const getLastVersion = etag => {
   });
 };
 
-if (fs.existsSync(etagFile)) {
-  fs.readFile(
-    etagFile,
-    (err, etag) => (err ? console.error(err) : getLastVersion(etag))
-  );
-} else {
-  getLastVersion();
-}
+const checkPlantumlVersion = () => {
+  let vendorDir = path.join(nodeVendorDir, "node-plantuml", "vendor");
+
+  let jar = path.join(vendorDir, "plantuml.jar");
+  let etagFile = path.join(vendorDir, "etag.txt");
+
+  if (!fs.existsSync(jar)) {
+    console.warn(
+      JSON.stringify({ success: false, error: "Unable to find the JAR" })
+    );
+    process.exit(0);
+  }
+
+  if (fs.existsSync(etagFile)) {
+    fs.readFile(
+      etagFile,
+      (err, etag) => (err ? console.error(err) : getPlantumlLastVersion(etag))
+    );
+  } else {
+    getPlantumlLastVersion();
+  }
+};
+
+copyPapaDistFiles().then(checkPlantumlVersion);
