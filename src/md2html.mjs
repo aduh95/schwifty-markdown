@@ -23,7 +23,7 @@ const pathServerication = (file, relativePath, prefix) =>
   prefix +
   encodeURIComponent(path.resolve(path.join(path.dirname(file), relativePath)));
 
-const isRelativePath = path => !/^(?:[a-z]+:)?\/\//i.test(path);
+const isRelativePath = path => !/^((?:(?:[a-z]+:)?\/\/)|data:)/i.test(path);
 
 const setCharset = document => {
   let charset = document.createElement("meta");
