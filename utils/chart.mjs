@@ -1,4 +1,5 @@
 import Chartist from "./chartist.mjs";
+import lazyLoad from "./lazyload.mjs";
 
 const asyncLoadScript = (globalObject, src) =>
   new Promise(resolve => {
@@ -58,23 +59,22 @@ const generate = async img => {
   new Chartist[chart.type](img.parentNode, chart.data, chart.options);
 };
 
-addEventListener("load", e => {
-  let images = this.document.querySelectorAll("img");
-
-  for (let img of images) {
-    let src = img.src;
-    if (src.endsWith(".json") || src.startsWith("data:text/json,")) {
-      generate(img);
-      img.hidden = true;
-    } else if (src.endsWith(".csv") || src.startsWith("data:text/csv,")) {
-      parseCSV(src).then(chartData => {
-        console.log(chartData);
-        new Chartist.Line(img.parentNode, {
-          labels: Object.keys(chartData[0]),
-          series: chartData.map(line => Object.values(line)),
+lazyLoad.then(promises => {
+  promises.forEach(loading => {
+    loading.then(img => {
+      let src = img.src;
+      if (src.endsWith(".json") || src.startsWith("data:text/json,")) {
+        generate(img);
+        img.hidden = true;
+      } else if (src.endsWith(".csv") || src.startsWith("data:text/csv,")) {
+        parseCSV(src, /%0A/.test(src)).then(chartData => {
+          new Chartist.Line(img.parentNode, {
+            labels: Object.keys(chartData[0]),
+            series: chartData.map(line => Object.values(line)),
+          });
         });
-      }, true);
-      img.hidden = true;
-    }
-  }
+        img.hidden = true;
+      }
+    });
+  });
 });
