@@ -1,12 +1,7 @@
 {
   "name": "schwifty-markdown",
   "version": "1.0.1",
-  "keywords": [
-    "markdown",
-    "toc",
-    "table of content",
-    "plantuml"
-  ],
+  "keywords": ["markdown", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
     "name": "Antoine du HAMEL",
@@ -39,9 +34,9 @@
     "yargs": "^10.0.1"
   },
   "scripts": {
-    "start": "node src/checkDependencies.js && node --experimental-modules index.mjs",
+    "start":
+      "node src/checkDependencies.js && node --experimental-modules index.mjs",
     "test": "node tests/bootstrap.js",
-    "test-dev": "npx cypress open --env testdir=$(pwd)/tests",
     "preinstall": "node src/checkDependencies.js",
     "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
   },

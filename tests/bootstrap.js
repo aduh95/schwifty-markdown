@@ -7,14 +7,16 @@ const runCypress = () => {
   console.log("Starting Cypress");
   let cypress = spawn(
     "npx",
-    [
-      "cypress",
-      "run",
-      "--browser",
-      "chromium",
-      "--env",
-      "testDir=" + __dirname,
-    ],
+    process.argv.length > 2
+      ? ["cypress", "open", "--env", "testDir=" + __dirname]
+      : [
+          "cypress",
+          "run",
+          "--browser",
+          "chromium",
+          "--env",
+          "testDir=" + __dirname,
+        ],
     {
       cwd: path.resolve(__dirname + path.sep + ".."),
     }
@@ -33,7 +35,7 @@ const runCypress = () => {
   cypress.on("close", exitTests);
 };
 
-console.log("Starting Schwifty");
+console.log("Starting Schwifty (watching tests dir)");
 
 const server = execFile(path.join(__dirname, "..", "bin", "schwifty.js"), [
   "-n",
