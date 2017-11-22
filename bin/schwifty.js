@@ -53,7 +53,7 @@ if (argv.u) {
     let data = JSON.parse(json);
 
     exec(
-      data.scripts.postinstall,
+      data.scripts.plantuml,
       {
         cwd: WORKING_DIR,
       },
