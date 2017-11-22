@@ -3,3 +3,4 @@ package-lock.json
 /cypress/screenshots
 cypress.env.json
 /utils/papaparse.min.js
+.idea/

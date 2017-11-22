@@ -1,4 +1,4 @@
-const worker = new Worker("/worker.js");
+let worker;
 
 const preloadCSS = href => {
   let style = document.createElement("link");
@@ -26,6 +26,10 @@ const init = initHighlight;
 
 const awaitHighlight = (codes, index) => {
   let code = codes.item(index);
+
+  if (!worker) {
+    worker = new Worker("/worker.js");
+  }
 
   if (code) {
     worker.onmessage = function(event) {
