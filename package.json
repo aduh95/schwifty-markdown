@@ -38,7 +38,7 @@
       "node src/checkDependencies.js && node --experimental-modules index.mjs",
     "test": "node tests/bootstrap.js",
     "preinstall": "node src/checkDependencies.js",
-    "postinstall": "node --experimental-modules src/updatePlantuml.mjs"
+    "plantuml": "node --experimental-modules src/updatePlantuml.mjs"
   },
   "engines": {
     "node": ">=8.5.0"

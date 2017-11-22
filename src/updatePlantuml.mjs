@@ -24,7 +24,7 @@ const copyPapaDistFiles = async () => {
   );
 };
 
-const getPlantumlLastVersion = etag => {
+const getPlantumlLastVersion = (jar, etagFile, etag) => {
   let distantJar = {
     hostname: HOST,
     path: "/project/plantuml/plantuml.jar",
@@ -38,8 +38,8 @@ const getPlantumlLastVersion = etag => {
 
   http.get(distantJar, res => {
     if (200 === res.statusCode) {
-      let writestream = fs.createWriteStream(jar);
-      res.pipe(writestream);
+      let writeStream = fs.createWriteStream(jar);
+      res.pipe(writeStream);
       fs.writeFile(
         etagFile,
         res.headers.etag,
@@ -80,10 +80,11 @@ const checkPlantumlVersion = () => {
   if (fs.existsSync(etagFile)) {
     fs.readFile(
       etagFile,
-      (err, etag) => (err ? console.error(err) : getPlantumlLastVersion(etag))
+      (err, etag) =>
+        err ? console.error(err) : getPlantumlLastVersion(jar, etagFile, etag)
     );
   } else {
-    getPlantumlLastVersion();
+    getPlantumlLastVersion(jar, etagFile);
   }
 };
 
