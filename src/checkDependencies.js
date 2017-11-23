@@ -18,11 +18,13 @@ if (version < "v8.5.0") {
   process.exit(1);
 }
 
-exec(checkProgramInPath("java"), function(err, stdout, stderr) {
-  if (err !== null) {
-    console.warn(
-      missingDep,
-      "Warning, Java is required for plantuml diagram rendering"
-    );
-  }
-});
+if (process.env.JAVA_ENABLED) {
+  exec(checkProgramInPath("java"), function(err, stdout, stderr) {
+    if (err !== null) {
+      console.warn(
+        missingDep,
+        "Warning, Java is required for plantuml diagram rendering (use --no-java to disable this warning)"
+      );
+    }
+  });
+}

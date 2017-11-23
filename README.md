@@ -5,7 +5,7 @@ This library allows you to generate Markdown files to HTML in your browser.
 ### Features
 
 * Renders markdown files to HTML using Github CSS.
-* Indexes your figures
+* Indexes your figures.
 * Generates a table of content for your Markdown file if you add the following
   tag:
 
@@ -13,8 +13,8 @@ This library allows you to generate Markdown files to HTML in your browser.
   <nav id="toc" data-label="Table of content"></nav>
   ```
 
-* Generates SVG charts in the browser
-* Renders yUML and PlantUML diagrams to SVG on the fly
+* Generates SVG charts in the browser.
+* Renders yUML and PlantUML diagrams to SVG on the fly.
 
 ### Install locally
 
@@ -51,6 +51,14 @@ build this module:
 
 * [Microsoft Visual C++](//support.microsoft.com/fr-fr/help/2977003/the-latest-supported-visual-c-downloads)
 * [Python 2.7](//python.org) (NOT Python 3.x)
+
+If you have trouble to add Java on your path, you can disable Java-dependent
+features to avoid crashing schwifty when it tries to call it. Add the
+`--no-java` flag when you run schwifty:
+
+```sh
+schwifty --no-java path/to/directory/to/listen
+```
 
 ### Run schwifty
 
@@ -276,8 +284,9 @@ as an image, it will render as an SVG.
 The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
 **N.B.:** As PlantUML rendering requires to call a Java dependency, the process
-might be slow depending of your machine. All the rendering is done locally, you
-don't need a network access to work with your diagrams.
+might be slow depending of your machine (about 4.6 times slower than yUML
+rendering on my computer). All the rendering is done locally, you don't need a
+network access to work with your diagrams.
 
 **N.B.:** The PlantUML project is not published on `npm`, which means it has to
 be updated manually. You can do so by typing `schwifty -u`.

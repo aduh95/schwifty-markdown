@@ -109,6 +109,7 @@ if (argv.u) {
         }
       }
       options.push(shellescape(watchable));
+      process.env.JAVA_ENABLED = !argv.j;
 
       let subprocess = exec(data.scripts.start + " " + options.join(" "), {
         cwd: WORKING_DIR,
