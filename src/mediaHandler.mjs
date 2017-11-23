@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import crypto from "crypto";
 import path from "path";
 import plantumlCompile from "node-plantuml";
-import yumlCompile from "yuml";
+import yumlCompile from "yuml2svg";
 import renderMarkdown from "./md2html";
 
 const SERVED_FILES_FOLDER = path.resolve("./utils");

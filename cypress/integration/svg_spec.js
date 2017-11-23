@@ -1,5 +1,5 @@
-describe("Test chart generation", function() {
-  it("Test SVG creation", function() {
+describe("Test SVG generation", function() {
+  it("Test chart creation", function() {
     cy.request(
       Cypress.env("host") +
         "md/" +
@@ -28,6 +28,24 @@ describe("Test chart generation", function() {
             .should("gt", 0);
         });
         //   $svg.its("length").should("eq", 3);
+      });
+  });
+
+  it("Tests yUML rendering", function() {
+    cy.request(
+      Cypress.env("host") +
+        "md/" +
+        encodeURIComponent(Cypress.env("testDir") + "/yuml.md")
+    );
+    cy
+      .visit(Cypress.env("host"))
+      .then(() => cy.get("img").invoke("attr", "src"))
+      .then(src => cy.request(Cypress.env("host") + src.substring(1)))
+      .then(response => {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(response.body, "text/xml");
+
+        cy.wrap(xmlDoc.rootElement.nodeName).should("eq", "svg");
       });
   });
 });
