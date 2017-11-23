@@ -2,37 +2,48 @@
 
 ### Upcoming
 
-- Integrate into VSCode (like Instant Markdown)
+* Integrate into VSCode (like Instant Markdown)
+
+### v1.1.0(2017-11-23)
+
+* Add Chartist fork to render chart
+* Add yUML support
+* Add support for data URLs for images
+* Fix bug when installing from npm
+* Don't load highlight.js external script when there is no code to highlight
 
 ### v1.0.1(2017-11-17)
 
-- Postpone the loading of images to get syntax highlighting sooner
+* Postpone the loading of images to get syntax highlighting sooner
 
 ### v1.0.0(2017-11-17)
 
-- Add `highlight.js` for code highlightning (require internet connection)
-- Fix bug with `--no-browser` option ([yargs#1011](https://github.com/yargs/yargs/issues/1011))
-- Improve test speed
+* Add `highlight.js` for code highlightning (require internet connection)
+* Fix bug with `--no-browser` option
+  ([yargs#1011](https://github.com/yargs/yargs/issues/1011))
+* Improve test speed
 
 ### v0.8.0(2017-11-16)
 
-- Add tests
-- Add `deepeset-level` option for the TOC
-- Remove error when listening to a directory with only one md file
-- Add async export on the index file
-- Add `--port` option
-- Add `--browser=` and `--no-browser` options
-- Do not throw error when *address already in use* and print an error message instead
+* Add tests
+* Add `deepeset-level` option for the TOC
+* Remove error when listening to a directory with only one md file
+* Add async export on the index file
+* Add `--port` option
+* Add `--browser=` and `--no-browser` options
+* Do not throw error when _address already in use_ and print an error message
+  instead
 
 ### v0.7.0(2017-11-06)
 
-- Add custom label to the generated TOC for i18n
-- **Breaking changes**: The `id` of the TOC is now `toc` instead of `generated-toc`
+* Add custom label to the generated TOC for i18n
+* **Breaking changes**: The `id` of the TOC is now `toc` instead of
+  `generated-toc`
 
 ### v0.6.0(2017-10-24)
 
-- Add CSS for printing and PDF generation
+* Add CSS for printing and PDF generation
 
 ### v0.5.0(2017-10-21)
 
-- Switch from Pandoc to marked to parse Markdown
+* Switch from Pandoc to marked to parse Markdown
