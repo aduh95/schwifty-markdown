@@ -118,6 +118,9 @@ Schwifty Markdown uses [highlight.js](https://highlightjs.org/) to highlight
 your code. You have to specify the language you are using, else it will be
 interpreted as plain text.
 
+**N.B.:** Schwifty uses the CDN hosted verion of `highlight.js`, which means a
+network access is required to perform the syntax highlighting.
+
 #### Automatic Table Of Content
 
 If the file you are editing in huge, the need to index your headings and have a
@@ -242,6 +245,26 @@ a CSV file for the data:
 }
 ```
 
+_The rendering is done locally using a fork of
+[Chartist](https://gionkunz.github.io/chartist-js/)._
+
+#### yUML usage
+
+Schwifty Markdown can render on-the-fly your Plantuml diagrams, just insert it
+as an image, it will render as an SVG.
+
+```markdown
+![Legend](./diagram.yuml)
+```
+
+The syntax is described on this
+[wiki page](https://github.com/jaime-olivares/vscode-yuml/wiki).
+
+_The rendering is done locally using [Viz.js](https://github.com/mdaines/viz.js)
+(a Javascript port of [Dot/Graphviz](http://www.graphviz.org/)). The yUML to SVG
+is inspired by the
+[VSCode yUML extension](https://github.com/jaime-olivares/vscode-yuml)._
+
 #### Plantuml usage
 
 Schwifty Markdown can render on-the-fly your Plantuml diagrams, just insert it
@@ -250,6 +273,15 @@ as an image, it will render as an SVG.
 ```markdown
 ![Legend](./diagram.pu)
 ```
+
+The syntax is described on the [Plantuml website](http://plantuml.com/).
+
+**N.B.:** As Plantuml rendering requires to call a Java dependency, the process
+might be slow depending of your machine. All the rendering is done locally, you
+don't need a network access to work with your diagrams.
+
+**N.B.:** The Plantuml project is not published on `npm`, which means it has to
+be updated manually. You can do so by typing `schwifty -u`.
 
 **N.B.:** The only supported extension for plantuml diagrams is `.pu`. If you
 think I should add suppport more file extensions, please raise an issue or
