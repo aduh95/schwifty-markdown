@@ -13,9 +13,8 @@ This library allows you to generate Markdown files to HTML in your browser.
   <nav id="toc" data-label="Table of content"></nav>
   ```
 
-* Generates SVG charts on the fly
-* Renders your plantuml diagrams to SVG on the fly
-* Renders Plantuml diagrams to SVG on the fly
+* Generates SVG charts in the browser
+* Renders yUML and PlantUML diagrams to SVG on the fly
 
 ### Install locally
 
@@ -25,10 +24,10 @@ your path:
 * [Node (v8.5+)](//nodejs.org)
 * [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
 
-> If you want schwifty to render plantuml diagrams, you also need:
+> If you want schwifty to render PlantUML diagrams, you also need:
 >
 > * [Java](//java.com)
-> * _(optional)_ [Graphviz](//graphviz.org) (to generate all plantuml diagram
+> * _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
 >   types)
 
 Then, you need to download the package dependecies using `yarn` (you might need
@@ -147,7 +146,7 @@ define sub-part, and sub-sub-part, etc. in your document. However, you might
 want the deepest levels not to be included in your TOC. You can specify a
 maximum heading level for your TOC by adding an attribute to the tag:
 
-```markdown
+```html
 <!-- This will ask Schwifty to ignore headings of level 5 and 6 -->
 
 <nav id="toc" data-deepest-level="4"></nav>
@@ -250,7 +249,7 @@ _The rendering is done locally using a fork of
 
 #### yUML usage
 
-Schwifty Markdown can render on-the-fly your Plantuml diagrams, just insert it
+Schwifty Markdown can render on-the-fly your PlantUML diagrams, just insert it
 as an image, it will render as an SVG.
 
 ```markdown
@@ -260,30 +259,30 @@ as an image, it will render as an SVG.
 The syntax is described on this
 [wiki page](https://github.com/jaime-olivares/vscode-yuml/wiki).
 
-_The rendering is done locally using [Viz.js](https://github.com/mdaines/viz.js)
-(a Javascript port of [Dot/Graphviz](http://www.graphviz.org/)). The yUML to SVG
-is inspired by the
-[VSCode yUML extension](https://github.com/jaime-olivares/vscode-yuml)._
+_The rendering is done locally using
+[yuml2svg](https://github.com/aduh95/vscode-yuml) which relies on
+[Viz.js](https://github.com/mdaines/viz.js) (a Javascript port of
+[Dot/Graphviz](http://www.graphviz.org/))._
 
-#### Plantuml usage
+#### PlantUML usage
 
-Schwifty Markdown can render on-the-fly your Plantuml diagrams, just insert it
+Schwifty Markdown can render on-the-fly your PlantUML diagrams, just insert it
 as an image, it will render as an SVG.
 
 ```markdown
 ![Legend](./diagram.pu)
 ```
 
-The syntax is described on the [Plantuml website](http://plantuml.com/).
+The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
-**N.B.:** As Plantuml rendering requires to call a Java dependency, the process
+**N.B.:** As PlantUML rendering requires to call a Java dependency, the process
 might be slow depending of your machine. All the rendering is done locally, you
 don't need a network access to work with your diagrams.
 
-**N.B.:** The Plantuml project is not published on `npm`, which means it has to
+**N.B.:** The PlantUML project is not published on `npm`, which means it has to
 be updated manually. You can do so by typing `schwifty -u`.
 
-**N.B.:** The only supported extension for plantuml diagrams is `.pu`. If you
+**N.B.:** The only supported extension for PlantUML diagrams is `.pu`. If you
 think I should add suppport more file extensions, please raise an issue or
 submit a pull request.
 
