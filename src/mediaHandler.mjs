@@ -1,13 +1,13 @@
 import fs from "fs-extra";
 import crypto from "crypto";
-import mime from "mime";
 import path from "path";
 import plantumlCompile from "node-plantuml";
+import yumlCompile from "yuml";
 import renderMarkdown from "./md2html";
 
 const SERVED_FILES_FOLDER = path.resolve("./utils");
 
-let sha1file = file =>
+const sha1file = file =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
     let input = fs.createReadStream(file);
@@ -21,24 +21,14 @@ let sha1file = file =>
     });
   });
 
-export const plantuml = () => (req, res) => {
-  let media = req.params.media;
-  res.set("Content-Type", "image/svg+xml");
-
+const generateIfNotChached = (req, res, media, generate) =>
   sha1file(media)
     .then(sha1 => {
       if (req.get("If-None-Match") === sha1) {
         res.sendStatus(304);
       } else {
         res.set("ETag", sha1);
-        console.log("Generating plantuml SVG", media);
-
-        plantumlCompile
-          .generate(media, {
-            format: "svg",
-            include: path.dirname(media),
-          })
-          .out.pipe(res);
+        generate();
       }
     })
     .catch(err => {
@@ -48,11 +38,36 @@ export const plantuml = () => (req, res) => {
         .end(
           "<svg xmlns='http://www.w3.org/2000/svg' width='350' height='30'>" +
             "<text fill='red' x='10' y='20'>" +
-            "Plantuml rendering failed, see console for more info!" +
+            "Rendering failed, see console for more info!" +
             "</text>" +
             "</svg>"
         );
     });
+
+export const yuml = () => (req, res) => {
+  let media = req.params.media;
+  res.set("Content-Type", "image/svg+xml");
+
+  generateIfNotChached(req, res, media, () => {
+    console.log("Generating yUML graph");
+    fs.readFile(media).then(yuml => res.send(yumlCompile(yuml.toString())));
+  });
+};
+
+export const plantuml = () => (req, res) => {
+  let media = req.params.media;
+  res.set("Content-Type", "image/svg+xml");
+
+  generateIfNotChached(req, res, media, () => {
+    console.log("Generating plantuml SVG", media);
+
+    plantumlCompile
+      .generate(media, {
+        format: "svg",
+        include: path.dirname(media),
+      })
+      .out.pipe(res);
+  });
 };
 
 export const markdown = () => (req, res) => {

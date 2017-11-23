@@ -58,6 +58,8 @@ for (let cssFile of CSS_FILES) {
 
 export const MEDIA_GET_URL = "/media/";
 app.get(MEDIA_GET_URL + ":media", serveMedia.localFile());
+export const YUML_GET_URL = "/yuml/";
+app.get(YUML_GET_URL + ":media", serveMedia.yuml());
 export const PLANTUML_GET_URL = "/pu/";
 app.get(PLANTUML_GET_URL + ":media", serveMedia.plantuml());
 export const MARKDOWN_GET_URL = "/md/";

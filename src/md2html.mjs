@@ -10,11 +10,13 @@ import {
   MEDIA_GET_URL,
   MARKDOWN_GET_URL,
   PLANTUML_GET_URL,
+  YUML_GET_URL,
   refreshBrowser,
   tmpFile,
 } from "./server";
 import {
   CHARSET,
+  YUML_EXTENSION,
   PLANTUML_EXTENSION,
   MARKDOWN_EXTENSION,
 } from "./definitions.mjs";
@@ -82,11 +84,17 @@ const imagesHandler = (document, file) => {
     figcaption.appendChild(document.createTextNode(img.alt));
 
     if (isRelativePath(img.src)) {
-      img.src = pathServerication(
-        file,
-        img.src,
-        img.src.endsWith(PLANTUML_EXTENSION) ? PLANTUML_GET_URL : MEDIA_GET_URL
-      );
+      let url;
+
+      if (img.src.endsWith(PLANTUML_EXTENSION)) {
+        url = PLANTUML_GET_URL;
+      } else if (img.src.endsWith(YUML_EXTENSION)) {
+        url = YUML_GET_URL;
+      } else {
+        url = MEDIA_GET_URL;
+      }
+
+      img.src = pathServerication(file, img.src, url);
     }
 
     if (img.nextElementSibling || img.previousElementSibling) {
