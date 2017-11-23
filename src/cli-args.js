@@ -8,6 +8,9 @@ module.exports = require("yargs")
     "n",
     "Schwifty will not try to start a browser even if does not detect any open"
   )
+  .boolean("j")
+  .alias("j", "no-java")
+  .describe("j", "Disable all java-dependent features (PlantUML rendering)")
   .string("b")
   .alias("b", "browser")
   .describe(

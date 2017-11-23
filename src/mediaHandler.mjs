@@ -4,6 +4,7 @@ import path from "path";
 import plantumlCompile from "node-plantuml";
 import yumlCompile from "yuml2svg";
 import renderMarkdown from "./md2html";
+import { CONFIG } from "./definitions";
 
 const SERVED_FILES_FOLDER = path.resolve("./utils");
 
@@ -37,7 +38,7 @@ const generateIfNotChached = (req, res, media, generate) =>
         .status(500)
         .end(
           "<svg xmlns='http://www.w3.org/2000/svg' width='350' height='30'>" +
-            "<text fill='red' x='10' y='20'>" +
+            "<text fill='red' x='33' y='22'>" +
             "Rendering failed, see console for more info!" +
             "</text>" +
             "</svg>"
@@ -59,14 +60,18 @@ export const plantuml = () => (req, res) => {
   res.set("Content-Type", "image/svg+xml");
 
   generateIfNotChached(req, res, media, () => {
-    console.log("Generating plantuml SVG", media);
+    if (CONFIG.JAVA_ENABLED) {
+      console.log("Generating plantuml SVG", media);
 
-    plantumlCompile
-      .generate(media, {
-        format: "svg",
-        include: path.dirname(media),
-      })
-      .out.pipe(res);
+      plantumlCompile
+        .generate(media, {
+          format: "svg",
+          include: path.dirname(media),
+        })
+        .out.pipe(res);
+    } else {
+      throw new Error("Java has been disabled by flags!");
+    }
   });
 };
 

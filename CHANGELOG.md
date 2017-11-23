@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.1.1(2017-11-23)
+
+* Add `--no-java` flag to avoid crashes if Java is not on the PATH
+
 ### v1.1.0(2017-11-23)
 
 * Add Chartist fork to render chart
