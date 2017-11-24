@@ -4,6 +4,11 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.3.1(2017-11-24)
+
+* Fix glitches on xivmap
+* Add support for SVG and table elements in xivmap
+
 ### v1.3.0(2017-11-24)
 
 * Add xivmap to preview whole document (Sublime Text like)
