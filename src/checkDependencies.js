@@ -1,8 +1,7 @@
-var process = require("process");
 var exec = require("child_process").exec;
 
 var version = process.version;
-var isWin = process.platform === "win32";
+var isWin = require("is-windows")();
 
 var missingDep = "MISSING DEPENDENCY:";
 var checkProgramInPath = function(bin) {
@@ -18,12 +17,12 @@ if (version < "v8.5.0") {
   process.exit(1);
 }
 
-if (process.env.JAVA_ENABLED) {
+if (!process.env.SCHWIFTY_DISABLE_JAVA) {
   exec(checkProgramInPath("java"), function(err, stdout, stderr) {
     if (err !== null) {
       console.warn(
         missingDep,
-        "Warning, Java is required for plantuml diagram rendering (use --no-java to disable this warning)"
+        "Warning, Java is required for plantuml diagram rendering (Set environment variable `SCHWIFTY_DISABLE_JAVA` at true to disable this warning)"
       );
     }
   });

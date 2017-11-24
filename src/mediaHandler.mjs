@@ -70,7 +70,7 @@ export const plantuml = () => (req, res) => {
         })
         .out.pipe(res);
     } else {
-      throw new Error("Java has been disabled by flags!");
+      throw new Error("Warning: Java has been disabled by flags!");
     }
   });
 };

@@ -29,6 +29,10 @@ your path:
 > * [Java](//java.com)
 > * _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
 >   types)
+>
+> If you don't want to use those features, you can set an environment variable
+> `SCHWIFTY_DISABLE_JAVA` at true or use the `--no-java` flag when running
+> schwifty to disable the warning on startup.
 
 Then, you need to download the package dependecies using `yarn` (you might need
 to use `sudo`):
@@ -51,14 +55,6 @@ build this module:
 
 * [Microsoft Visual C++](//support.microsoft.com/fr-fr/help/2977003/the-latest-supported-visual-c-downloads)
 * [Python 2.7](//python.org) (NOT Python 3.x)
-
-If you have trouble to add Java on your path, you can disable Java-dependent
-features to avoid crashing schwifty when it tries to call it. Add the
-`--no-java` flag when you run schwifty:
-
-```sh
-schwifty --no-java path/to/directory/to/listen
-```
 
 ### Run schwifty
 

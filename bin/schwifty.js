@@ -76,6 +76,7 @@ if (argv.u) {
   });
 } else if (fs.existsSync(watchable)) {
   const isPortAvailable = require("is-port-available");
+  const isWin = require("is-windows")();
 
   const FgRed = "\x1b[31m";
   const FgYellow = "\x1b[33m";
@@ -109,7 +110,13 @@ if (argv.u) {
         }
       }
       options.push(shellescape(watchable));
-      process.env.JAVA_ENABLED = !argv.j;
+
+      if (argv.j) {
+        data.scripts.start =
+          (isWin ? "SET " : "") +
+          "SCHWIFTY_DISABLE_JAVA=true " +
+          data.scripts.start;
+      }
 
       let subprocess = exec(data.scripts.start + " " + options.join(" "), {
         cwd: WORKING_DIR,
