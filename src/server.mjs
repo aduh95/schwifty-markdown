@@ -15,6 +15,7 @@ export const CSS_FILES = [
   "/github-markdown.css",
   "/figureCaption.css",
   "/print.css",
+  "/toc.css",
   "/xivmap.css",
 ];
 export const JS_MODULES = [

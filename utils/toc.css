@@ -1,0 +1,26 @@
+#toc select {
+  display: none;
+}
+
+@media screen and (min-width: 1600px) {
+  body {
+    padding-bottom: calc(100vh - 3rem);
+  }
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0.5rem;
+    bottom: 0;
+  }
+  #toc ol {
+    display: none;
+  }
+  #toc select {
+    display: block;
+    height: calc(100vh - 1.5rem);
+    border: none;
+  }
+  #toc select::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -104,10 +104,49 @@ let generate = function(document, headings, generate_from, summaryText) {
   summary.addEventListener("click", () => {
     dispatchEvent(new Event("resize"));
   });
+  let select = document.createElement("select");
+  let currentSelectSection;
+  let selectScrollAnimationFrame;
+  let selectComputeAnimationFrame;
+  select.multiple = true;
+  select.addEventListener("change", function() {
+    location.assign("#" + select.selectedOptions[0].dataset.target);
+  });
+  addEventListener("resize", () => {
+    if (selectComputeAnimationFrame) {
+      cancelAnimationFrame(selectComputeAnimationFrame);
+    }
+    selectComputeAnimationFrame = requestAnimationFrame(() => {
+      for (let option of select.options) {
+        option.dataset.top = document.getElementById(
+          option.dataset.target
+        ).offsetTop;
+      }
+    });
+  });
+  addEventListener("scroll", () => {
+    // Tests if the select element is visible before trying to animate it
+    if (details.open && select.offsetParent !== null) {
+      if (selectScrollAnimationFrame) {
+        cancelAnimationFrame(selectScrollAnimationFrame);
+      }
+      selectScrollAnimationFrame = requestAnimationFrame(() => {
+        let i = 0;
+        while (
+          i < select.options.length &&
+          (select.options[i].dataset.top | 0) < window.scrollY + 9
+        ) {
+          i++;
+        }
+        select.selectedIndex = i - 1;
+      });
+    }
+  });
 
   let cur_list_el = document.createElement("ol");
   details.appendChild(summary);
   details.appendChild(cur_list_el);
+  details.appendChild(select);
 
   // now walk through our saved heading nodes
   for (let this_head_el of headings) {
@@ -117,6 +156,17 @@ let generate = function(document, headings, generate_from, summaryText) {
       // if heading doesn't have an ID, give it one
       this_head_el.id = generateRandID();
       this_head_el.setAttribute("tabindex", "-1");
+    }
+
+    if (this_head_lvl - generate_from === 0) {
+      currentSelectSection = document.createElement("optgroup");
+      currentSelectSection.label = innerText(this_head_el);
+      select.appendChild(currentSelectSection);
+    } else if (this_head_lvl - generate_from === 1) {
+      let option = document.createElement("option");
+      option.appendChild(document.createTextNode(innerText(this_head_el)));
+      option.dataset.target = this_head_el.id;
+      currentSelectSection.appendChild(option);
     }
 
     while (this_head_lvl > cur_head_lvl) {
@@ -211,11 +261,13 @@ let generateStyle = (style, generate_from, deepestLevel) => {
   }
 };
 
-const intiPrintEvent = tocElement => {
-  var mediaQueryList = window.matchMedia("print");
-  mediaQueryList.addListener(
-    mql => (tocElement.querySelector("details").open = mql.matches)
+const listenForMediaEvents = tocElement => {
+  var mediaQueryList = window.matchMedia(
+    "print, screen and (min-width:1600px)"
   );
+  mediaQueryList.onchange = mql =>
+    (tocElement.querySelector("details").open = mql.matches);
+  return mediaQueryList;
 };
 
 const init = function() {
@@ -234,7 +286,7 @@ const init = function() {
     return;
   }
 
-  intiPrintEvent(tocElement);
+  let shouldOpen = listenForMediaEvents(tocElement).matches;
 
   let generate_from = getFirstHeaderLevel(tocElement, this.body);
   let generate_to = tocElement.dataset.deepestLevel | 0 || 6;
@@ -243,14 +295,15 @@ const init = function() {
     this.head.appendChild(style);
     generateStyle(style, generate_from, generate_to);
 
-    tocElement.appendChild(
-      generate(
-        this,
-        getHeadings(tocElement, generate_from, generate_to),
-        generate_from,
-        tocElement.dataset.label
-      )
+    const details = generate(
+      this,
+      getHeadings(tocElement, generate_from, generate_to),
+      generate_from,
+      tocElement.dataset.label
     );
+    details.open = shouldOpen;
+
+    tocElement.appendChild(details);
   }
 };
 
