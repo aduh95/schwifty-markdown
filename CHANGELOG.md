@@ -4,6 +4,11 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.3.0(2017-11-24)
+
+* Add xivmap to preview whole document (Sublime Text like)
+* Fix a bug on Windows and `--no-java` flag
+
 ### v1.2.0(2017-11-23)
 
 * Add `--no-java` flag to avoid crashes if Java is not on the PATH

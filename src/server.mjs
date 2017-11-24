@@ -15,6 +15,7 @@ export const CSS_FILES = [
   "/github-markdown.css",
   "/figureCaption.css",
   "/print.css",
+  "/xivmap.css",
 ];
 export const JS_MODULES = [
   AUTO_REFRESH_MODULE,
@@ -24,6 +25,7 @@ export const JS_MODULES = [
   "/local-links.mjs",
   "/highlight.mjs",
   "/lazyload.mjs",
+  "/xivmap.mjs",
 ];
 export const JS_SCRIPTS = ["/worker.js", "/papaparse.min.js"];
 export const tmpFile = temp.path({ suffix: ".html" });

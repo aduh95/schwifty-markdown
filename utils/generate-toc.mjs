@@ -1,28 +1,29 @@
-/** 
+import xivmap from "./xivmap.mjs";
+/**
  * Based on the [Stuart Langridge script](https://kryogenix.org/code/browser/generated-toc/generated_toc.js)
  * Generated TOC
  * aduh95, 2017-09-28
- * 
+ *
  * Generate a table of contents, based on headings in the page.
- * 
+ *
  * To place the TOC on your Markdown or HTML document, insert this
  * script and add the following `nav` element to your document where
  * you want the TOC to be generated.
  * N.B.: All the headings before the `nav` element will be ignored.
- * 
+ *
  * ```html
- * 
+ *
  *  <!-- ... -->
- * 
+ *
  *  <!-- The TOC will appear here -->
  *  <nav id="toc" data-label="Table of content"></nav>
  *  <!-- The data-label is optional, and default to "Table of content" -->
- * 
+ *
  *  <!-- Rest of document on which the TOC references -->
- * 
+ *
  * ```
- * 
-*/
+ *
+ */
 
 const SUMMARY_TEXT = "Table of content";
 const ID_TOC_ELEMENT = "toc";
@@ -215,6 +216,15 @@ const intiPrintEvent = tocElement => {
 };
 
 const init = function() {
+  if (!document.getElementById("xivmap")) {
+    let xivmapElem = document.createElement("div");
+    xivmapElem.id = "xivmap";
+    xivmapElem.className = "xivmap top-right slide-in";
+
+    document.body.appendChild(xivmapElem);
+  }
+  xivmap();
+
   // Identify our TOC element, and what it applies to
   let tocElement = this.getElementById(ID_TOC_ELEMENT);
   if (!tocElement || tocElement.hasChildNodes()) {
