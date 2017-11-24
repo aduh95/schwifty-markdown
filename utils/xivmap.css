@@ -44,6 +44,12 @@
 .xivmap [data-tag="ADDRESS"] {
   background-color: #b9b9b9;
 }
+.xivmap [data-tag="TABLE"] {
+  background-size: 25% 12%;
+  background-repeat: repeat;
+  background-image: linear-gradient(to right, #eee 1px, transparent 3px),
+    linear-gradient(to bottom, #eee 1px, transparent 3px);
+}
 
 .xivmap [data-tag="SVG"] {
   position: absolute;
