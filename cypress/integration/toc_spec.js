@@ -14,7 +14,8 @@ describe("Test HTML rendering", function() {
           .wrap(toc.firstElementChild.nodeName.toLowerCase())
           .should("eq", "details");
 
-        let list = toc.firstElementChild.lastElementChild;
+        let select = toc.firstElementChild.lastElementChild;
+        let list = select.previousElementSibling;
         let listChildren = list.children;
         cy.wrap(list.nodeName.toLowerCase()).should("eq", "ol");
 
@@ -61,7 +62,10 @@ describe("Test HTML rendering", function() {
           .wrap(toc.firstElementChild.nodeName.toLowerCase())
           .should("eq", "details");
 
-        let list = toc.firstElementChild.lastElementChild;
+        let select = toc.firstElementChild.lastElementChild;
+        cy.wrap(select.nodeName.toLowerCase()).should("eq", "select");
+
+        let list = select.previousElementSibling;
         let listChildren = list.children;
         cy.wrap(list.nodeName.toLowerCase()).should("eq", "ol");
 
