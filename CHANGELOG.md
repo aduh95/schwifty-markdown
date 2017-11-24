@@ -7,6 +7,8 @@
 ### v1.3.0(2017-11-24)
 
 * Add xivmap to preview whole document (Sublime Text like)
+* Place a minimal version of the TOC on the side with a scroll spy if viewport
+  is large enough
 * Fix a bug on Windows and `--no-java` flag
 
 ### v1.2.0(2017-11-23)

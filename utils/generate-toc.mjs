@@ -95,15 +95,20 @@ let findFirstHeaderElement = function(node) {
 let getFirstHeaderLevel = tocElement =>
   parseInt(findFirstHeaderElement(tocElement).slice(1));
 
+let computeYPositions = select => {
+  for (let option of select.options) {
+    option.dataset.top = document.getElementById(
+      option.dataset.target
+    ).offsetTop;
+  }
+};
+
 let generate = function(document, headings, generate_from, summaryText) {
   let cur_head_lvl = generate_from;
 
   let details = document.createElement("details");
   let summary = document.createElement("summary");
   summary.appendChild(document.createTextNode(summaryText || SUMMARY_TEXT));
-  summary.addEventListener("click", () => {
-    dispatchEvent(new Event("resize"));
-  });
   let select = document.createElement("select");
   let currentSelectSection;
   let selectScrollAnimationFrame;
@@ -116,13 +121,12 @@ let generate = function(document, headings, generate_from, summaryText) {
     if (selectComputeAnimationFrame) {
       cancelAnimationFrame(selectComputeAnimationFrame);
     }
-    selectComputeAnimationFrame = requestAnimationFrame(() => {
-      for (let option of select.options) {
-        option.dataset.top = document.getElementById(
-          option.dataset.target
-        ).offsetTop;
-      }
-    });
+    selectComputeAnimationFrame = requestAnimationFrame(() =>
+      computeYPositions(select)
+    );
+  });
+  summary.addEventListener("click", () => {
+    computeYPositions(select);
   });
   addEventListener("scroll", () => {
     // Tests if the select element is visible before trying to animate it
@@ -302,8 +306,13 @@ const init = function() {
       tocElement.dataset.label
     );
     details.open = shouldOpen;
-
     tocElement.appendChild(details);
+
+    if (shouldOpen) {
+      requestAnimationFrame(() =>
+        computeYPositions(details.querySelector("select"))
+      );
+    }
   }
 };
 
