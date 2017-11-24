@@ -101,6 +101,9 @@ let generate = function(document, headings, generate_from, summaryText) {
   let details = document.createElement("details");
   let summary = document.createElement("summary");
   summary.appendChild(document.createTextNode(summaryText || SUMMARY_TEXT));
+  summary.addEventListener("click", () => {
+    dispatchEvent(new Event("resize"));
+  });
 
   let cur_list_el = document.createElement("ol");
   details.appendChild(summary);
