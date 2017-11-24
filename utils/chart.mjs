@@ -56,25 +56,28 @@ const generate = async img => {
     );
   }
 
-  new Chartist[chart.type](img.parentNode, chart.data, chart.options);
+  return new Chartist[chart.type](img.parentNode, chart.data, chart.options);
 };
 
-lazyLoad.then(promises => {
-  promises.forEach(loading => {
-    loading.then(img => {
+export default lazyLoad.then(promises =>
+  promises.map(loading =>
+    loading.then(async img => {
       let src = img.src;
       if (src.endsWith(".json") || src.startsWith("data:text/json,")) {
-        generate(img);
         img.hidden = true;
+        return await generate(img);
       } else if (src.endsWith(".csv") || src.startsWith("data:text/csv,")) {
-        parseCSV(src, /%0A/.test(src)).then(chartData => {
-          new Chartist.Line(img.parentNode, {
-            labels: Object.keys(chartData[0]),
-            series: chartData.map(line => Object.values(line)),
-          });
-        });
         img.hidden = true;
+        return parseCSV(src, /%0A/.test(src)).then(
+          chartData =>
+            new Chartist.Line(img.parentNode, {
+              labels: Object.keys(chartData[0]),
+              series: chartData.map(line => Object.values(line)),
+            })
+        );
+      } else {
+        return img;
       }
-    });
-  });
-});
+    })
+  )
+);

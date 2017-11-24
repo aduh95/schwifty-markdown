@@ -33,9 +33,6 @@
 
 /* These items have medium darkness*/
 .xivmap [data-tag="Q"],
-.xivmap [data-tag="PICTURE"],
-.xivmap [data-tag="FIGURE"],
-.xivmap [data-tag="IMG"],
 .xivmap [data-tag="MAP"],
 .xivmap [data-tag="OBJECT"],
 .xivmap [data-tag="AUDIO"],
@@ -48,9 +45,27 @@
   background-color: #b9b9b9;
 }
 
+.xivmap [data-tag="SVG"] {
+  position: absolute;
+  width: var(--body-width, 100vw);
+}
+.xivmap [data-tag="SVG"] > svg {
+  transform-origin: 0 0 0;
+  transform: scale(var(--ratio, 0.1));
+}
+
 .xivmap [data-tag="IMG"] {
   position: absolute;
-  transform-origin: 0 0 0;
+  width: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1;
+}
+
+.xivmap > [data-tag] {
+  --translate: calc(var(--body-width, 0) - 100vw);
+  transform: translateX(calc(var(--translate) * var(--ratio) / 2));
 }
 
 /* These items are the lightest */

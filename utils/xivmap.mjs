@@ -1,4 +1,4 @@
-import waitForLazyLoad from "./lazyload.mjs";
+import waitForLazyLoad from "./chart.mjs";
 
 // The viewport height, updated at each resize
 let viewPortHeight = window.innerHeight;
@@ -93,7 +93,7 @@ function xivmap(config) {
 
   function refresh() {
     disableTransitions();
-    render();
+    requestAnimationFrame(() => render());
 
     // Using a timeout because otherwise the browser can condense these
     // statements into one operation (so adding and removing a class would
@@ -123,10 +123,13 @@ function xivmap(config) {
    * into the minimap element.
    */
   function updateDom() {
-    var ratio = o.minimap.offsetWidth / document.body.offsetWidth;
+    o.bodyWidth = document.querySelector("body>main").offsetWidth;
+    var ratio = o.minimap.offsetWidth / o.bodyWidth;
     var elements = uniq(
       mergeElementLists(o.context.querySelectorAll(o.selectors), o.elements)
     );
+    o.minimap.style.setProperty("--ratio", ratio);
+    o.minimap.style.setProperty("--body-width", o.bodyWidth + "px");
     o.minimap.style.height = document.body.offsetHeight * ratio + "px";
     var viewport =
       '<div class="xivmap-viewport" style="position: absolute; top: 0"><div></div></div>';
@@ -139,8 +142,10 @@ function xivmap(config) {
       ) {
         if (o.accurateText && o.accurateTextTags.includes(el.tagName)) {
           html += makeAccurateRectangle(el, ratio);
-        } else if (el.tagName === "IMG") {
+        } else if (el.tagName.toUpperCase() === "IMG") {
           html += makeImageRectangle(el, ratio);
+        } else if (el.tagName.toUpperCase() === "SVG") {
+          html += makeSVGRectangle(el, ratio);
         } else {
           html += makeRectangle(el, ratio);
         }
@@ -155,6 +160,9 @@ function xivmap(config) {
    * refresh the minimap once it does.
    */
   function refreshOnPageLoad() {
+    waitForLazyLoad.then(promises => {
+      console.log(promises, promises[3].status, Promise.all(promises));
+    });
     waitForLazyLoad.then(promises => Promise.all(promises)).then(refresh);
   }
 
@@ -301,34 +309,23 @@ function xivmap(config) {
    * @returns {string} The representation of the element, as an HTML string
    */
   function makeRectangle(element, ratio, originalElement) {
-    var rectangle =
+    const rectangle =
       element instanceof HTMLElement ? position(element) : element;
-    if (!rectangle.width || !rectangle.height) return "";
-    var style =
-      'style="' +
-      "position: absolute; " +
-      "top: " +
-      r(rectangle.top * ratio) +
-      "px; " +
-      "left: " +
-      r(rectangle.left * ratio) +
-      "px; " +
-      "width: " +
-      r(rectangle.width * ratio) +
-      "px; " +
-      "height: " +
-      r(rectangle.height * ratio) +
-      'px;"';
-    var tag = 'data-tag="' + (element.tagName || originalElement.tagName) + '"';
-    return "<div " + style + " " + tag + "></div>";
+    const r = nb => o.roundingFn(nb);
+    if (rectangle.width && rectangle.height) {
+      let style = "position:absolute;";
+      style += `top:${r(rectangle.top * ratio)}px;`;
+      style += `left:${r(rectangle.left * ratio)}px;`;
+      style += `width:${r(rectangle.width * ratio)}px;`;
+      style += `height:${r(rectangle.height * ratio)}px;`;
 
-    function r(number) {
-      return o.roundingFn(number);
-    }
+      return `<div style=${style} data-tag="${element.tagName ||
+        originalElement.tagName}"></div>`;
+    } else return "";
   }
 
   /**
-   * Wrapper for makeRectangle, but potentially using text nodes
+   * Wrapper for makeRectangle, but inserting image element
    *
    * @param {HTMLElement} element
    * @param {number} ratio
@@ -336,12 +333,26 @@ function xivmap(config) {
    */
   function makeImageRectangle(element, ratio) {
     const rectangle = position(element);
-    let style = "transform:scale(" + ratio + ");";
+    let style = `height:${o.roundingFn(element.offsetHeight * ratio)}px;`; // "transform:scale(" + ratio + ");";
     style += `top:${o.roundingFn(rectangle.top * ratio)}px;`;
     style += `left:${o.roundingFn(rectangle.left * ratio)}px;`;
-    return `<div data-tag="${element.tagName}" style="${style}">${
-      element.outerHTML
-    }</div>`;
+    style += `background-image:url(${element.src});`;
+    return `<div data-tag="IMG" style="${style}"></div>`;
+  }
+
+  /**
+   * Wrapper for makeRectangle, but inserting SVG element
+   *
+   * @param {HTMLElement} element
+   * @param {number} ratio
+   * @returns {string}
+   */
+  function makeSVGRectangle(element, ratio) {
+    const rectangle = position(element);
+    let style = "";
+    style += `top:${o.roundingFn(rectangle.top * ratio)}px;`;
+    style += `left:${o.roundingFn(rectangle.left * ratio)}px;`;
+    return `<div data-tag="SVG" style="${style}">${element.outerHTML}</div>`;
   }
 
   /**
@@ -352,18 +363,22 @@ function xivmap(config) {
    * @returns {string}
    */
   function makeAccurateRectangle(element, ratio) {
-    var html = "";
     var range = document.createRange();
     range.selectNodeContents(element);
     var rects = range.getClientRects();
     if (rects.length) {
+      let html = "";
       for (var i = 0; i < rects.length; i++) {
-        var rect = clientRectAbsolutePosition(rects[i]);
-        html += makeRectangle(rect, ratio, element);
+        html += makeRectangle(
+          clientRectAbsolutePosition(rects.item(i)),
+          ratio,
+          element
+        );
       }
       return html;
+    } else {
+      return makeRectangle(element, ratio);
     }
-    return makeRectangle(element, ratio);
   }
 
   /**
@@ -507,7 +522,7 @@ function xivmap(config) {
     } else {
       var rect = element.getBoundingClientRect();
       pos.top = rect.top + window.pageYOffset;
-      pos.left = rect.left + window.pageXOffset;
+      pos.left = rect.left; // + window.pageXOffset - o.bodyWidth;
       pos.width = rect.width;
       pos.height = rect.height;
     }
@@ -583,8 +598,7 @@ xivmap.selectors = function() {
     "button",
     "label",
     "q",
-    "picture",
-    "figure",
+    "svg",
     "img",
     "map",
     "object",

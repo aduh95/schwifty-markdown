@@ -7,4 +7,3 @@
 ![Inline CSV with header Chart](data:text/csv,Mon;Tue;Wed%0A1;4;3)
 
 ![Inlive CSV without header Chart](data:text/csv,8;4;3)
-
