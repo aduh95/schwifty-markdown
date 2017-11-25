@@ -9,10 +9,24 @@ if (!fs.existsSync(nodeVendorDir)) {
   nodeVendorDir = path.resolve("..");
 }
 
+const resolveModuleDir = moduleName => {
+  let nodeModuleDir = nodeVendorDir;
+  let distDir;
+  do {
+    if (nodeModuleDir === path.resolve("/")) {
+      throw new Error(`Module '${moduleName}' not found`);
+    }
+    distDir = path.join(nodeModuleDir, moduleName);
+    nodeModuleDir = path.resolve(nodeModuleDir + path.sep + "..");
+  } while (!fs.existsSync(distDir));
+
+  return distDir;
+};
+
 const copyPapaDistFiles = async () => {
   const fileName = "papaparse.min.js";
   const localVendorDir = path.join(path.resolve("."), "utils");
-  let distDir = path.join(nodeVendorDir, "papaparse");
+  const distDir = resolveModuleDir("papaparse");
 
   if (!fs.existsSync(localVendorDir)) {
     await fs.mkdir(localVendorDir);
@@ -65,7 +79,7 @@ const getPlantumlLastVersion = (jar, etagFile, etag) => {
 };
 
 const checkPlantumlVersion = () => {
-  let vendorDir = path.join(nodeVendorDir, "node-plantuml", "vendor");
+  let vendorDir = path.join(resolveModuleDir("node-plantuml"), "vendor");
 
   let jar = path.join(vendorDir, "plantuml.jar");
   let etagFile = path.join(vendorDir, "etag.txt");
@@ -88,4 +102,10 @@ const checkPlantumlVersion = () => {
   }
 };
 
-copyPapaDistFiles().then(checkPlantumlVersion);
+copyPapaDistFiles()
+  .then(checkPlantumlVersion)
+  .catch(err =>
+    console.log(
+      `{"success":false, "statusCode":500, "message":"${err.message}"}`
+    )
+  );

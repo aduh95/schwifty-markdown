@@ -34,8 +34,11 @@ const argv = require("../src/cli-args")
   .boolean("q")
   .alias("q", ["quiet", "no-output"])
   .boolean("u")
-  .alias("u", "update-plantuml")
-  .describe("u", "Update the plantuml JAR if a new version is available")
+  .alias("u", "update-dependencies")
+  .describe(
+    "u",
+    "Update dependency files (the plantuml JAR, CSV parser) if a new version is available"
+  )
   .help("h")
   .alias("h", "help").argv;
 
@@ -53,7 +56,7 @@ if (argv.u) {
     let data = JSON.parse(json);
 
     exec(
-      data.scripts.plantuml,
+      data.scripts.updateDependencies,
       {
         cwd: WORKING_DIR,
       },
@@ -63,10 +66,18 @@ if (argv.u) {
         } else {
           try {
             let result = JSON.parse(stdout);
-            console.log(
-              result.statusCode === 304 ? "Already up-to-date!" : "Done!",
-              result
-            );
+            switch (result.statusCode) {
+              case 200:
+                console.log("Done!");
+                break;
+
+              case 304:
+                console.log("Already up-to-date");
+                break;
+
+              default:
+                console.error("Something went wrong", result);
+            }
           } catch (err) {
             console.error(err);
           }
