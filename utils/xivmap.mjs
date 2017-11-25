@@ -160,9 +160,6 @@ function xivmap(config) {
    * refresh the minimap once it does.
    */
   function refreshOnPageLoad() {
-    waitForLazyLoad.then(promises => {
-      console.log(promises, promises[3].status, Promise.all(promises));
-    });
     waitForLazyLoad.then(promises => Promise.all(promises)).then(refresh);
   }
 
