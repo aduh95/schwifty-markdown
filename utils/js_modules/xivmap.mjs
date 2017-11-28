@@ -241,7 +241,7 @@ function xivmap(config) {
    * @param {MouseEvent} e
    */
   function updateScrollPosition(e) {
-    var ratio = o.minimap.offsetWidth / document.body.offsetWidth;
+    var ratio = o.minimap.style.getPropertyValue("--ratio");
     var distance = mouseDistanceFromTopOfTarget(e);
     var viewport = o.minimap.querySelector(".xivmap-viewport");
     var centeredDistance = distance - viewport.offsetHeight / 2;
