@@ -197,7 +197,7 @@ function xivmap(config) {
     }
     updateViewportAnimationFrame = requestAnimationFrame(() => {
       const viewportMask = o.minimap.querySelector(".xivmap-viewport");
-      viewportMask.style["margin-top"] = topDistance * ratio + "px";
+      viewportMask.style.transform = `translateY(${topDistance * ratio}px)`;
       const translation =
         viewPortHeight - viewportMask.offsetHeight * 2 - topDistance * ratio;
 
