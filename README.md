@@ -294,3 +294,7 @@ submit a pull request.
 **N.B.:** If you use [preprocessing includes](preprocessing) in your diagrams,
 you might have trouble with the cache of your navigator. Most browser won't ask
 schwifty to re-generate the SVG unless the target file has changed.
+
+**N.B.:** Some browser have trouble exporting vector images with shadow, you
+might want to disable them by adding `skinparam shadowing false` in your
+diagrams.
