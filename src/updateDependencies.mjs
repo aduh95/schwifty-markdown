@@ -25,7 +25,7 @@ const resolveModuleDir = moduleName => {
 
 const copyPapaDistFiles = async () => {
   const fileName = "papaparse.min.js";
-  const localVendorDir = path.join(path.resolve("."), "utils");
+  const localVendorDir = path.join(path.resolve("."), "utils", "js_scripts");
   const distDir = resolveModuleDir("papaparse");
 
   if (!fs.existsSync(localVendorDir)) {

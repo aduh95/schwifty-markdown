@@ -1,5 +1,7 @@
 @startuml
 
+skinparam shadowing false
+
 start
 
 if (multiprocessor?) then (yes)

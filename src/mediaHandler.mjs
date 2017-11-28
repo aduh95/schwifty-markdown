@@ -6,8 +6,6 @@ import yumlCompile from "yuml2svg";
 import renderMarkdown from "./md2html";
 import { CONFIG } from "./definitions";
 
-const SERVED_FILES_FOLDER = path.resolve("./utils");
-
 const sha1file = file =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
@@ -92,7 +90,7 @@ export const localFile = () => (req, res) => {
 
 export const serverFile = (file, mime) => (req, res) => {
   fs
-    .readFile(SERVED_FILES_FOLDER + file)
+    .readFile(file)
     .then(result => res.set("Content-Type", mime).send(result))
     .catch(err => (console.error(err), res.sendStatus(404)));
 };

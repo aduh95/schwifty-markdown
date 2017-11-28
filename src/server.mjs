@@ -1,5 +1,6 @@
 import temp from "temp";
 import open from "open";
+import path from "path";
 import fs from "fs-extra";
 import express from "express";
 import webSocket from "websocket";
@@ -9,6 +10,7 @@ import { CONFIG } from "./definitions";
 // Automatically track and cleanup files at exit
 temp.track();
 
+const SERVED_FILES_FOLDER = path.resolve("./utils");
 const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
 export const CSS_FILES = [
   "/chartist.css",
@@ -52,11 +54,32 @@ app.get("/", function(req, res) {
     );
 });
 
-for (let jsFile of JS_SCRIPTS.concat(JS_MODULES)) {
-  app.get(jsFile, serveMedia.serverFile(jsFile, "application/javascript"));
-}
-for (let cssFile of CSS_FILES) {
-  app.get(cssFile, serveMedia.serverFile(cssFile, "text/css"));
+for (let serverFile of [
+  {
+    type: "text/css",
+    files: CSS_FILES,
+    folder: "css",
+  },
+  {
+    type: "application/javascript",
+    files: JS_MODULES,
+    folder: "js_modules",
+  },
+  {
+    type: "application/javascript",
+    files: JS_SCRIPTS,
+    folder: "js_scripts",
+  },
+]) {
+  for (let file of serverFile.files) {
+    app.get(
+      file,
+      serveMedia.serverFile(
+        path.join(SERVED_FILES_FOLDER, serverFile.folder + file),
+        serverFile.type
+      )
+    );
+  }
 }
 
 export const MEDIA_GET_URL = "/media/";

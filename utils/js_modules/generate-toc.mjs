@@ -307,16 +307,13 @@ const init = function() {
       generate_from,
       tocElement.dataset.label
     );
-    details.open = shouldOpen;
     tocElement.appendChild(details);
 
     if (shouldOpen) {
-      let computePosition = () =>
+      waitForLazyLoad.then(promises => Promise.all(promises)).then(() => {
         computeYPositions(details.querySelector("select"));
-      requestAnimationFrame(computePosition);
-      waitForLazyLoad
-        .then(promises => Promise.all(promises))
-        .then(computePosition);
+        details.open = true;
+      });
     }
   }
 };
