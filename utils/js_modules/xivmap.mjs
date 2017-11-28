@@ -188,8 +188,8 @@ function xivmap(config) {
    * Should probably be used when scrolling.
    */
   function updateViewport() {
-    var topDistance = window.pageYOffset;
-    var ratio = o.minimap.offsetWidth / document.body.offsetWidth;
+    var topDistance = window.scrollY;
+    var ratio = parseFloat(o.minimap.style.getPropertyValue("--ratio"));
     // const viewportHeight = window.innerHeight / ratio;
     // console.log(viewportHeight, topDistance, ratio);
     if (updateViewportAnimationFrame) {
