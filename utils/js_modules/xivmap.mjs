@@ -3,6 +3,8 @@ import waitForLazyLoad from "./chart.mjs";
 // The viewport height, updated at each resize
 let viewPortHeight = window.innerHeight;
 
+const RATIO_CSS_VAR = "--ratio";
+
 /**
  * Creates a minimap by populating the `config.minimap` element with generated HTML.
  * Attaches event listeners to track viewport location and window resizing.
@@ -128,7 +130,7 @@ function xivmap(config) {
     var elements = uniq(
       mergeElementLists(o.context.querySelectorAll(o.selectors), o.elements)
     );
-    o.minimap.style.setProperty("--ratio", ratio);
+    o.minimap.style.setProperty(RATIO_CSS_VAR, ratio);
     o.minimap.style.setProperty("--body-width", o.bodyWidth + "px");
     o.minimap.style.height = document.body.offsetHeight * ratio + "px";
     var viewport =
@@ -178,8 +180,8 @@ function xivmap(config) {
    * Should probably be used when resizing the window.
    */
   function resizeViewport() {
-    var ratio = o.minimap.offsetWidth / document.body.offsetWidth;
-    var viewport = o.minimap.querySelector(".xivmap-viewport");
+    const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
+    const viewport = o.minimap.querySelector(".xivmap-viewport");
     viewport.style.height = window.innerHeight * ratio + "px";
   }
 
@@ -188,8 +190,8 @@ function xivmap(config) {
    * Should probably be used when scrolling.
    */
   function updateViewport() {
-    var topDistance = window.scrollY;
-    var ratio = parseFloat(o.minimap.style.getPropertyValue("--ratio"));
+    const topDistance = window.scrollY;
+    const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
     // const viewportHeight = window.innerHeight / ratio;
     // console.log(viewportHeight, topDistance, ratio);
     if (updateViewportAnimationFrame) {
@@ -241,7 +243,7 @@ function xivmap(config) {
    * @param {MouseEvent} e
    */
   function updateScrollPosition(e) {
-    var ratio = o.minimap.style.getPropertyValue("--ratio");
+    const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
     var distance = mouseDistanceFromTopOfTarget(e);
     var viewport = o.minimap.querySelector(".xivmap-viewport");
     var centeredDistance = distance - viewport.offsetHeight / 2;
@@ -481,12 +483,13 @@ function xivmap(config) {
    * @returns {boolean}
    */
   function isInside(element, host) {
-    var elRect = element.getBoundingClientRect();
-    var hostRect = host.getBoundingClientRect();
+    const elRect = element.getBoundingClientRect();
+    const hostRect = host.getBoundingClientRect();
 
-    var elCenter = { x: 0, y: 0 };
-    elCenter.y = (elRect.bottom - elRect.top) / 2 + elRect.top;
-    elCenter.x = (elRect.right - elRect.left) / 2 + elRect.left;
+    const elCenter = {
+      x: (elRect.bottom - elRect.top) / 2 + elRect.top,
+      y: (elRect.right - elRect.left) / 2 + elRect.left,
+    };
 
     return !!(
       hostRect.left <= elCenter.x &&
