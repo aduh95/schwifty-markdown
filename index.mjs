@@ -26,6 +26,8 @@ if (opt) {
   CONFIG.AUTO_OPEN_BROWSER = !argv.n;
   CONFIG.BROWSER_NAME = argv.b || undefined;
   CONFIG.JAVA_ENABLED = !argv.j;
+  CONFIG.PLANTUML_CONFIG =
+    argv.c || path.resolve("./utils/plantuml-ressources/no-shadow.pu");
 
   schwifty(path.resolve(argv._.pop()));
 }

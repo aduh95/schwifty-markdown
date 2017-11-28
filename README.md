@@ -280,7 +280,7 @@ as an image, it will render as an SVG.
 The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
 **N.B.:** As PlantUML rendering requires to call a Java dependency, the process
-might be slow depending of your machine (about 4.6 times slower than yUML
+might be slow depending of your machine (about 4.87 times slower than yUML
 rendering on my computer). All the rendering is done locally, you don't need a
 network access to work with your diagrams.
 
@@ -295,6 +295,7 @@ submit a pull request.
 you might have trouble with the cache of your navigator. Most browser won't ask
 schwifty to re-generate the SVG unless the target file has changed.
 
-**N.B.:** Some browser have trouble exporting vector images with shadow, you
-might want to disable them by adding `skinparam shadowing false` in your
-diagrams.
+**N.B.:** Some browser have trouble exporting vector images with shadow, which
+is why Schwifty disables them by default. If you use the `--plantuml-config`
+argument to have a custom config file for PlantUML, you might want to add the
+line `skinparam shadowing false`.
