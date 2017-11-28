@@ -4,6 +4,15 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.3.3(2017-11-28)
+
+* Fix a bug with TOC
+* Fix a bug when printing PlantUML diagram
+
+### v1.3.2(2017-11-25)
+
+* Add version script
+
 ### v1.3.1(2017-11-24)
 
 * Fix glitches on xivmap
