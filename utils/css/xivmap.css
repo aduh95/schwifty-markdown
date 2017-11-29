@@ -86,6 +86,9 @@
 .xivmap [data-tag="PRE"] {
   background-color: #c7c7c7;
 }
+.xivmap [data-tag="PRE"] {
+  opacity: 0.7;
+}
 
 /*
     STRUCTURE =======================================================
@@ -136,6 +139,7 @@
 /* This is the rectangle that indicates your position on the page
    Its height will be set via JavaScript, based on window height */
 .xivmap .xivmap-viewport {
+  position: absolute;
   margin-left: -10px;
   border-radius: 2px;
   width: calc(100% + 20px);

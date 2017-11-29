@@ -4,10 +4,12 @@ import waitForLazyLoad from "./chart.mjs";
 let viewPortHeight = window.innerHeight;
 
 const RATIO_CSS_VAR = "--ratio";
+const XIVMAP_MASK_CLASS = "xivmap-viewport";
 
 /**
  * Creates a minimap by populating the `config.minimap` element with generated HTML.
  * Attaches event listeners to track viewport location and window resizing.
+ * You can ask an update by trigerring a `xivmap.render` event.
  *
  * @param {object} [config]
  * @param {string | HTMLElement} [config.minimap] Element that will hold the minimap DOM, '.xivmap' by default.
@@ -33,13 +35,13 @@ function xivmap(config) {
 
   // Prevent the render function from being called too often,
   // such as during window resize operations.
-  var debouncedRender = debounce(render, 350);
+  const debouncedRender = debounce(render, 350);
 
   // Need a variable to keep track of timeouts when using autohide
-  var autohideScrollTimer = null;
+  let autohideScrollTimer = null;
 
   // The main config object
-  var o = {
+  const o = {
     minimap: toEl(config.minimap) || document.getElementById("xivmap"),
     selectors: config.selectors || xivmap.selectors(),
     context: toEl(config.context) || document.body,
@@ -76,7 +78,7 @@ function xivmap(config) {
   render();
   attachListeners();
   if (o.refreshOnLoad) refreshOnPageLoad();
-  if (o.autohide) autohideOnLoad();
+  if (o.autohide) autoHideOnLoad();
 
   return {
     refresh: refresh,
@@ -88,6 +90,8 @@ function xivmap(config) {
   // =======================================================
 
   function render() {
+    viewPortHeight = window.innerHeight;
+
     updateDom();
     resizeViewport();
     updateViewport();
@@ -106,6 +110,7 @@ function xivmap(config) {
   function attachListeners() {
     window.addEventListener("scroll", updateViewport);
     window.addEventListener("resize", debouncedRender);
+    window.addEventListener("xivmap.render", debouncedRender);
     o.minimap.addEventListener("mousedown", beginDragTracking);
 
     if (o.autohide) {
@@ -126,16 +131,15 @@ function xivmap(config) {
    */
   function updateDom() {
     o.bodyWidth = document.querySelector("body>main").offsetWidth;
-    var ratio = o.minimap.offsetWidth / o.bodyWidth;
-    var elements = uniq(
-      mergeElementLists(o.context.querySelectorAll(o.selectors), o.elements)
-    );
+    const elements = o.context.querySelectorAll(o.selectors);
+    const ratio = o.minimap.offsetWidth / o.bodyWidth;
+
     o.minimap.style.setProperty(RATIO_CSS_VAR, ratio);
     o.minimap.style.setProperty("--body-width", o.bodyWidth + "px");
     o.minimap.style.height = document.body.offsetHeight * ratio + "px";
-    var viewport =
-      '<div class="xivmap-viewport" style="position: absolute; top: 0"><div></div></div>';
-    var html = "";
+    const viewport =
+      '<div class="' + XIVMAP_MASK_CLASS + '" style="top:0"><div></div></div>';
+    let html = "";
     for (let el of elements) {
       // Exclude fixed elements and invisible elements from the minimap
       if (
@@ -169,7 +173,7 @@ function xivmap(config) {
    * When autohide is enabled, do not hide the minimap right away.
    * Give it a chance to play entry animations first.
    */
-  function autohideOnLoad() {
+  function autoHideOnLoad() {
     setTimeout(function() {
       if (!autohideScrollTimer) o.minimap.classList.add("xivmap-hidden");
     }, o.autohideDelay);
@@ -181,7 +185,7 @@ function xivmap(config) {
    */
   function resizeViewport() {
     const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
-    const viewport = o.minimap.querySelector(".xivmap-viewport");
+    const viewport = o.minimap.querySelector("." + XIVMAP_MASK_CLASS);
     viewport.style.height = window.innerHeight * ratio + "px";
   }
 
@@ -198,7 +202,7 @@ function xivmap(config) {
       cancelAnimationFrame(updateViewportAnimationFrame);
     }
     updateViewportAnimationFrame = requestAnimationFrame(() => {
-      const viewportMask = o.minimap.querySelector(".xivmap-viewport");
+      const viewportMask = o.minimap.querySelector("." + XIVMAP_MASK_CLASS);
       viewportMask.style.transform = `translateY(${topDistance * ratio}px)`;
       const translation =
         viewPortHeight - viewportMask.offsetHeight * 2 - topDistance * ratio;
@@ -244,9 +248,9 @@ function xivmap(config) {
    */
   function updateScrollPosition(e) {
     const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
-    var distance = mouseDistanceFromTopOfTarget(e);
-    var viewport = o.minimap.querySelector(".xivmap-viewport");
-    var centeredDistance = distance - viewport.offsetHeight / 2;
+    const distance = mouseDistanceFromTopOfTarget(e);
+    const viewport = o.minimap.querySelector("." + XIVMAP_MASK_CLASS);
+    const centeredDistance = distance - viewport.offsetHeight / 2;
     window.scrollTo(0, centeredDistance / ratio);
   }
 
@@ -269,34 +273,6 @@ function xivmap(config) {
   // =======================================================
   // Helper functions
   // =======================================================
-
-  /**
-   * Combines NodeList and Element arrays
-   *
-   * @param {... (HTMLElement[] | NodeList)}
-   * @returns {HTMLElement[]}
-   */
-  function mergeElementLists() {
-    var elements = [];
-    for (var i = 0; i < arguments.length; i++) {
-      for (var j = 0; j < arguments[i].length; j++) {
-        elements.push(arguments[i][j]);
-      }
-    }
-    return elements;
-  }
-
-  /**
-   * Returns a new array with duplicates removed
-   *
-   * @param {[]} a
-   * @returns {[]}
-   */
-  function uniq(a) {
-    return a.filter(function(value, index, self) {
-      return self.indexOf(value) === index;
-    });
-  }
 
   /**
    * Returns an absolutely positioned representation of an element,
@@ -362,12 +338,13 @@ function xivmap(config) {
    * @returns {string}
    */
   function makeAccurateRectangle(element, ratio) {
-    var range = document.createRange();
+    const range = document.createRange();
     range.selectNodeContents(element);
-    var rects = range.getClientRects();
+
+    const rects = range.getClientRects();
     if (rects.length) {
       let html = "";
-      for (var i = 0; i < rects.length; i++) {
+      for (let i = 0; i < rects.length; i++) {
         html += makeRectangle(
           clientRectAbsolutePosition(rects.item(i)),
           ratio,
@@ -403,14 +380,11 @@ function xivmap(config) {
    * @returns {HTMLElement | HTMLElement[]}
    */
   function toEl(selector) {
+    const singleToElement = sel =>
+      typeof sel === "string" ? document.querySelector(sel) : sel;
+
     if (!selector || !selector.length) return singleToElement(selector);
     else return Array.prototype.map.call(selector, singleToElement);
-
-    function singleToElement(sel) {
-      if (typeof sel === "string") return document.querySelector(sel);
-      if (sel && sel.get === "function") return sel.get(0);
-      return sel;
-    }
   }
 
   /**
@@ -432,7 +406,7 @@ function xivmap(config) {
    */
   function isElementFixed(element) {
     while (element) {
-      var styles = getComputedStyle(element);
+      let styles = getComputedStyle(element);
       if (styles.getPropertyValue("position") === "fixed") return true;
       element = element.parentElement;
     }
@@ -443,59 +417,12 @@ function xivmap(config) {
    * Calculates if an element is visible or would be visible to humans
    * if they scrolled to it.
    *
-   * @param {HTMLElement} element
-   * @param {object} [exceptions]
-   * @param {boolean} [exceptions.display = false] Return true for elements with or inside of display: none?
-   * @param {boolean} [exceptions.visibility = false] Return true for elements with or inside of visibility: hidden?
-   * @param {boolean} [exceptions.opacity = false] Return true for elements with or inside of opacity: 0?
+   * @param {HTMLElement} el
    * @returns {boolean}
    */
-  function isElementVisible(element, exceptions) {
-    exceptions = exceptions || {};
-    var currentElement = element;
-    while (currentElement) {
-      var styles = getComputedStyle(currentElement);
-      if (
-        styles.getPropertyValue("overflow") !== "visible" &&
-        !isInside(element, currentElement)
-      )
-        return false;
-      if (!exceptions.display && styles.getPropertyValue("display") === "none")
-        return false;
-      if (
-        !exceptions.visibility &&
-        styles.getPropertyValue("visibility") === "hidden"
-      )
-        return false;
-      if (!exceptions.opacity && styles.getPropertyValue("opacity") === "0")
-        return false;
-      currentElement = currentElement.parentElement;
-    }
-    return true;
-  }
-
-  /**
-   * Returns true if element's center point is inside the box
-   * created by host's four corners.
-   *
-   * @param {HTMLElement} element
-   * @param {HTMLElement} host
-   * @returns {boolean}
-   */
-  function isInside(element, host) {
-    const elRect = element.getBoundingClientRect();
-    const hostRect = host.getBoundingClientRect();
-
-    const elCenter = {
-      x: (elRect.bottom - elRect.top) / 2 + elRect.top,
-      y: (elRect.right - elRect.left) / 2 + elRect.left,
-    };
-
-    return !!(
-      hostRect.left <= elCenter.x &&
-      elCenter.x <= hostRect.right &&
-      hostRect.top <= elCenter.y &&
-      elCenter.y <= hostRect.bottom
+  function isElementVisible(el) {
+    return (
+      el.offsetParent !== null || window.getComputedStyle(el).display !== "none"
     );
   }
 
@@ -511,16 +438,16 @@ function xivmap(config) {
    * @returns {{left: number, top: number, width: number, height: number}}
    */
   function position(element, ancestor) {
-    var pos = { left: 0, top: 0, width: 0, height: 0 };
+    const pos = { left: 0, top: 0, width: 0, height: 0 };
     if (ancestor) {
-      var thisPos = position(element);
-      var ancestorPos = position(ancestor);
+      const thisPos = position(element);
+      const ancestorPos = position(ancestor);
       pos.left = thisPos.left - ancestorPos.left;
       pos.top = thisPos.top - ancestorPos.top;
       pos.width = thisPos.width;
       pos.height = thisPos.height;
     } else {
-      var rect = element.getBoundingClientRect();
+      const rect = element.getBoundingClientRect();
       pos.top = rect.top + window.pageYOffset;
       pos.left = rect.left; // + window.pageXOffset - o.bodyWidth;
       pos.width = rect.width;
@@ -536,9 +463,9 @@ function xivmap(config) {
    * Modified _.now to Date.now
    */
   function debounce(func, wait, immediate) {
-    var timeout, args, context, timestamp, result;
-    var later = function() {
-      var last = Date.now() - timestamp;
+    let timeout, args, context, timestamp, result;
+    const later = function() {
+      const last = Date.now() - timestamp;
       if (last < wait && last >= 0) timeout = setTimeout(later, wait - last);
       else {
         timeout = null;
@@ -548,12 +475,11 @@ function xivmap(config) {
         }
       }
     };
-    viewPortHeight = window.innerHeight;
     return function() {
       context = this;
       args = arguments;
       timestamp = Date.now();
-      var callNow = immediate && !timeout;
+      const callNow = immediate && !timeout;
       if (!timeout) timeout = setTimeout(later, wait);
       if (callNow) {
         result = func.apply(context, args);

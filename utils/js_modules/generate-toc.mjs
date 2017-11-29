@@ -129,6 +129,7 @@ let generate = function(document, headings, generate_from, summaryText) {
   });
   summary.addEventListener("click", () => {
     computeYPositions(select);
+    window.dispatchEvent(new Event("xivmap.render"));
   });
   addEventListener("scroll", () => {
     // Tests if the select element is visible before trying to animate it
