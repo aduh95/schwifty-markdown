@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.3.4(2017-11-29)
+
+* Fix bugs with xivmap
+
 ### v1.3.3(2017-11-28)
 
 * Fix a bug with TOC

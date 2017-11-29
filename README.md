@@ -284,8 +284,10 @@ might be slow depending of your machine (about 4.87 times slower than yUML
 rendering on my computer). All the rendering is done locally, you don't need a
 network access to work with your diagrams.
 
-**N.B.:** The PlantUML project is not published on `npm`, which means it has to
-be updated manually. You can do so by typing `schwifty -u`.
+**N.B.:** The PlantUML project is not published on `npm`, which means Schwifty
+must embed a JAR archive of the project, and this archive is not guarenteed to
+be the last version available. You can update it manually by typing `schwifty
+--update-dependencies`.
 
 **N.B.:** The only supported extension for PlantUML diagrams is `.pu`. If you
 think I should add suppport more file extensions, please raise an issue or
@@ -293,9 +295,11 @@ submit a pull request.
 
 **N.B.:** If you use [preprocessing includes](preprocessing) in your diagrams,
 you might have trouble with the cache of your navigator. Most browser won't ask
-schwifty to re-generate the SVG unless the target file has changed.
+schwifty to re-generate the SVG unless the target file has changed. You can
+either empty your cache or modify the target file (adding a new empty line is
+enough).
 
 **N.B.:** Some browser have trouble exporting vector images with shadow, which
 is why Schwifty disables them by default. If you use the `--plantuml-config`
-argument to have a custom config file for PlantUML, you might want to add the
-line `skinparam shadowing false`.
+option to set a custom config file for PlantUML, you might want to add the line
+`skinparam shadowing false`.
