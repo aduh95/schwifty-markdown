@@ -143,6 +143,10 @@
   background-color: rgba(0, 0, 0, 0.09);
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
+.xivmap:hover .xivmap-viewport {
+  background-color: #33333366;
+  z-index: 1;
+}
 
 /* Temporarily applied when calling .refresh() to prevent the viewport
    indicator from needlessly animating */
