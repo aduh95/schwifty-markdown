@@ -68,7 +68,6 @@ export const plantuml = () => (req, res) => {
           config: CONFIG.PLANTUML_CONFIG,
         })
         .out.pipe(res);
-      console.log(CONFIG.PLANTUML_CONFIG);
     } else {
       throw new Error("Warning: Java has been disabled by flags!");
     }
