@@ -2,5 +2,8 @@ node_modules/
 package-lock.json
 /cypress/screenshots
 cypress.env.json
-/utils/papaparse.min.js
+/utils/js_scripts/papaparse.min.js
+/parts
+/prime
+/stage
 .idea/
