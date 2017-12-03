@@ -288,7 +288,7 @@ function xivmap(config) {
       element instanceof HTMLElement ? position(element) : element;
     const r = nb => o.roundingFn(nb);
     if (rectangle.width && rectangle.height) {
-      let style = "position:absolute;";
+      let style = "";
       style += `top:${r(rectangle.top * ratio)}px;`;
       style += `left:${r(rectangle.left * ratio)}px;`;
       style += `width:${r(rectangle.width * ratio)}px;`;
@@ -528,6 +528,7 @@ xivmap.selectors = function() {
     "img",
     "map",
     "table",
+    "tr",
     "object",
     "audio",
     "video",
