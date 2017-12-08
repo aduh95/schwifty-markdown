@@ -2,6 +2,14 @@
   display: none;
 }
 
+@media print {
+  #toc {
+    page-break-before: always;
+    page-break-inside: avoid;
+    page-break-after: always;
+  }
+}
+
 @media screen and (min-width: 1600px) {
   body {
     padding-bottom: calc(100vh - 3rem);

@@ -12,6 +12,10 @@ figure,
   padding: 0;
   margin: 0;
 }
+figcaption {
+  font-style: italic;
+  padding-bottom: 1rem;
+}
 figcaption::before,
 .caption::before {
   content: "Fig. " counter(figure-caption) ": ";
