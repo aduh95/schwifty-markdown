@@ -7,6 +7,15 @@ body {
   text-align: justify;
 }
 
+header {
+  position: absolute;
+  top: 0;
+}
+
+footer {
+  bottom: 0;
+}
+
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;

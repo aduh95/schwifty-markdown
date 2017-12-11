@@ -26,4 +26,9 @@
     page-break-inside: avoid;
     page-break-after: auto;
   }
+
+  header:not(.first-page-only),
+  footer:not(.last-page-only) {
+    position: fixed;
+  }
 }
