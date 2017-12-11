@@ -10,6 +10,9 @@ import { CONFIG } from "./definitions";
 // Automatically track and cleanup files at exit
 temp.track();
 
+const WAIT_FOR_BROWSER_TO_OPEN = 2500;
+let waitForBrowserToOpen = null;
+
 const SERVED_FILES_FOLDER = path.resolve("./utils");
 const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
 export const CSS_FILES = [
@@ -115,9 +118,12 @@ export const refreshBrowser = () => {
   if (wsConnection && wsConnection.connected) {
     console.log("Sending socket to refresh browser");
     wsConnection.send("refresh");
-  } else if (CONFIG.AUTO_OPEN_BROWSER) {
+  } else if (CONFIG.AUTO_OPEN_BROWSER && !waitForBrowserToOpen) {
     console.log("Opening browser");
     open("http://localhost:" + CONFIG.PORT_NUMBER, CONFIG.BROWSER_NAME);
+    waitForBrowserToOpen = setTimeout(() => {
+      waitForBrowserToOpen = null;
+    }, WAIT_FOR_BROWSER_TO_OPEN);
   } else {
     console.log("Document ready");
   }
