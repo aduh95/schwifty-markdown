@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.3.4(2017-12-11)
+
+* Fix bug opening multiple instances of browser when saving markdown file several times in a row
+
 ### v1.3.4(2017-11-29)
 
 * Fix bugs with xivmap
