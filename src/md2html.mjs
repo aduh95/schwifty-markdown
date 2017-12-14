@@ -39,6 +39,23 @@ const setTitle = (document, file) => {
   document.head.appendChild(title);
 };
 
+const headerAndFooterHandler = document => {
+  const headers = document.querySelectorAll("header");
+  for (let header of headers) {
+    if (!header.id) {
+      header.id = "pageHeader";
+    }
+    document.body.insertBefore(header, document.body.firstChild);
+  }
+  const footers = document.querySelectorAll("footer");
+  for (let footer of footers) {
+    if (!footer.id) {
+      footer.id = "pageFooter";
+    }
+    document.body.appendChild(footer);
+  }
+};
+
 const addDependencies = document => {
   for (let cssFile of CSS_FILES) {
     let style = document.createElement("link");
@@ -142,6 +159,7 @@ const normalizeHTML = (file, dom) => {
     setCharset,
     setTitle,
     addDependencies,
+    headerAndFooterHandler,
     fixSharedID,
     imagesHandler,
     linksHandler,
