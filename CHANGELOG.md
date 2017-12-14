@@ -4,7 +4,11 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
-### v1.3.4(2017-12-11)
+### v1.4.0(2017-12-14)
+
+* Add support for header and footer elements (experimental)
+
+### v1.3.5(2017-12-11)
 
 * Fix bug opening multiple instances of browser when saving markdown file several times in a row
 
