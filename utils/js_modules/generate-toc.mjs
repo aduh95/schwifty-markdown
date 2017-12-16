@@ -99,10 +99,19 @@ let getFirstHeaderLevel = tocElement =>
 
 let computeYPositions = select => {
   for (let option of select.options) {
-    option.dataset.top = document.getElementById(
-      option.dataset.target
-    ).offsetTop;
+    option.dataset.top =
+      document.getElementById(option.dataset.target).offsetTop -
+      window.innerHeight / 5;
   }
+};
+
+let addOptionToSummary = (parent, targetId, text) => {
+  let option = document.createElement("option");
+  if (text) {
+    option.appendChild(document.createTextNode(text));
+  }
+  option.dataset.target = targetId;
+  parent.appendChild(option);
 };
 
 let generate = function(document, headings, generate_from, summaryText) {
@@ -166,14 +175,22 @@ let generate = function(document, headings, generate_from, summaryText) {
     }
 
     if (this_head_lvl - generate_from === 0) {
+      if (currentSelectSection && !currentSelectSection.hasChildNodes()) {
+        addOptionToSummary(
+          currentSelectSection,
+          currentSelectSection.dataset.target
+        );
+      }
       currentSelectSection = document.createElement("optgroup");
       currentSelectSection.label = innerText(this_head_el);
+      currentSelectSection.dataset.target = this_head_el.id;
       select.appendChild(currentSelectSection);
     } else if (this_head_lvl - generate_from === 1) {
-      let option = document.createElement("option");
-      option.appendChild(document.createTextNode(innerText(this_head_el)));
-      option.dataset.target = this_head_el.id;
-      currentSelectSection.appendChild(option);
+      addOptionToSummary(
+        currentSelectSection,
+        this_head_el.id,
+        innerText(this_head_el)
+      );
     }
 
     while (this_head_lvl > cur_head_lvl) {
@@ -206,6 +223,13 @@ let generate = function(document, headings, generate_from, summaryText) {
         li.appendChild(a);
         return li;
       })(document.createElement("li"))
+    );
+  }
+
+  if (currentSelectSection && !currentSelectSection.hasChildNodes()) {
+    addOptionToSummary(
+      currentSelectSection,
+      currentSelectSection.dataset.target
     );
   }
   return details;
