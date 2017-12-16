@@ -28,7 +28,7 @@
   "dependencies": {
     "exitzero": "^1.0.1",
     "express": "expressjs/express#5.0",
-    "fs-extra": "^4.0.2",
+    "fs-extra": "^5.0.0",
     "is-port-available": "^0.1.5",
     "is-windows": "^1.0.1",
     "jsdom": "^11.4.0",

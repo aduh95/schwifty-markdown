@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.4.2(2017-12-14)
+
+* Update dependencies
+
 ### v1.4.1(2017-12-14)
 
 * Add support for section without subsections in the TOC for bigger screens
