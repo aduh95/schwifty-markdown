@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.4.3(2017-12-22)
+
+* Fix npm installation performance
+
 ### v1.4.2(2017-12-14)
 
 * Update dependencies
