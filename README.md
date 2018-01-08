@@ -6,11 +6,11 @@ This library allows you to generate Markdown files to HTML in your browser.
 
 * Renders markdown files to HTML using Github CSS.
 * Indexes your figures.
-* Generates a table of content for your Markdown file if you add the following
+* Generates a table of contents for your Markdown file if you add the following
   tag:
 
   ```html
-  <nav id="toc" data-label="Table of content"></nav>
+  <nav id="toc" data-label="Table of contents"></nav>
   ```
 
 * Generates SVG charts in the browser.
@@ -88,7 +88,7 @@ schwifty --help
   fine.
 * Be sure that the support for
   [ES6 Modules is available for your browser](//caniuse.com/#feat=es6-module) to
-  able to use the generated table of content and the automatic refresh.
+  able to use the generated table of contents and the automatic refresh.
 
 #### Print to PDF
 
@@ -127,7 +127,7 @@ network access is required to perform the syntax highlighting.
 #### Automatic Table Of Content
 
 If the file you are editing in huge, the need to index your headings and have a
-table of content linking to the differents parts of the document. You can have
+table of contents linking to the differents parts of the document. You can have
 this by using this tag in your markdown file:
 
 ```html
@@ -286,8 +286,7 @@ network access to work with your diagrams.
 
 **N.B.:** The PlantUML project is not published on `npm`, which means Schwifty
 must embed a JAR archive of the project, and this archive is not guarenteed to
-be the last version available. You can update it manually by typing `schwifty
---update-dependencies`.
+be the last version available. You can update it manually by typing `schwifty --update-dependencies`.
 
 **N.B.:** The only supported extension for PlantUML diagrams is `.pu`. If you
 think I should add suppport more file extensions, please raise an issue or

@@ -27,7 +27,7 @@ import waitForLazyLoad from "./chart.mjs";
  *
  */
 
-const SUMMARY_TEXT = "Table of content";
+const SUMMARY_TEXT = "Table of contents";
 const ID_TOC_ELEMENT = "toc";
 
 let addToArrayIfNotPreviousSibbling = (
