@@ -4,6 +4,14 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.5.0(2018-01-12)
+
+* Add support for images embedded in table
+
+### v1.4.4(2018-01-08)
+
+* Fix typo
+
 ### v1.4.3(2017-12-22)
 
 * Fix npm installation performance

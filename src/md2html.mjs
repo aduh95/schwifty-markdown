@@ -27,6 +27,9 @@ const pathServerication = (file, relativePath, prefix) =>
 
 const isRelativePath = path => !/^((?:(?:[a-z]+:)?\/\/)|data:)/i.test(path);
 
+const MASK_IMG =
+  "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+
 const setCharset = document => {
   let charset = document.createElement("meta");
   charset.setAttribute("charset", CHARSET);
@@ -92,13 +95,15 @@ const fixSharedID = document => {
 
 const imagesHandler = (document, file) => {
   // Handle images and plantuml diagram
-  let images = document.querySelectorAll("img");
-  for (let img of images) {
+  const images = document.querySelectorAll("img");
+
+  for (const img of images) {
     let parent = img.parentNode;
-    let figure = document.createElement("figure");
-    let picture = document.createElement("noscript");
-    let figcaption = document.createElement("figcaption");
-    figcaption.appendChild(document.createTextNode(img.alt));
+    let picture = document.createElement("picture");
+    let source = document.createElement("source");
+    source.setAttribute("class", "MASK_IMG");
+    source.setAttribute("srcset", MASK_IMG);
+    source.setAttribute("media", "screen");
 
     if (isRelativePath(img.src)) {
       let url;
@@ -114,15 +119,22 @@ const imagesHandler = (document, file) => {
       img.src = pathServerication(file, img.src, url);
     }
 
-    if (img.nextElementSibling || img.previousElementSibling) {
-      parent.insertBefore(figure, img).appendChild(img);
-    } else {
-      figure.appendChild(img);
+    picture.appendChild(source);
+    parent.insertBefore(picture, img).appendChild(img);
+
+    if (
+      parent.nodeName.toLowerCase() === "p" &&
+      !picture.previousSibling &&
+      !picture.nextSibling
+    ) {
+      let figure = document.createElement("figure");
+      let figcaption = document.createElement("figcaption");
+      figcaption.appendChild(document.createTextNode(img.alt));
+
+      figure.appendChild(picture);
+      figure.appendChild(figcaption);
       parent.parentNode.replaceChild(figure, parent);
     }
-
-    figure.insertBefore(picture, img).appendChild(img);
-    figure.appendChild(figcaption);
   }
 };
 
