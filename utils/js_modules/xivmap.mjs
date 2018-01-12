@@ -108,13 +108,13 @@ function xivmap(config) {
   }
 
   function attachListeners() {
-    window.addEventListener("scroll", updateViewport);
+    window.addEventListener("scroll", updateViewport, { passive: true });
     window.addEventListener("resize", debouncedRender);
     window.addEventListener("xivmap.render", debouncedRender);
     o.minimap.addEventListener("mousedown", beginDragTracking);
 
     if (o.autohide) {
-      window.addEventListener("scroll", showMomentarily);
+      window.addEventListener("scroll", showMomentarily, { passive: true });
       o.minimap.addEventListener("mousemove", showMomentarily);
     }
   }

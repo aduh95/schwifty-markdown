@@ -140,24 +140,28 @@ let generate = function(document, headings, generate_from, summaryText) {
     computeYPositions(select);
     window.dispatchEvent(new Event("xivmap.render"));
   });
-  addEventListener("scroll", () => {
-    // Tests if the select element is visible before trying to animate it
-    if (details.open && select.offsetParent !== null) {
-      if (selectScrollAnimationFrame) {
-        cancelAnimationFrame(selectScrollAnimationFrame);
-      }
-      selectScrollAnimationFrame = requestAnimationFrame(() => {
-        let i = 0;
-        while (
-          i < select.options.length &&
-          (select.options[i].dataset.top | 0) < window.scrollY + 9
-        ) {
-          i++;
+  addEventListener(
+    "scroll",
+    () => {
+      // Tests if the select element is visible before trying to animate it
+      if (details.open && select.offsetParent !== null) {
+        if (selectScrollAnimationFrame) {
+          cancelAnimationFrame(selectScrollAnimationFrame);
         }
-        select.selectedIndex = i - 1;
-      });
-    }
-  });
+        selectScrollAnimationFrame = requestAnimationFrame(() => {
+          let i = 0;
+          while (
+            i < select.options.length &&
+            (select.options[i].dataset.top | 0) < window.scrollY + 9
+          ) {
+            i++;
+          }
+          select.selectedIndex = i - 1;
+        });
+      }
+    },
+    { passive: true }
+  );
 
   let cur_list_el = document.createElement("ol");
   details.appendChild(summary);

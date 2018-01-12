@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.5.1(2018-01-12)
+
+* Use passive scroll listeners to improve performance
+
 ### v1.5.0(2018-01-12)
 
 * Add support for images embedded in table
