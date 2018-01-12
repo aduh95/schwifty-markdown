@@ -5,6 +5,7 @@ import fs from "fs-extra";
 import parseMarkdown from "./mdParser";
 import {
   JS_MODULES,
+  JS_NO_MODULES_FALLBACK,
   JS_SCRIPTS,
   CSS_FILES,
   MEDIA_GET_URL,
@@ -79,6 +80,13 @@ const addDependencies = document => {
     let script = document.createElement("link");
     script.rel = "preload";
     script.setAttribute("as", "script");
+    script.href = jsFile;
+    document.head.appendChild(script);
+  }
+
+  for (let jsFile of JS_NO_MODULES_FALLBACK) {
+    let script = document.createElement("script");
+    script.setAttribute("nomodule", "nomodule");
     script.href = jsFile;
     document.head.appendChild(script);
   }
@@ -166,6 +174,18 @@ const codeBlockHandler = document => {
   }
 };
 
+const noJSFallback = document => {
+  const dialog = document.createElement("dialog");
+
+  dialog.setAttribute("open", "open");
+  dialog.setAttribute("onclick", "this.open=false");
+  dialog.setAttribute("style", "position:fixed;top:0");
+  dialog.innerHTML =
+    "Your browser does not support all the features Schwifty needs. You experience may be less enjoyable as it should. Please consider activate the missing properties in your browser's settings or use a different one.";
+
+  document.body.appendChild(dialog);
+};
+
 const normalizeHTML = (file, dom) => {
   [
     setCharset,
@@ -176,6 +196,7 @@ const normalizeHTML = (file, dom) => {
     imagesHandler,
     linksHandler,
     codeBlockHandler,
+    noJSFallback,
   ].map(fct => fct.call(this, dom.window.document, file));
 
   return Promise.resolve("<!DOCTYPE html>\n" + dom.serialize());

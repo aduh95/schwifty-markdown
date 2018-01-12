@@ -23,8 +23,10 @@ export const CSS_FILES = [
   "/toc.css",
   "/xivmap.css",
 ];
+export const JS_NO_MODULES_FALLBACK = ["/nomodule.js"];
 export const JS_MODULES = [
   AUTO_REFRESH_MODULE,
+  "/remove-fallback-warning.mjs",
   "/chart.mjs",
   "/chartist.mjs",
   "/generate-toc.mjs",
@@ -70,7 +72,7 @@ for (let serverFile of [
   },
   {
     type: "application/javascript",
-    files: JS_SCRIPTS,
+    files: JS_SCRIPTS.concat(JS_NO_MODULES_FALLBACK),
     folder: "js_scripts",
   },
 ]) {

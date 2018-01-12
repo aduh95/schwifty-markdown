@@ -7,6 +7,7 @@
 ### v1.5.0(2018-01-12)
 
 * Add support for images embedded in table
+* Add warning message for browsers with no module support
 
 ### v1.4.4(2018-01-08)
 
