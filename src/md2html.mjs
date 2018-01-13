@@ -84,7 +84,7 @@ const addDependencies = document => {
   for (let jsFile of JS_NO_MODULES_FALLBACK) {
     let script = document.createElement("script");
     script.setAttribute("nomodule", "nomodule");
-    script.href = jsFile;
+    script.src = jsFile;
     document.head.appendChild(script);
   }
 };
