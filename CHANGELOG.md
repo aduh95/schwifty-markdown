@@ -4,6 +4,11 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.5.2(2018-01-13)
+
+* Update dependencies
+* Improve fallback message
+
 ### v1.5.1(2018-01-12)
 
 * Use passive scroll listeners to improve performance
