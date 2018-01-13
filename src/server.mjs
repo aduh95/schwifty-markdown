@@ -16,6 +16,7 @@ let waitForBrowserToOpen = null;
 const SERVED_FILES_FOLDER = path.resolve("./utils");
 const AUTO_REFRESH_MODULE = "/autorefresh.mjs";
 export const CSS_FILES = [
+  "/fallback-message.css",
   "/chartist.css",
   "/github-markdown.css",
   "/figureCaption.css",

@@ -4,9 +4,13 @@ const promise = new Promise(resolve => (promiseResolver = resolve));
 const promises = [];
 
 addEventListener("load", function() {
-  const pictures = document.querySelectorAll("picture");
+  const pictures = document.querySelectorAll("noscript.img");
 
-  for (let picture of pictures) {
+  for (let noscript of pictures) {
+    let picture = document.createElement("picture");
+
+    picture.innerHTML = noscript.textContent;
+    noscript.parentNode.insertBefore(picture, noscript);
     promises.push(
       new Promise(resolve => {
         let img = picture.querySelector("img");
@@ -21,7 +25,7 @@ addEventListener("load", function() {
         }
       })
     );
-    picture.querySelector(".MASK_IMG").remove();
+    noscript.remove();
   }
 
   promiseResolver(promises);

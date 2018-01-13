@@ -28,9 +28,6 @@ const pathServerication = (file, relativePath, prefix) =>
 
 const isRelativePath = path => !/^((?:(?:[a-z]+:)?\/\/)|data:)/i.test(path);
 
-const MASK_IMG =
-  "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-
 const setCharset = document => {
   let charset = document.createElement("meta");
   charset.setAttribute("charset", CHARSET);
@@ -107,12 +104,8 @@ const imagesHandler = (document, file) => {
 
   for (const img of images) {
     let parent = img.parentNode;
-    let picture = document.createElement("picture");
-    let source = document.createElement("source");
-    source.setAttribute("class", "MASK_IMG");
-    source.setAttribute("srcset", MASK_IMG);
-    source.setAttribute("media", "screen");
-
+    let picture = document.createElement("noscript");
+    picture.setAttribute("class", "img");
     if (isRelativePath(img.src)) {
       let url;
 
@@ -127,10 +120,10 @@ const imagesHandler = (document, file) => {
       img.src = pathServerication(file, img.src, url);
     }
 
-    picture.appendChild(source);
     parent.insertBefore(picture, img).appendChild(img);
 
     if (
+      // If the image is only child of a p, we turn it into figure
       parent.nodeName.toLowerCase() === "p" &&
       !picture.previousSibling &&
       !picture.nextSibling
@@ -175,14 +168,24 @@ const codeBlockHandler = document => {
 };
 
 const noJSFallback = document => {
+  const INPUT_ID = "fallback-message-ctrl";
   const dialog = document.createElement("dialog");
+  const input = document.createElement("input");
+
+  input.setAttribute("id", INPUT_ID);
+  input.setAttribute("type", "checkbox");
 
   dialog.setAttribute("open", "open");
-  dialog.setAttribute("onclick", "this.open=false");
-  dialog.setAttribute("style", "position:fixed;top:0");
+  dialog.setAttribute("id", "fallback-message");
   dialog.innerHTML =
-    "Your browser does not support all the features Schwifty needs. You experience may be less enjoyable as it should. Please consider activate the missing properties in your browser's settings or use a different one.";
+    "<label for='" +
+    INPUT_ID +
+    "'><strong>Warning!</strong> Your browser does not support all the " +
+    "features Schwifty needs. You experience may be less enjoyable as " +
+    "it should. Please consider activate the corresponding flags in " +
+    "your browser's settings or use a different one. <em>[Close]</em></label>";
 
+  document.body.appendChild(input);
   document.body.appendChild(dialog);
 };
 

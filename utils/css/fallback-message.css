@@ -1,0 +1,50 @@
+#fallback-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  animation: slideInWithDelay 2s;
+  background-color: #fcf8e3;
+  border-color: #faf2cc;
+  color: #8a6d3b;
+  border-radius: 4px;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+#fallback-message em {
+  text-decoration: underline;
+  color: grey;
+  cursor: pointer;
+  font-style: normal;
+}
+
+#fallback-message-ctrl:checked + #fallback-message {
+  animation: slideOut 0.2s;
+  transform: translateY(-100%);
+}
+
+#fallback-message-ctrl {
+  appearance: none;
+  position: absolute;
+  visibility: hidden;
+}
+
+@keyframes slideInWithDelay {
+  0% {
+    transform: translateY(-100%);
+  }
+  90% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes slideOut {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
