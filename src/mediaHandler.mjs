@@ -20,7 +20,7 @@ const sha1file = file =>
     });
   });
 
-const generateIfNotChached = (req, res, media, generate) =>
+const generateIfNotCached = (req, res, media, generate) =>
   sha1file(media)
     .then(sha1 => {
       if (req.get("If-None-Match") === sha1) {
@@ -47,7 +47,7 @@ export const yuml = () => (req, res) => {
   let media = req.params.media;
   res.set("Content-Type", "image/svg+xml");
 
-  generateIfNotChached(req, res, media, () => {
+  generateIfNotCached(req, res, media, () => {
     console.log("Generating yUML graph");
     fs.readFile(media).then(yuml => res.send(yumlCompile(yuml.toString())));
   });
@@ -57,7 +57,7 @@ export const plantuml = () => (req, res) => {
   let media = req.params.media;
   res.set("Content-Type", "image/svg+xml");
 
-  generateIfNotChached(req, res, media, () => {
+  generateIfNotCached(req, res, media, () => {
     if (CONFIG.JAVA_ENABLED) {
       console.log("Generating plantuml SVG", media);
 

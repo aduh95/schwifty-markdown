@@ -168,6 +168,7 @@ const codeBlockHandler = document => {
 };
 
 const noJSFallback = document => {
+  const wrapper = document.createElement("div");
   const INPUT_ID = "fallback-message-ctrl";
   const dialog = document.createElement("dialog");
   const input = document.createElement("input");
@@ -185,8 +186,9 @@ const noJSFallback = document => {
     "it should. Please consider activate the corresponding flags in " +
     "your browser's settings or use a different one. <em>[Close]</em></label>";
 
-  document.body.appendChild(input);
-  document.body.appendChild(dialog);
+  wrapper.appendChild(input);
+  wrapper.appendChild(dialog);
+  document.body.appendChild(wrapper);
 };
 
 const normalizeHTML = (file, dom) => {
