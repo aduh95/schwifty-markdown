@@ -4,6 +4,11 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.5.3(2018-01-27)
+
+* Fix HTML error
+* Fix multiple tabs opening on Firefox
+
 ### v1.5.2(2018-01-13)
 
 * Update dependencies
@@ -40,7 +45,8 @@
 
 ### v1.3.5(2017-12-11)
 
-* Fix bug opening multiple instances of browser when saving markdown file several times in a row
+* Fix bug opening multiple instances of browser when saving markdown file
+  several times in a row
 
 ### v1.3.4(2017-11-29)
 
