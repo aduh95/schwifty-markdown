@@ -35,9 +35,11 @@ const setCharset = document => {
 };
 
 const setTitle = (document, file) => {
-  const title = document.createElement("title");
-  title.appendChild(document.createTextNode(path.basename(file)));
-  document.head.appendChild(title);
+  if (!document.head.querySelector("title")) {
+    const title = document.createElement("title");
+    title.appendChild(document.createTextNode(path.basename(file)));
+    document.head.appendChild(title);
+  }
 };
 
 const headerAndFooterHandler = document => {
@@ -191,9 +193,29 @@ const noJSFallback = document => {
   document.body.appendChild(wrapper);
 };
 
+const addHTMLHeaders = ({ headers, dom }) => {
+  const document = dom.window.document;
+  let tag;
+  setCharset(document);
+
+  Object.keys(headers).forEach(key => {
+    switch (key) {
+      case "title":
+        tag = null;
+        setTitle(document, headers[key]);
+        break;
+      default:
+        tag = document.createElement("meta");
+        tag.setAttribute("name", key);
+        tag.setAttribute("value", headers[key]);
+    }
+    tag && document.head.appendChild(tag);
+  });
+  return Promise.resolve(dom);
+};
+
 const normalizeHTML = (file, dom) => {
   [
-    setCharset,
     setTitle,
     addDependencies,
     headerAndFooterHandler,
@@ -207,14 +229,18 @@ const normalizeHTML = (file, dom) => {
   return Promise.resolve("<!DOCTYPE html>\n" + dom.serialize());
 };
 
-const parseHTML = html =>
-  Promise.resolve(new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`));
+const parseHTML = ({ headers, html }) =>
+  Promise.resolve({
+    headers,
+    dom: new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`),
+  });
 
 const generate = file =>
   fs
     .readFile(file)
     .then(parseMarkdown)
     .then(parseHTML)
+    .then(addHTMLHeaders)
     .then(dom => normalizeHTML(file, dom))
     .then(html => fs.writeFile(tmpFile, html))
     .then(refreshBrowser)
