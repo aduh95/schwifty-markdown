@@ -4,6 +4,12 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.6.0(2018-01-31)
+
+* Add support for YAML metadata (including external JS&CSS files)
+* Update HTML `id` generation for `<hX>` tags to match behavior other markdown
+  parsers
+
 ### v1.5.3(2018-01-27)
 
 * Fix HTML error
