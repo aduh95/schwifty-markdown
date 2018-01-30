@@ -13,7 +13,7 @@ const onClose = () => window.close();
 // Listen for messages to reload the page
 socket.addEventListener("message", () => {
   socket.removeEventListener("close", onClose);
-  window.location.reload();
+  window.requestAnimationFrame(() => window.location.reload());
 });
 
 // When server closes the connection, let's close the tab
