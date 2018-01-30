@@ -28,6 +28,9 @@ const pathServerication = (file, relativePath, prefix) =>
 
 const isRelativePath = path => !/^((?:(?:[a-z]+:)?\/\/)|data:)/i.test(path);
 
+const mediaServerication = (file, path) =>
+  isRelativePath(path) ? pathServerication(file, path, MEDIA_GET_URL) : path;
+
 const setCharset = document => {
   let charset = document.createElement("meta");
   charset.setAttribute("charset", CHARSET);
@@ -198,6 +201,16 @@ const noJSFallback = document => {
   document.body.appendChild(wrapper);
 };
 
+const createUserScriptTag = (file, document, path) => {
+  const script = document.createElement("script");
+
+  // ES Module handling
+  path.endsWith("mjs") && script.setAttribute("type", "module");
+
+  script.setAttribute("src", mediaServerication(file, path));
+  return script;
+};
+
 const addHTMLHeaders = (file, dom, headers) => {
   const document = dom.window.document;
   let titleSet = false;
@@ -213,49 +226,35 @@ const addHTMLHeaders = (file, dom, headers) => {
 
       case "lang":
         document.documentElement.setAttribute("lang", headers[key]);
-
         break;
+
       case "js":
       case "script":
       case "scripts":
         if (Array.isArray(headers[key])) {
           tag = document.createDocumentFragment();
-          headers[key].forEach(script => {
-            const scriptTag = document.createElement("script");
-            scriptTag.setAttribute(
-              "src",
-              pathServerication(file, script, MEDIA_GET_URL)
-            );
-            tag.appendChild(scriptTag);
-          });
-        } else {
-          tag = document.createElement("script");
-          tag.setAttribute(
-            "src",
-            pathServerication(file, headers[key], MEDIA_GET_URL)
+          headers[key].forEach(script =>
+            tag.appendChild(createUserScriptTag(file, document, script))
           );
+        } else {
+          tag = createUserScriptTag(file, document, headers[key]);
         }
         break;
+
       case "css":
       case "style":
       case "styles":
         if (Array.isArray(headers[key])) {
           tag = document.createDocumentFragment();
           headers[key].forEach(style => {
-            const styleTag = document.createElement("style");
+            const styleTag = document.createElement("link");
             styleTag.rel = "stylesheet";
-            styleTag.setAttribute(
-              "href",
-              pathServerication(file, style, MEDIA_GET_URL)
-            );
+            styleTag.setAttribute("href", mediaServerication(file, style));
             tag.appendChild(styleTag);
           });
         } else {
           tag = document.createElement("link");
-          tag.setAttribute(
-            "src",
-            pathServerication(file, headers[key], MEDIA_GET_URL)
-          );
+          tag.setAttribute("href", mediaServerication(file, headers[key]));
         }
         break;
 
