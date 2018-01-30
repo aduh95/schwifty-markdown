@@ -1,5 +1,7 @@
 # Schwifty Markdown
 
+[![NPM version](https://img.shields.io/npm/v/schwifty-markdown.svg)](https://www.npmjs.org/package/schwifty-markdown)
+
 This library allows you to generate Markdown files to HTML in your browser.
 
 ### Features
@@ -286,7 +288,8 @@ network access to work with your diagrams.
 
 **N.B.:** The PlantUML project is not published on `npm`, which means Schwifty
 must embed a JAR archive of the project, and this archive is not guarenteed to
-be the last version available. You can update it manually by typing `schwifty --update-dependencies`.
+be the last version available. You can update it manually by typing
+`schwifty --update-dependencies`.
 
 **N.B.:** The only supported extension for PlantUML diagrams is `.pu`. If you
 think I should add suppport more file extensions, please raise an issue or
