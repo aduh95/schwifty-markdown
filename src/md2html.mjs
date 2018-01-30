@@ -98,10 +98,10 @@ const fixSharedID = document => {
   let title_nb = 0;
   for (let title of titles) {
     if (known_titles.includes(title.id)) {
-    title.id += "-" + title_nb++;
+      title.id += "-" + title_nb++;
     } else {
       known_titles.push(title.id);
-  }
+    }
   }
 };
 
@@ -198,17 +198,67 @@ const noJSFallback = document => {
   document.body.appendChild(wrapper);
 };
 
-const addHTMLHeaders = ({ headers, dom }) => {
+const addHTMLHeaders = (file, dom, headers) => {
   const document = dom.window.document;
-  let tag;
+  let titleSet = false;
   setCharset(document);
 
   Object.keys(headers).forEach(key => {
+    let tag = null;
     switch (key) {
       case "title":
-        tag = null;
         setTitle(document, headers[key]);
+        titleSet = true;
         break;
+
+      case "lang":
+        document.documentElement.setAttribute("lang", headers[key]);
+
+        break;
+      case "js":
+      case "script":
+      case "scripts":
+        if (Array.isArray(headers[key])) {
+          tag = document.createDocumentFragment();
+          headers[key].forEach(script => {
+            const scriptTag = document.createElement("script");
+            scriptTag.setAttribute(
+              "src",
+              pathServerication(file, script, MEDIA_GET_URL)
+            );
+            tag.appendChild(scriptTag);
+          });
+        } else {
+          tag = document.createElement("script");
+          tag.setAttribute(
+            "src",
+            pathServerication(file, headers[key], MEDIA_GET_URL)
+          );
+        }
+        break;
+      case "css":
+      case "style":
+      case "styles":
+        if (Array.isArray(headers[key])) {
+          tag = document.createDocumentFragment();
+          headers[key].forEach(style => {
+            const styleTag = document.createElement("style");
+            styleTag.rel = "stylesheet";
+            styleTag.setAttribute(
+              "href",
+              pathServerication(file, style, MEDIA_GET_URL)
+            );
+            tag.appendChild(styleTag);
+          });
+        } else {
+          tag = document.createElement("link");
+          tag.setAttribute(
+            "src",
+            pathServerication(file, headers[key], MEDIA_GET_URL)
+          );
+        }
+        break;
+
       default:
         tag = document.createElement("meta");
         tag.setAttribute("name", key);
@@ -216,12 +266,15 @@ const addHTMLHeaders = ({ headers, dom }) => {
     }
     tag && document.head.appendChild(tag);
   });
+
+  if (!titleSet) {
+    setTitle(document, file);
+  }
   return Promise.resolve(dom);
 };
 
 const normalizeHTML = (file, dom) => {
   [
-    setTitle,
     addDependencies,
     headerAndFooterHandler,
     fixSharedID,
@@ -245,7 +298,7 @@ const generate = file =>
     .readFile(file)
     .then(parseMarkdown)
     .then(parseHTML)
-    .then(addHTMLHeaders)
+    .then(({ headers, dom }) => addHTMLHeaders(file, dom, headers))
     .then(dom => normalizeHTML(file, dom))
     .then(html => fs.writeFile(tmpFile, html))
     .then(refreshBrowser)
