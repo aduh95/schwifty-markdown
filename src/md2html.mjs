@@ -93,10 +93,15 @@ const addDependencies = document => {
 
 const fixSharedID = document => {
   // Force IDs to be different in the titles
-  let titles = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
+  const titles = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
+  const known_titles = [];
   let title_nb = 0;
   for (let title of titles) {
+    if (known_titles.includes(title.id)) {
     title.id += "-" + title_nb++;
+    } else {
+      known_titles.push(title.id);
+  }
   }
 };
 
