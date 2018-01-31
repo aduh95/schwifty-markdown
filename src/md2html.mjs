@@ -267,7 +267,11 @@ const addHTMLHeaders = (file, dom, headers) => {
   });
 
   if (!titleSet) {
-    setTitle(document, file);
+    const firstHeading = document.querySelector(
+      ".markdown-body>h1:first-child"
+    );
+
+    setTitle(document, firstHeading ? firstHeading.textContent : file);
   }
   return Promise.resolve(dom);
 };
