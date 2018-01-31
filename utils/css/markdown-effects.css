@@ -1,0 +1,31 @@
+@media screen {
+  h1::before,
+  h2::before,
+  h3::before,
+  h4::before,
+  h5::before,
+  h6::before {
+    position: absolute;
+    transform: translateX(-100%);
+    padding-right: 0.5em;
+    opacity: 0.5;
+  }
+  h1:hover::before {
+    content: "#";
+  }
+  h2:hover::before {
+    content: "##";
+  }
+  h3:hover::before {
+    content: "###";
+  }
+  h4:hover::before {
+    content: "####";
+  }
+  h5:hover::before {
+    content: "#####";
+  }
+  h6:hover::before {
+    content: "######";
+  }
+}

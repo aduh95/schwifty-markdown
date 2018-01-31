@@ -19,6 +19,7 @@ export const CSS_FILES = [
   "/fallback-message.css",
   "/chartist.css",
   "/github-markdown.css",
+  "/markdown-effects.css",
   "/figureCaption.css",
   "/print.css",
   "/toc.css",
