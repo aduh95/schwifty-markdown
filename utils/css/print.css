@@ -1,5 +1,5 @@
 @media print {
-  .markdown-body hr {
+  .markdown-body hr:not(.no-page-break) {
     page-break-after: always;
     visibility: hidden;
   }
