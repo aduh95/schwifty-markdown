@@ -9,6 +9,7 @@
 * Add support for YAML metadata (including external JS&CSS files)
 * Update HTML `id` generation for `<hX>` tags to match behavior other markdown
   parsers
+* Title is now set by the first h1 it it appears first in the document
 
 ### v1.5.3(2018-01-27)
 
