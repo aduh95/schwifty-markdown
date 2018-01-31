@@ -9,7 +9,7 @@ export default buffer =>
     let headers = {};
 
     marked(
-      buffer.toString("utf8").replace(/^---\n((.*\n)+)---/, function(m, data) {
+      buffer.toString("utf8").replace(/^---\n((.*\n)+?)---/, function(m, data) {
         try {
           headers = yaml.safeLoad(data);
         } catch (e) {
