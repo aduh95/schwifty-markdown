@@ -5,43 +5,55 @@
 
 const getLocalLinks = () => document.querySelectorAll("a[href^='/md/']");
 
+const loadOtherDocument = async path => {
+  try {
+    let response = await fetch(path);
+
+    if (response.status === 202) {
+      document.body.style.cursor = "wait";
+      return true;
+    } else {
+      return await response.text();
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Unable to communicate with Schwifty Markdown");
+  }
+};
+
 const init = () => {
   for (let link of getLocalLinks()) {
     link.addEventListener("click", async ev => {
       ev.preventDefault();
+      const loadResult = await loadOtherDocument(ev.target.href);
 
-      try {
-        let response = await fetch(ev.target.href);
+      if (loadResult === true) {
+        const currentFilePath = document.documentElement.dataset.path;
+        const savedState = { index: currentFilePath };
+        const currentState = {};
 
-        if (response.status === 202) {
-          const currentFilePath = document.documentElement.dataset.path;
-          const stateObjFirst = { index: currentFilePath };
-          const stateObjSecond = {};
-          history.replaceState(
-            stateObjFirst,
-            document.head.querySelector("title").textContent,
-            currentFilePath
-          );
+        history.replaceState(
+          savedState,
+          document.head.querySelector("title").textContent,
+          currentFilePath
+        );
 
-          stateObjSecond[currentFilePath] = "index";
-          history.pushState(
-            stateObjSecond,
-            document.head.querySelector("title").textContent + " schwifty",
-            "/"
-          );
-          ev.target.style.cursor = "wait";
-        } else {
-          ev.target.style.cursor = "not-allowed";
-          ev.target.style.color = "red";
-          ev.target.title = await response.text();
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Unable to communicate with Schwifty Markdown");
+        currentState[currentFilePath] = "index";
+        history.pushState(
+          currentState,
+          document.head.querySelector("title").textContent + " schwifty",
+          "/"
+        );
+      } else {
+        ev.target.style.cursor = "not-allowed";
+        ev.target.style.color = "red";
+        ev.target.title = loadResult;
       }
     });
   }
 };
+
+window.addEventListener("popstate", ev => loadOtherDocument(ev.state.index));
 
 if (window.document.readyState === "loading") {
   window.document.addEventListener("DOMContentLoaded", init);

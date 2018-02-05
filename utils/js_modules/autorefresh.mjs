@@ -13,7 +13,7 @@ const onClose = () => window.close();
 // Listen for messages to reload the page
 socket.addEventListener("message", () => {
   socket.removeEventListener("close", onClose);
-  window.requestAnimationFrame(() => window.location.reload());
+  window.requestAnimationFrame(() => window.location.assign("/"));
 });
 
 window.addEventListener("beforeunload", () =>
