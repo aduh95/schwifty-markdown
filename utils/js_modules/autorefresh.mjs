@@ -16,6 +16,10 @@ socket.addEventListener("message", () => {
   window.requestAnimationFrame(() => window.location.reload());
 });
 
+window.addEventListener("beforeunload", () =>
+  socket.removeEventListener("close", onClose)
+);
+
 // When server closes the connection, let's close the tab
 socket.addEventListener("close", onClose);
 

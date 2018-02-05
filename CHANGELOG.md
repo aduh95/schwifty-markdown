@@ -7,6 +7,7 @@
 ### v1.6.1(2018-02-05)
 
 * Allow back navigation within local links with History API
+* Fix a bug in Firefox causing tab to close unexpectedly
 
 ### v1.6.0(2018-01-31)
 
