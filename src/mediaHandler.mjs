@@ -4,6 +4,7 @@ import path from "path";
 import plantumlCompile from "node-plantuml";
 import yumlCompile from "yuml2svg";
 import renderMarkdown from "./md2html";
+import { AUTO_REFRESH_MODULE } from "./server";
 import { CONFIG } from "./definitions";
 
 const sha1file = file =>
@@ -79,9 +80,21 @@ export const markdown = () => (req, res) => {
 
   if (fs.existsSync(media)) {
     renderMarkdown(media);
-    res.sendStatus(202);
+    res
+      .status(202)
+      .send(
+        "<script type=module src='" +
+          AUTO_REFRESH_MODULE +
+          "'></script><p>Accepted</p>"
+      );
   } else {
-    res.sendStatus(404);
+    res
+      .status(404)
+      .send(
+        "<script type=module src='" +
+          AUTO_REFRESH_MODULE +
+          "'></script><p>Not Found</p>"
+      );
   }
 };
 

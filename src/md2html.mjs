@@ -216,6 +216,11 @@ const addHTMLHeaders = (file, dom, headers) => {
   let titleSet = false;
   setCharset(document);
 
+  document.documentElement.setAttribute(
+    "data-path",
+    pathServerication(file, path.basename(file), MARKDOWN_GET_URL)
+  );
+
   Object.keys(headers).forEach(key => {
     let tag = null;
     switch (key) {

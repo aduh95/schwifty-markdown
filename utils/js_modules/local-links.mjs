@@ -14,6 +14,21 @@ const init = () => {
         let response = await fetch(ev.target.href);
 
         if (response.status === 202) {
+          const currentFilePath = document.documentElement.dataset.path;
+          const stateObjFirst = { index: currentFilePath };
+          const stateObjSecond = {};
+          history.replaceState(
+            stateObjFirst,
+            document.head.querySelector("title").textContent,
+            currentFilePath
+          );
+
+          stateObjSecond[currentFilePath] = "index";
+          history.pushState(
+            stateObjSecond,
+            document.head.querySelector("title").textContent + " schwifty",
+            "/"
+          );
           ev.target.style.cursor = "wait";
         } else {
           ev.target.style.cursor = "not-allowed";

@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.6.1(2018-02-05)
+
+* Allow back navigation within local links with History API
+
 ### v1.6.0(2018-01-31)
 
 * Add support for YAML metadata (including external JS&CSS files)
