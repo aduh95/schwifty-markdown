@@ -4,9 +4,7 @@
 
 @media print {
   #toc {
-    page-break-before: always;
     page-break-inside: avoid;
-    page-break-after: always;
   }
 }
 

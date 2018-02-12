@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.6.2(2018-02-12)
+
+* Fix page break around TOC
+
 ### v1.6.1(2018-02-05)
 
 * Allow back navigation within local links with History API

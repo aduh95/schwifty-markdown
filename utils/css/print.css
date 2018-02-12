@@ -3,14 +3,6 @@
     page-break-after: always;
     visibility: hidden;
   }
-  #generated-toc {
-    page-break-after: always;
-    page-break-before: always;
-  }
-  #generated-toc summary {
-    font-size: 2em;
-    text-align: center;
-  }
   .xivmap,
   #generated-toc summary::-webkit-details-marker {
     display: none;
