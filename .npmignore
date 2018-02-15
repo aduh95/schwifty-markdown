@@ -1,0 +1,5 @@
+cypress/
+snap/
+tests/
+*.md
+cypress.json
