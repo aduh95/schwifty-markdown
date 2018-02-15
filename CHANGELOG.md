@@ -4,6 +4,12 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.6.3(2018-02-16)
+
+* Add warning when no preload support on browser (break syntax highlighting)
+* Add `.npmignore` file
+* Update dependencies
+
 ### v1.6.2(2018-02-12)
 
 * Fix page break around TOC
