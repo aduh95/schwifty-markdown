@@ -30,8 +30,8 @@ import waitForLazyLoad from "./chart.mjs";
 const SUMMARY_TEXT = "Table of contents";
 const ID_TOC_ELEMENT = "toc";
 
-let addToArrayIfNotPreviousSibbling = (
-  notPreviousSibblings,
+let addToArrayIfNotPreviousSibling = (
+  notPreviousSiblings,
   refElement,
   element
 ) => {
@@ -41,12 +41,12 @@ let addToArrayIfNotPreviousSibbling = (
         return;
       }
       if (child === refElement) {
-        notPreviousSibblings.push(element);
+        notPreviousSiblings.push(element);
         return;
       }
     }
   } else {
-    notPreviousSibblings.push(element);
+    notPreviousSiblings.push(element);
   }
 };
 
@@ -62,33 +62,37 @@ let getHeadings = (tocElement, generate_from, generate_to) => {
   // make the basic elements of the TOC itself, ready to fill into
   let wantedHeadings = [];
   for (let heading of headings) {
-    addToArrayIfNotPreviousSibbling(wantedHeadings, tocElement, heading);
+    addToArrayIfNotPreviousSibling(wantedHeadings, tocElement, heading);
   }
 
   return wantedHeadings;
 };
 
+/**
+ * A recursive function which returns the first header it finds inside
+ * node, or null if there are no functions inside node.
+ * @param node The node used to look for the header
+ * @return string | null The tagName of the first header element found
+ */
 let findFirstHeaderElement = function(node) {
-  // a recursive function which returns the first header it finds inside
-  // node, or null if there are no functions inside node.
   let nn = node.nodeName.toLowerCase();
   if (nn.match(/^h[1-6]$/)) {
     // this node is itself a header; return our name
     return nn;
   } else {
-    let subvalue;
+    let headerElementTagName;
 
     if (node.nextElementSibling) {
-      // Looking for the sibblings first
-      subvalue = findFirstHeaderElement(node.nextElementSibling);
+      // Looking for the siblings first
+      headerElementTagName = findFirstHeaderElement(node.nextElementSibling);
     }
-    if (subvalue) return subvalue;
+    if (headerElementTagName) return headerElementTagName;
 
     if (node.hasChildNodes()) {
       // Then looking for the children
-      subvalue = findFirstHeaderElement(node.firstElementChild);
+      headerElementTagName = findFirstHeaderElement(node.firstElementChild);
     }
-    if (subvalue) return subvalue;
+    if (headerElementTagName) return headerElementTagName;
 
     // no headers in this node at all
     return null;
@@ -202,11 +206,11 @@ let generate = function(document, headings, generate_from, summaryText) {
       // create additional nested lists to put it at the right level
 
       // get the *last* LI in the current list, and add our new UL to it
-      let last_listitem_el =
+      let last_listItem_el =
         cur_list_el.lastChild || document.createElement("li");
       let new_list_el = document.createElement("ol");
-      last_listitem_el.appendChild(new_list_el);
-      cur_list_el.appendChild(last_listitem_el);
+      last_listItem_el.appendChild(new_list_el);
+      cur_list_el.appendChild(last_listItem_el);
       cur_list_el = new_list_el;
       cur_head_lvl++;
     }
