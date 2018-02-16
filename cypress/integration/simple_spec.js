@@ -50,5 +50,13 @@ describe("Test HTML rendering", function() {
       .then($link => {
         cy.title().should("eq", "empty.md");
       });
+
+    cy.go("back").then(() => cy.title().should("eq", "links.md"));
+    cy
+      .get("a[title='local-relative-parent']>:first")
+      .click()
+      .then($link => {
+        cy.title().should("eq", "empty.md");
+      });
   });
 });

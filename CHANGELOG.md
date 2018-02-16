@@ -4,6 +4,10 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.6.4(2018-02-16)
+
+* Patch bug when clicking on a link containing a sub-element
+
 ### v1.6.3(2018-02-16)
 
 * Add warning when no preload support on browser (break syntax highlighting)

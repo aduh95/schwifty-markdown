@@ -25,7 +25,7 @@ const init = () => {
   for (let link of getLocalLinks()) {
     link.addEventListener("click", async ev => {
       ev.preventDefault();
-      const loadResult = await loadOtherDocument(ev.target.href);
+      const loadResult = await loadOtherDocument(ev.currentTarget.href);
 
       if (loadResult === true) {
         const currentFilePath = document.documentElement.dataset.path;
