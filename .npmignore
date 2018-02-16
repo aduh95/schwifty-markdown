@@ -1,5 +1,14 @@
+node_modules/
+cypress.env.json
+cypress.json
 cypress/
 snap/
 tests/
 *.md
-cypress.json
+package-lock.json
+/parts
+/prime
+/stage
+.idea/
+.vscode/
+
