@@ -36,7 +36,7 @@ your path:
 > `SCHWIFTY_DISABLE_JAVA` at true or use the `--no-java` flag when running
 > schwifty to disable the warning on startup.
 
-Then, you need to download the package dependecies using `yarn` (you might need
+Then, you need to download the package dependencies using `yarn` (you might need
 to use `sudo`):
 
 ```sh
@@ -51,7 +51,7 @@ npm -g install schwifty-markdown
 
 #### Note for Windows Users
 
-Because there is a small C++ component used for validating UTF-8 data, you will
+Because there is a small C++ component used for validating UTF-8 data, you might
 need to install a few other software packages in addition to Node to be able to
 build this module:
 
@@ -86,11 +86,11 @@ schwifty --help
 
 #### Browser support
 
-* Schwifty Markdown uses HTML5, if your browser support it, it should work just
-  fine.
-* Be sure that the support for
-  [ES6 Modules is available for your browser](//caniuse.com/#feat=es6-module) to
-  able to use the generated table of contents and the automatic refresh.
+Schwifty Markdown uses HTML5, if your browser support it, it should work just
+fine. You might to pay attention if your browser supports these features:
+
+* [ES6 Modules](//caniuse.com/#feat=es6-module)
+* [Resource Hints: preload](//caniuse.com/#feat=link-rel-preload)
 
 #### Print to PDF
 
@@ -129,7 +129,7 @@ network access is required to perform the syntax highlighting.
 #### Automatic Table Of Content
 
 If the file you are editing in huge, the need to index your headings and have a
-table of contents linking to the differents parts of the document. You can have
+table of contents linking to the different parts of the document. You can have
 this by using this tag in your markdown file:
 
 ```html
@@ -287,13 +287,13 @@ rendering on my computer). All the rendering is done locally, you don't need a
 network access to work with your diagrams.
 
 **N.B.:** The PlantUML project is not published on `npm`, which means Schwifty
-must embed a JAR archive of the project, and this archive is not guarenteed to
+must embed a JAR archive of the project, and this archive is not guaranteed to
 be the last version available. You can update it manually by typing
 `schwifty --update-dependencies`.
 
 **N.B.:** The only supported extension for PlantUML diagrams is `.pu`. If you
-think I should add suppport more file extensions, please raise an issue or
-submit a pull request.
+think I should add support more file extensions, please raise an issue or submit
+a pull request.
 
 **N.B.:** If you use [preprocessing includes](preprocessing) in your diagrams,
 you might have trouble with the cache of your navigator. Most browser won't ask
