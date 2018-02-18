@@ -22,6 +22,9 @@ import {
   MARKDOWN_EXTENSION,
 } from "./definitions.mjs";
 
+const TEXT_NODE = 3; // @see https://developer.mozilla.org/fr/docs/Web/API/Node/nodeType
+const NON_BREAKING_SPACE = "\u00A0"; // @see https://en.wikipedia.org/wiki/Non-breaking_space
+
 const pathServerication = (file, relativePath, prefix) =>
   prefix +
   encodeURIComponent(path.resolve(path.join(path.dirname(file), relativePath)));
@@ -109,7 +112,7 @@ const fixSharedID = document => {
 };
 
 const imagesHandler = (document, file) => {
-  // Handle images and plantuml diagram
+  // Handle images and yUML / plantUML diagram
   const images = document.querySelectorAll("img");
 
   for (const img of images) {
@@ -147,6 +150,49 @@ const imagesHandler = (document, file) => {
       parent.parentNode.replaceChild(figure, parent);
     }
   }
+};
+
+/**
+ * Replaces spaces by non-breaking spaces when it is relevant
+ * @param document {Document} The current document
+ * @param file {string} The path of the current markdown file
+ */
+const nonBreakingSpaces = (document, file) => {
+  const regexSpaceBefore = / [\?!:;»%€]/g;
+  const regexSpaceAfter = /« /g;
+
+  const textNodes = [
+    ...document.querySelectorAll(
+      "p,h1,h2,h3,h4,h5,h6,a,strong,em,li,figcaption"
+    ),
+  ]
+    .reduce(
+      (array, textContainer) => (
+        array.push(...textContainer.childNodes), array
+      ),
+      []
+    )
+    .filter(child => child.nodeType === TEXT_NODE);
+
+  textNodes
+    .filter(textNode => regexSpaceBefore.test(textNode.wholeText))
+    .forEach(
+      textNode =>
+        (textNode.nodeValue = textNode.wholeText.replace(
+          regexSpaceBefore,
+          m => NON_BREAKING_SPACE + m.slice(1)
+        ))
+    );
+
+  textNodes
+    .filter(textNode => regexSpaceAfter.test(textNode.wholeText))
+    .forEach(
+      textNode =>
+        (textNode.nodeValue = textNode.wholeText.replace(
+          regexSpaceAfter,
+          m => m.slice(0, -1) + NON_BREAKING_SPACE
+        ))
+    );
 };
 
 const linksHandler = (document, file) => {
@@ -289,6 +335,7 @@ const normalizeHTML = (file, dom) => {
     imagesHandler,
     linksHandler,
     codeBlockHandler,
+    nonBreakingSpaces,
     noJSFallback,
   ].map(fct => fct.call(this, dom.window.document, file));
 
