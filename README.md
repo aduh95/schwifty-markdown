@@ -88,8 +88,8 @@ schwifty --help
 
 #### Browser support
 
-Schwifty Markdown uses HTML5, if your browser support it, it should work just
-fine. You might to pay attention if your browser supports these features:
+Schwifty Markdown uses HTML5; if your browser support it, it should work just
+fine. You might want to pay attention if your browser supports these features:
 
 * [ES6 Modules](//caniuse.com/#feat=es6-module)
 * [Resource Hints: preload](//caniuse.com/#feat=link-rel-preload)
@@ -125,7 +125,7 @@ Schwifty Markdown uses [highlight.js](https://highlightjs.org/) to highlight
 your code. You have to specify the language you are using, else it will be
 interpreted as plain text.
 
-**N.B.:** Schwifty uses the CDN hosted verion of `highlight.js`, which means a
+**N.B.:** Schwifty uses the CDN hosted version of `highlight.js`, which means a
 network access is required to perform the syntax highlighting.
 
 #### Automatic Table Of Content
@@ -204,7 +204,7 @@ Your data can be represented this way in the `data.csv` file:
 # Lines starting with `#` will be ignored, you can use them for your comments
 # First the labels
 Monday,Tuesday,Wednesday,Thursday,Friday
-# BTW, you can ommit this first line, Schwifty will use a range of integers starting from 1
+# BTW, you can omit this first line, Schwifty will use a range of integers starting from 1
 # Then comes the data
 8,5,6,2,3
 # You can have several lines of data
@@ -307,3 +307,30 @@ enough).
 is why Schwifty disables them by default. If you use the `--plantuml-config`
 option to set a custom config file for PlantUML, you might want to add the line
 `skinparam shadowing false`.
+
+#### Metadata
+
+You can add YAML metadata at the beginning of your markdown files:
+
+```markdown
+---
+title: Hardcoded title
+lang: en
+date: 1970-01-01
+
+application-name: Schwifty
+keywords: test,schwifty,cypress
+description:
+    This file set a lot of metadata which should be inserted into HTML by Schwifty.
+
+# Adding JS && CSS files
+script:
+    - script.js
+    - //code.jquery.com/jquery.js
+    - ./empty.mjs # should be added as ES module
+
+style:
+    - //code.jquery.com/jquery.css
+    - myCSS.css
+---
+```
