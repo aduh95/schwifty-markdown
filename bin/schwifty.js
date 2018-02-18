@@ -37,7 +37,7 @@ const argv = require("../src/cli-args")
   .alias("u", "update-dependencies")
   .describe(
     "u",
-    "Update dependency files (the plantuml JAR, CSV parser) if a new version is available"
+    "Update dependency files (the plantUML JAR, CSV parser) if a new version is available"
   )
   .help("h")
   .alias("h", "help").argv;
@@ -51,7 +51,7 @@ const PACKAGE_FILE = path.join(WORKING_DIR, "package.json");
 const watchable = path.resolve(argv._.pop() || ".");
 
 if (argv.u) {
-  console.log("Updating plantuml");
+  console.log("Updating plantUML");
   fs.readFile(PACKAGE_FILE).then(json => {
     let data = JSON.parse(json);
 

@@ -61,7 +61,7 @@ app.get("/", function(req, res) {
     );
 });
 
-for (let serverFile of [
+for (const serverFile of [
   {
     type: "text/css",
     files: CSS_FILES,
@@ -100,23 +100,20 @@ app.get(MARKDOWN_GET_URL + ":media", serveMedia.markdown());
 
 let wsConnection = null;
 
-setImmediate(() => {
-  // Waiting for the CONFIG to be loaded before starting the server
-
-  let server = app.listen(CONFIG.PORT_NUMBER, "localhost", function() {
-    console.log(`Listening on port ${CONFIG.PORT_NUMBER}!`);
+export const startServer = () => {
+  const server = app.listen(CONFIG.PORT_NUMBER, "localhost", function() {
+    console.log(`Server started on http://localhost:${CONFIG.PORT_NUMBER}`);
   });
-  let wsServer = new webSocket.server({
+  new webSocket.server({
     httpServer: server,
     autoAcceptConnections: true,
-  });
-  wsServer.on("connect", connection => {
+  }).on("connect", connection => {
     wsConnection && wsConnection.close();
     wsConnection = connection;
 
     connection.ping(1);
   });
-});
+};
 
 export const refreshBrowser = () => {
   if (wsConnection && wsConnection.connected) {
