@@ -4,10 +4,12 @@
  */
 
 const getLocalLinks = () => document.querySelectorAll("a[href^='/md/']");
+const getTransformedLinks = () =>
+  document.querySelectorAll("a[data-original-href]");
 
 const loadOtherDocument = async path => {
   try {
-    let response = await fetch(path);
+    const response = await fetch(path);
 
     if (response.status === 202) {
       document.body.style.cursor = "wait";
@@ -21,8 +23,37 @@ const loadOtherDocument = async path => {
   }
 };
 
+/**
+ * Hides relative links to avoid non working links in PDF.
+ */
+const transformLinksForPDF = () => {
+  for (const link of getTransformedLinks()) {
+    const span = document.createElement("span");
+    [...link.childNodes].forEach(node => span.appendChild(node));
+    link.hidden = true;
+    link.parentNode.insertBefore(span, link);
+  }
+};
+
+/**
+ * Recreates links after printing.
+ */
+const transformLinksBack = () => {
+  for (const link of getTransformedLinks()) {
+    [...link.previousElementSibling.childNodes].forEach(node =>
+      link.appendChild(node)
+    );
+    link.previousElementSibling.remove();
+    link.hidden = false;
+  }
+};
+
 const init = () => {
-  for (let link of getLocalLinks()) {
+  window.matchMedia("print").addListener(query => {
+    query.matches ? transformLinksForPDF() : transformLinksBack();
+  });
+
+  for (const link of getLocalLinks()) {
     link.addEventListener("click", async ev => {
       ev.preventDefault();
       const loadResult = await loadOtherDocument(ev.currentTarget.href);

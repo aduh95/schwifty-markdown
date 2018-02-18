@@ -26,10 +26,11 @@ const TEXT_NODE = 3; // @see https://developer.mozilla.org/fr/docs/Web/API/Node/
 const NON_BREAKING_SPACE = "\u00A0"; // @see https://en.wikipedia.org/wiki/Non-breaking_space
 
 const pathServerication = (file, relativePath, prefix) =>
-  prefix +
-  encodeURIComponent(path.resolve(path.join(path.dirname(file), relativePath)));
+  prefix + encodeURIComponent(getLocalAbsolutePath(file, relativePath));
 
 const isRelativePath = path => !/^((?:(?:[a-z]+:)?\/\/)|data:)/i.test(path);
+const getLocalAbsolutePath = (file, relativePath) =>
+  path.resolve(path.join(path.dirname(file), relativePath));
 
 const mediaServerication = (file, path) =>
   isRelativePath(path) ? pathServerication(file, path, MEDIA_GET_URL) : path;
@@ -200,6 +201,11 @@ const linksHandler = (document, file) => {
   let links = document.querySelectorAll("a");
   for (let link of links) {
     if (isRelativePath(link.href)) {
+      link.setAttribute(
+        "data-original-href",
+        getLocalAbsolutePath(file, link.href)
+      );
+
       link.href = pathServerication(
         file,
         link.href,
