@@ -94,7 +94,7 @@ fine. You might want to pay attention if your browser supports these features:
 * [ES6 Modules](//caniuse.com/#feat=es6-module)
 * [Resource Hints: preload](//caniuse.com/#feat=link-rel-preload)
 
-#### Print to PDF
+#### Output as PDF
 
 To generate a PDF file, you have to use the print feature of your browser.
 
@@ -107,6 +107,17 @@ This goes on the first page
 
 This goes on the second one
 ```
+
+If you have `Chromium 62+` installed (or one of its derivatives, such as
+`Google Chrome` or `Chrome Canary`), you can generate a PDF file from the CLI to
+automate the process :
+
+```sh
+schwifty ./myFile.md --browser=chromium-browser -o ./dist/myOutput.pdf
+```
+
+> If you want to render in parallel several files, you mmust specify a different
+> port for each command (with the `--port` flag).
 
 #### Syntax highlighting
 
