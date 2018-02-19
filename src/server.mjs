@@ -128,15 +128,20 @@ export const refreshBrowser = () => {
     }, WAIT_FOR_BROWSER_TO_OPEN);
   } else if (CONFIG.PRINT_TO_PDF) {
     console.log("Generating PDF " + CONFIG.PRINT_TO_PDF);
-    child_process
-      .spawn(CONFIG.BROWSER_NAME, [
-        "--headless",
-        "--print-to-pdf=" + CONFIG.PRINT_TO_PDF,
-        "http://localhost:" + CONFIG.PORT_NUMBER,
-      ])
-      .on("close", function(errCode) {
-        process.exit(errCode);
-      });
+    try {
+      child_process
+        .spawn(CONFIG.BROWSER_NAME, [
+          "--headless",
+          "--print-to-pdf=" + CONFIG.PRINT_TO_PDF,
+          "http://localhost:" + CONFIG.PORT_NUMBER,
+        ])
+        .on("close", function(errCode) {
+          process.exit(errCode);
+        });
+    } catch (err) {
+      console.error("Have you forgot to specify the browser to use?", err);
+      process.exit(1);
+    }
   } else {
     console.log("Document ready");
   }

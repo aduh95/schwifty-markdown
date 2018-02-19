@@ -28,7 +28,8 @@ if (opt) {
     .argv;
 
   CONFIG.PORT_NUMBER = argv.p;
-  CONFIG.AUTO_OPEN_BROWSER = !argv.n;
+  CONFIG.AUTO_OPEN_BROWSER = !argv.n && !argv.o;
+  CONFIG.PRINT_TO_PDF = argv.o ? path.resolve(argv.o) : false;
   CONFIG.BROWSER_NAME = argv.b || undefined;
   CONFIG.JAVA_ENABLED = !argv.j;
   CONFIG.PLANTUML_CONFIG =
