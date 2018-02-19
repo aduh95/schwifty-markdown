@@ -6,6 +6,7 @@ import express from "express";
 import webSocket from "websocket";
 import * as serveMedia from "./mediaHandler";
 import { CONFIG } from "./definitions";
+import child_process from "child_process";
 
 // Automatically track and cleanup files at exit
 temp.track();
@@ -125,6 +126,17 @@ export const refreshBrowser = () => {
     waitForBrowserToOpen = setTimeout(() => {
       waitForBrowserToOpen = null;
     }, WAIT_FOR_BROWSER_TO_OPEN);
+  } else if (CONFIG.PRINT_TO_PDF) {
+    console.log("Generating PDF " + CONFIG.PRINT_TO_PDF);
+    child_process
+      .spawn(CONFIG.BROWSER_NAME, [
+        "--headless",
+        "--print-to-pdf=" + CONFIG.PRINT_TO_PDF,
+        "http://localhost:" + CONFIG.PORT_NUMBER,
+      ])
+      .on("close", function(errCode) {
+        process.exit(errCode);
+      });
   } else {
     console.log("Document ready");
   }

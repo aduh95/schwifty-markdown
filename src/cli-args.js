@@ -2,6 +2,12 @@ module.exports = require("yargs")
   .number("p")
   .alias("p", "port")
   .default("p", 3000)
+  .string("o")
+  .alias("o", "output")
+  .describe(
+    "o",
+    "Schwifty will try to generate a PDF file instead of launching a preview"
+  )
   .boolean("n")
   .alias("n", "no-browser")
   .describe(
