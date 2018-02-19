@@ -3,7 +3,7 @@ const promise = new Promise(resolve => (promiseResolver = resolve));
 
 const promises = [];
 
-addEventListener("load", function() {
+const init = function() {
   const pictures = document.querySelectorAll("noscript.img");
 
   for (let noscript of pictures) {
@@ -29,6 +29,12 @@ addEventListener("load", function() {
   }
 
   promiseResolver(promises);
-});
+};
+
+if (window.document.readyState === "loading") {
+  window.document.addEventListener("DOMContentLoaded", init);
+} else {
+  init.apply(window.document);
+}
 
 export default promise;
