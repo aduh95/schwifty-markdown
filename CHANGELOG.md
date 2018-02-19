@@ -4,6 +4,12 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.7.0(2018-02-19)
+
+* Add CLI flag `--output` to output a PDF
+* Add automatic non breaking spaces (helping French people mostly)
+* Remove relative links on printing to avoid broken links
+
 ### v1.6.4(2018-02-16)
 
 * Patch bug when clicking on a link containing a sub-element
