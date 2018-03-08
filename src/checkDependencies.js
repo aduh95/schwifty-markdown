@@ -12,7 +12,7 @@ var checkProgramInPath = function(bin) {
     : "command -v " + bin + " >/dev/null 2>&1 || { exit 1; }";
 };
 
-if (version < "v8.5.0") {
+if (version < "v8.5.0" && version < "v8.10.0") {
   console.error(missingDep, "Node v8.5.0 or later version is required!");
   process.exit(1);
 }
