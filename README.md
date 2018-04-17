@@ -1,8 +1,8 @@
 # Schwifty Markdown
 
 [![NPM version](https://img.shields.io/npm/v/schwifty-markdown.svg)](https://www.npmjs.org/package/schwifty-markdown)
-[![NPM version](https://img.shields.io/node/v/schwifty-markdown.svg)](https://nodejs.org)
-[![NPM version](https://img.shields.io/npm/l/schwifty-markdown.svg)](https://github.com/aduh95/schwifty-markdown/blob/master/LICENCE)
+[![Node >=8.5](https://img.shields.io/node/v/schwifty-markdown.svg)](https://nodejs.org)
+[![License MIT](https://img.shields.io/npm/l/schwifty-markdown.svg)](https://github.com/aduh95/schwifty-markdown/blob/master/LICENCE)
 
 This library allows you to generate Markdown files to HTML in your browser.
 
