@@ -11,8 +11,9 @@ const loadOtherDocument = async path => {
   try {
     const response = await fetch(path);
 
-    if (response.status === 202) {
+    if (response.ok) {
       document.body.style.cursor = "wait";
+      document.body.hidden = true;
       return true;
     } else {
       return await response.text();
