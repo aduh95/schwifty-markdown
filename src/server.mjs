@@ -145,4 +145,5 @@ export const refreshBrowser = () => {
   } else {
     console.log("Document ready");
   }
+  return true;
 };

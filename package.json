@@ -1,13 +1,9 @@
 {
   "name": "schwifty-markdown",
-  "description": "Convert Markdown documents to HTML on the fly, including yUML and PlantUML diagrams and graph charts rendering.",
+  "description":
+    "Convert Markdown documents to HTML on the fly, including yUML and PlantUML diagrams and graph charts rendering.",
   "version": "1.7.1",
-  "keywords": [
-    "markdown",
-    "toc",
-    "table of content",
-    "plantuml"
-  ],
+  "keywords": ["markdown", "toc", "table of content", "plantuml"],
   "author": {
     "email": "duhamelantoine1995@gmail.com",
     "name": "Antoine du HAMEL",
@@ -43,11 +39,13 @@
     "yuml2svg": "^3.0.0"
   },
   "scripts": {
-    "start": "node src/checkDependencies.js && node --experimental-modules index.mjs",
+    "start":
+      "node src/checkDependencies.js && node --experimental-modules bin/schwifty.mjs",
     "test": "node tests/bootstrap.js",
     "preinstall": "node src/checkDependencies.js",
-    "postinstall": "npx exitzero node bin/schwifty.js -u",
-    "updateDependencies": "node --experimental-modules src/updateDependencies.mjs",
+    "postinstall": "exitzero node bin/schwifty.js -u",
+    "updateDependencies":
+      "node --experimental-modules src/updateDependencies.mjs",
     "preversion": "yarn test",
     "postversion": "git push && git push --tags"
   },
