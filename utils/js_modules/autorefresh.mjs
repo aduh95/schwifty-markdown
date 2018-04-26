@@ -8,11 +8,21 @@
 
 const socket = new WebSocket("ws://" + window.location.host + "/");
 
+const SCROLL_POSITION_STORAGE = "scrollPosition";
+const savedScrollPosition = window.sessionStorage.getItem(
+  SCROLL_POSITION_STORAGE
+);
+if (savedScrollPosition) {
+  window.scroll(0, savedScrollPosition);
+  window.sessionStorage.removeItem(SCROLL_POSITION_STORAGE);
+}
+
 const onClose = () => window.close();
 
 // Listen for messages to reload the page
 socket.addEventListener("message", () => {
   socket.removeEventListener("close", onClose);
+  window.sessionStorage.setItem(SCROLL_POSITION_STORAGE, window.scrollY);
   window.requestAnimationFrame(() => window.location.assign("/"));
 });
 
