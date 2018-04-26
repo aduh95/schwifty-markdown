@@ -1,11 +1,11 @@
 import http from "https";
 import path from "path";
-import fs from "./fs-promises";
+import fsSync from "fs";
 
 const HOST = "netcologne.dl.sourceforge.net";
 
 let nodeVendorDir = path.join(path.resolve("."), "node_modules");
-if (!fs.existsSync(nodeVendorDir)) {
+if (!fsSync.existsSync(nodeVendorDir)) {
   nodeVendorDir = path.resolve("..");
 }
 
@@ -18,28 +18,30 @@ const resolveModuleDir = moduleName => {
     }
     distDir = path.join(nodeModuleDir, moduleName);
     nodeModuleDir = path.resolve(nodeModuleDir + path.sep + "..");
-  } while (!fs.existsSync(distDir));
+  } while (!fsSync.existsSync(distDir));
 
   return distDir;
 };
 
-const copyPapaDistFiles = async () => {
-  const fileName = "papaparse.min.js";
-  const localVendorDir = path.join(path.resolve("."), "utils", "js_scripts");
-  const distDir = resolveModuleDir("papaparse");
+const copyPapaDistFiles = () =>
+  new Promise((resolve, reject) => {
+    const fileName = "papaparse.min.js";
+    const localVendorDir = path.join(path.resolve("."), "utils", "js_scripts");
+    const distDir = resolveModuleDir("papaparse");
 
-  if (!fs.existsSync(localVendorDir)) {
-    await fs.mkdir(localVendorDir);
-  }
+    if (!fsSync.existsSync(localVendorDir)) {
+      fsSync.mkdirSync(localVendorDir);
+    }
 
-  return await fs.copyFile(
-    path.join(distDir, fileName),
-    path.join(localVendorDir, fileName)
-  );
-};
+    return fsSync.copyFile(
+      path.join(distDir, fileName),
+      path.join(localVendorDir, fileName),
+      err => (err ? reject() : resolve())
+    );
+  });
 
 const getPlantumlLastVersion = (jar, etagFile, etag) => {
-  let distantJar = {
+  const distantJar = {
     hostname: HOST,
     path: "/project/plantuml/plantuml.jar",
   };
@@ -52,9 +54,9 @@ const getPlantumlLastVersion = (jar, etagFile, etag) => {
 
   http.get(distantJar, res => {
     if (200 === res.statusCode) {
-      let writeStream = fs.createWriteStream(jar);
+      const writeStream = fsSync.createWriteStream(jar);
       res.pipe(writeStream);
-      fs.writeFile(
+      fsSync.writeFile(
         etagFile,
         res.headers.etag,
         err =>
@@ -79,20 +81,20 @@ const getPlantumlLastVersion = (jar, etagFile, etag) => {
 };
 
 const checkPlantumlVersion = () => {
-  let vendorDir = path.join(resolveModuleDir("node-plantuml"), "vendor");
+  const vendorDir = path.join(resolveModuleDir("node-plantuml"), "vendor");
 
-  let jar = path.join(vendorDir, "plantuml.jar");
-  let etagFile = path.join(vendorDir, "etag.txt");
+  const jar = path.join(vendorDir, "plantuml.jar");
+  const etagFile = path.join(vendorDir, "etag.txt");
 
-  if (!fs.existsSync(jar)) {
+  if (!fsSync.existsSync(jar)) {
     console.warn(
       JSON.stringify({ success: false, error: "Unable to find the JAR" })
     );
     process.exit(0);
   }
 
-  if (fs.existsSync(etagFile)) {
-    fs.readFile(
+  if (fsSync.existsSync(etagFile)) {
+    fsSync.readFile(
       etagFile,
       (err, etag) =>
         err ? console.error(err) : getPlantumlLastVersion(jar, etagFile, etag)

@@ -76,26 +76,32 @@ export const plantuml = () => (req, res) => {
 };
 
 export const markdown = () => (req, res) => {
-  let media = req.params.media;
+  const { media } = req.params;
 
-  if (fs.existsSync(media)) {
-    renderMarkdown(media);
-    res
-      .status(202)
-      .send(
-        "<script type=module src='" +
-          AUTO_REFRESH_MODULE +
-          "'></script><p>Accepted</p>"
-      );
-  } else {
-    res
-      .status(404)
-      .send(
-        "<script type=module src='" +
-          AUTO_REFRESH_MODULE +
-          "'></script><p>Not Found</p>"
-      );
-  }
+  fs
+    .access(media, fs.constants.R_OK)
+    .then(() => {
+      // Rendering Markdown asynchronously
+      renderMarkdown(media);
+
+      // Sending a temporary response to the browser
+      res
+        .status(202)
+        .send(
+          "<script type=module src='" +
+            AUTO_REFRESH_MODULE +
+            "'></script><p>Accepted</p>"
+        );
+    })
+    .catch(() => {
+      res
+        .status(404)
+        .send(
+          "<script type=module src='" +
+            AUTO_REFRESH_MODULE +
+            "'></script><p>Not Found</p>"
+        );
+    });
 };
 
 export const localFile = () => (req, res) => {

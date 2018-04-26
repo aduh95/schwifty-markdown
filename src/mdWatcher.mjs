@@ -13,9 +13,7 @@ import { MARKDOWN_EXTENSION } from "./definitions.mjs";
  * @param {string} file The path of the file watched
  */
 const fileWatcher = file => evType => {
-  if (fs.existsSync(file)) {
-    md2html(file);
-  }
+  fs.access(file, fs.constants.R_OK).then(() => md2html(file));
 };
 
 /**
@@ -30,11 +28,10 @@ const dirWatcher = dir => (eventType, filename = "") => {
   // @see https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener
   // Note that on most platforms, 'rename' is emitted whenever a filename appears or disappears in the directory.
   if (eventType === "rename" && filename.endsWith(MARKDOWN_EXTENSION)) {
-    let file = path.join(dir, filename);
-    if (fs.existsSync(file)) {
-      fs.watch(file, fileWatcher(file));
-      console.log("Now watching " + file);
-    }
+    const file = path.join(dir, filename);
+    fs
+      .access(file, fs.constants.R_OK)
+      .then(() => fs.watch(file, fileWatcher(file)));
   }
 };
 
