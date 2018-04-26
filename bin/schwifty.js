@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
-const fs = require("fs-extra");
+const fs = require("../src/fs-promises");
 const path = require("path");
 const { exec } = require("child_process");
 
 const shellescape = cmd =>
   Number.isInteger(cmd)
     ? cmd
-    : cmd === true ? "" : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
+    : cmd === true
+      ? ""
+      : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
 
 const argv = require("../src/cli-args")
   .usage("Usage: $0 [--port=3000] [--browser=firefox] [--no-browser] <path>")
@@ -85,26 +87,16 @@ if (argv.u) {
       }
     );
   });
-} else if (fs.existsSync(watchable)) {
-  const isPortAvailable = require("is-port-available");
-  const isWin = require("is-windows")();
+} else {
+  const [FgRed, FgYellow, FgReset] = ["\x1b[31m", "\x1b[33m", "\x1b[0m"];
 
-  const FgRed = "\x1b[31m";
-  const FgYellow = "\x1b[33m";
-  const FgReset = "\x1b[0m";
-
-  isPortAvailable(argv.p)
-    .then(result => {
-      if (!result) {
-        console.error("Please specify another port (see help for more info)");
-        throw new Error("Bad port: " + isPortAvailable.lastError);
-      }
-    })
+  fs
+    .access(watchable, fs.constants.R_OK)
+    .then(() => require("is-port-available")(argv.p))
     .then(() => fs.readFile(PACKAGE_FILE))
-    .then(json => {
-      let data = JSON.parse(json);
-
-      let options = [];
+    .then(JSON.parse)
+    .then(data => {
+      const options = [];
       for (let option in argv) {
         if (
           option === "_" ||
@@ -123,13 +115,15 @@ if (argv.u) {
       options.push(shellescape(watchable));
 
       if (argv.j) {
+        const isWin = require("is-windows")();
+
         data.scripts.start =
           (isWin ? "SET " : "") +
           "SCHWIFTY_DISABLE_JAVA=true " +
           data.scripts.start;
       }
 
-      let subprocess = exec(data.scripts.start + " " + options.join(" "), {
+      const subprocess = exec(data.scripts.start + " " + options.join(" "), {
         cwd: WORKING_DIR,
       });
 
@@ -145,7 +139,4 @@ if (argv.u) {
       }
     })
     .catch(err => console.error(FgRed + err + FgReset));
-} else {
-  console.error("No such file or directory");
-  process.exit(1);
 }

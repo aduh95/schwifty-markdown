@@ -1,6 +1,6 @@
 import http from "https";
 import path from "path";
-import fs from "fs-extra";
+import fs from "./fs-promises";
 
 const HOST = "netcologne.dl.sourceforge.net";
 

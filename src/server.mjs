@@ -1,7 +1,7 @@
 import temp from "temp";
 import open from "open";
 import path from "path";
-import fs from "fs-extra";
+import fs from "./fs-promises";
 import express from "express";
 import webSocket from "websocket";
 import * as serveMedia from "./mediaHandler";

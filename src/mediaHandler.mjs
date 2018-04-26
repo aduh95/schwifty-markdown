@@ -1,4 +1,4 @@
-import fs from "fs-extra";
+import fs from "./fs-promises";
 import crypto from "crypto";
 import path from "path";
 import plantumlCompile from "node-plantuml";

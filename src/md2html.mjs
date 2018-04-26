@@ -1,6 +1,6 @@
 import path from "path";
 import DOM from "jsdom";
-import fs from "fs-extra";
+import fs from "./fs-promises";
 
 import parseMarkdown from "./mdParser";
 import {

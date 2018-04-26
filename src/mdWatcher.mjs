@@ -1,5 +1,5 @@
 import path from "path";
-import fs from "fs-extra";
+import fs from "./fs-promises";
 
 import md2html from "./md2html";
 import { MARKDOWN_EXTENSION } from "./definitions.mjs";
