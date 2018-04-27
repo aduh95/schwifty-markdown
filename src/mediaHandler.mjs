@@ -28,7 +28,7 @@ const generateIfNotCached = (req, res, media, generate) =>
         res.sendStatus(304);
       } else {
         res.set("ETag", sha1);
-        generate();
+        return generate();
       }
     })
     .catch(err => {
@@ -50,7 +50,9 @@ export const yuml = () => (req, res) => {
 
   generateIfNotCached(req, res, media, () => {
     console.log("Generating yUML graph");
-    fs.readFile(media).then(yuml => res.send(yumlCompile(yuml.toString())));
+    return fs
+      .readFile(media)
+      .then(yuml => res.send(yumlCompile(yuml.toString())));
   });
 };
 

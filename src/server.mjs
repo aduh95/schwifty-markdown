@@ -136,6 +136,7 @@ export const refreshBrowser = () => {
           "http://localhost:" + CONFIG.PORT_NUMBER,
         ])
         .on("close", function(errCode) {
+          console.log("Browser has closed, closing Schwifty...");
           process.exit(errCode);
         });
     } catch (err) {
