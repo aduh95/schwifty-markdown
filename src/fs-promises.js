@@ -1,3 +1,5 @@
+const { constants, watch, createReadStream } = require("fs");
+
 try {
   if (!("finally" in Promise.prototype)) throw new Error();
   module.exports = require("fs/promises");
@@ -12,7 +14,7 @@ try {
   );
 
   module.exports = Object.keys(fs).reduce((fsPromises, methodName) => {
-    if (!methodName.endsWith("Sync")) {
+    if (!methodName.endsWith("Sync") && !methodName.endsWith("Stream")) {
       try {
         fsPromises[methodName] = promisify(fs[methodName]);
       } catch (_) {
@@ -23,4 +25,6 @@ try {
   }, {});
 }
 
-module.exports.constants = require("fs").constants;
+module.exports.constants = constants;
+module.exports.watch = watch;
+module.exports.createReadStream = createReadStream;
