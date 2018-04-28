@@ -52,7 +52,8 @@ export const yuml = () => (req, res) => {
     console.log("Generating yUML graph");
     return fs
       .readFile(media)
-      .then(yuml => res.send(yumlCompile(yuml.toString())));
+      .then(yumlCompile)
+      .then(svg => res.send(svg));
   });
 };
 
