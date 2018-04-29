@@ -10,14 +10,12 @@ import { CONFIG } from "./definitions";
 const sha1file = file =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
-    let input = fs.createReadStream(file);
+    const input = fs.createReadStream(file);
+
     input.on("error", err => reject(err));
-    input.on("readable", () => {
-      const data = input.read();
-      if (data) hash.update(data);
-      else {
-        resolve(hash.digest("hex"));
-      }
+    input.on("data", data => hash.update(data));
+    input.on("end", () => {
+      resolve(hash.digest("hex"));
     });
   });
 
