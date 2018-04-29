@@ -91,7 +91,7 @@ export const markdown = () => (req, res) => {
         .send(
           "<script type=module src='" +
             AUTO_REFRESH_MODULE +
-            "'></script><p>Accepted</p>"
+            "'></script><p>Redirection…</p>"
         );
     })
     .catch(() => {
@@ -110,8 +110,5 @@ export const localFile = () => (req, res) => {
 };
 
 export const serverFile = (file, mime) => (req, res) => {
-  fs
-    .readFile(file)
-    .then(result => res.set("Content-Type", mime).send(result))
-    .catch(err => (console.error(err), res.sendStatus(404)));
+  res.sendFile(file, { headers: { "Content-Type": mime } });
 };
