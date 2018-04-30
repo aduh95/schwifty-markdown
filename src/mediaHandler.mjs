@@ -43,20 +43,17 @@ const generateIfNotCached = (req, res, media, generate) =>
     });
 
 export const yuml = () => (req, res) => {
-  let media = req.params.media;
+  const { media } = req.params;
   res.set("Content-Type", "image/svg+xml");
 
   generateIfNotCached(req, res, media, () => {
     console.log("Generating yUML graph");
-    return fs
-      .readFile(media)
-      .then(yumlCompile)
-      .then(svg => res.send(svg));
+    return yumlCompile(fs.createReadStream(media)).then(svg => res.send(svg));
   });
 };
 
 export const plantuml = () => (req, res) => {
-  let media = req.params.media;
+  const { media } = req.params;
   res.set("Content-Type", "image/svg+xml");
 
   generateIfNotCached(req, res, media, () => {

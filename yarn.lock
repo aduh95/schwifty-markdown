@@ -347,9 +347,9 @@ color-string@^1.5.2:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/color/-/color-2.0.1.tgz#e4ed78a3c4603d0891eba5430b04b86314f4c839"
+color@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/color/-/color-3.0.0.tgz#d920b4328d534a3ac8295d68f7bd4ba6c427be9a"
   dependencies:
     color-convert "^1.9.1"
     color-string "^1.5.2"
@@ -2073,10 +2073,10 @@ yauzl@2.8.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.0.1"
 
-yuml2svg@4.0.0-beta2:
-  version "4.0.0-beta2"
-  resolved "https://registry.yarnpkg.com/yuml2svg/-/yuml2svg-4.0.0-beta2.tgz#952583c4965ef78473a1a7a1f0d0920d1cdcb13e"
+yuml2svg@4.0.0-beta6:
+  version "4.0.0-beta6"
+  resolved "https://registry.yarnpkg.com/yuml2svg/-/yuml2svg-4.0.0-beta6.tgz#89408c4a6b70544a6bb1b09706ae3ff113c7569d"
   dependencies:
-    color "^2.0.1"
+    color "^3.0.0"
     jsdom "^11.6.2"
     viz.js "^2.0.0-pre.5"
