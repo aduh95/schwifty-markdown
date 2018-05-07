@@ -1,7 +1,7 @@
 let worker;
 
 const preloadCSS = href => {
-  let style = document.createElement("link");
+  const style = document.createElement("link");
 
   style.rel = "preload";
   style.setAttribute("as", "style");
@@ -25,10 +25,10 @@ const initHighlight = function() {
 const init = initHighlight;
 
 const awaitHighlight = (codes, index) => {
-  let code = codes.item(index);
+  const code = codes.item(index);
 
   if (!worker) {
-    worker = new Worker("/worker.js");
+    worker = new Worker("/highlight-worker.js");
   }
 
   if (code) {

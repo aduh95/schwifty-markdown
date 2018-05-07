@@ -38,7 +38,7 @@ export const JS_MODULES = [
   "/lazyload.mjs",
   "/xivmap.mjs",
 ];
-export const JS_SCRIPTS = ["/worker.js", "/papaparse.min.js"];
+export const JS_SCRIPTS = ["/highlight-worker.js", "/papaparse.min.js"];
 export const tmpFile = temp.path({ suffix: ".html" });
 
 const app = express();
