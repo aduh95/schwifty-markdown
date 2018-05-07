@@ -51,15 +51,6 @@ If you want to use `npm`:
 npm -g install schwifty-markdown
 ```
 
-#### Note for Windows Users
-
-Because there is a small C++ component used for validating UTF-8 data, you might
-need to install a few other software packages in addition to Node to be able to
-build this module:
-
-* [Microsoft Visual C++](//support.microsoft.com/fr-fr/help/2977003/the-latest-supported-visual-c-downloads)
-* [Python 2.7](//python.org) (NOT Python 3.x)
-
 ### Run schwifty
 
 #### Getting started

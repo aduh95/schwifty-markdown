@@ -3,7 +3,7 @@ import open from "open";
 import path from "path";
 import fs from "./fs-promises";
 import express from "express";
-import webSocket from "websocket";
+import webSocket from "ws";
 import * as serveMedia from "./mediaHandler";
 import { CONFIG } from "./definitions";
 import child_process from "child_process";
@@ -107,10 +107,7 @@ export const startServer = () => {
   const server = app.listen(CONFIG.PORT_NUMBER, "localhost", function() {
     console.log(`Server started on http://localhost:${CONFIG.PORT_NUMBER}`);
   });
-  new webSocket.server({
-    httpServer: server,
-    autoAcceptConnections: true,
-  }).on("connect", connection => {
+  new webSocket.Server({ server }).on("connection", connection => {
     wsConnection && wsConnection.close();
     wsConnection = connection;
 
@@ -119,7 +116,8 @@ export const startServer = () => {
 };
 
 export const refreshBrowser = () => {
-  if (wsConnection && wsConnection.connected) {
+  const OPEN = 1;
+  if (wsConnection && wsConnection.readyState === OPEN) {
     console.log("Sending socket to refresh browser");
     wsConnection.send("refresh");
   } else if (CONFIG.AUTO_OPEN_BROWSER && !waitForBrowserToOpen) {
