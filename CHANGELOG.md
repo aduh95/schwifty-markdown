@@ -8,6 +8,7 @@
 
 * Add support for yUML sequence diagrams
 * Add support for inline charts and UML diagrams
+* Add support for mermaid diagrams (experimental)
 * Remove `fs-extra` dependency in favor of `fs/promises`
 * Improve package API access
 
