@@ -29,14 +29,15 @@ export const CSS_FILES = [
 export const JS_NO_MODULES_FALLBACK = ["/nomodule.js"];
 export const JS_MODULES = [
   AUTO_REFRESH_MODULE,
-  "/remove-fallback-warning.mjs",
   "/chart.mjs",
   "/chartist.mjs",
   "/diagram-rendering.mjs",
   "/generate-toc.mjs",
-  "/local-links.mjs",
   "/highlight.mjs",
   "/lazyload.mjs",
+  "/local-links.mjs",
+  "/mermaid-rendering.mjs",
+  "/remove-fallback-warning.mjs",
   "/xivmap.mjs",
 ];
 export const JS_SCRIPTS = ["/highlight-worker.js", "/papaparse.min.js"];

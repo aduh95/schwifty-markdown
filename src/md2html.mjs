@@ -134,6 +134,11 @@ const imagesHandler = (document, file) => {
             "data:text/csv," + encodeURIComponent(codeElement.textContent);
           break;
 
+        case "mermaid":
+          img.src =
+            "data:text/mermaid," + encodeURIComponent(codeElement.textContent);
+          break;
+
         case "plantuml":
           img.src =
             PLANTUML_GET_URL + encodeURIComponent(codeElement.textContent);
