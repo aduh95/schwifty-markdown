@@ -32,6 +32,7 @@ export const JS_MODULES = [
   "/remove-fallback-warning.mjs",
   "/chart.mjs",
   "/chartist.mjs",
+  "/diagram-rendering.mjs",
   "/generate-toc.mjs",
   "/local-links.mjs",
   "/highlight.mjs",

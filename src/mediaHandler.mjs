@@ -7,16 +7,26 @@ import renderMarkdown from "./md2html";
 import { AUTO_REFRESH_MODULE } from "./server";
 import { CONFIG } from "./definitions";
 
-const sha1file = file =>
+const sha1file = fileOrString =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
-    const input = fs.createReadStream(file);
 
-    input.on("error", err => reject(err));
-    input.on("data", data => hash.update(data));
-    input.on("end", () => {
-      resolve(hash.digest("hex"));
-    });
+    fs
+      .access(fileOrString, fs.constants.R_OK)
+      .then(() => {
+        const input = fs.createReadStream(fileOrString);
+
+        input.on("error", err => reject(err));
+        input.on("data", data => hash.update(data));
+        input.on("end", () => {
+          resolve(hash.digest("hex"));
+        });
+      })
+      .catch(() => {
+        // Plain string handling
+        hash.update(fileOrString);
+        resolve(hash.digest("hex"));
+      });
   });
 
 const generateIfNotCached = (req, res, media, generate) =>
@@ -48,7 +58,13 @@ export const yuml = () => (req, res) => {
 
   generateIfNotCached(req, res, media, () => {
     console.log("Generating yUML graph");
-    return yumlCompile(fs.createReadStream(media)).then(svg => res.send(svg));
+    return fs
+      .access(media, fs.constants.R_OK)
+      .then(
+        () => yumlCompile(fs.createReadStream(media)),
+        () => yumlCompile(media) // If a yUML string is requested
+      )
+      .then(svg => res.send(svg));
   });
 };
 
@@ -58,7 +74,7 @@ export const plantuml = () => (req, res) => {
 
   generateIfNotCached(req, res, media, () => {
     if (CONFIG.JAVA_ENABLED) {
-      console.log("Generating plantuml SVG", media);
+      console.log("Generating plantuml SVG");
 
       plantumlCompile
         .generate(media, {
