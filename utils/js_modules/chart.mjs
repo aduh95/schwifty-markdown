@@ -1,5 +1,5 @@
 import Chartist from "./chartist.mjs";
-import lazyLoad from "./lazyload.mjs";
+import { registerImageHandler } from "./lazyload.mjs";
 
 const asyncLoadScript = (globalObject, src) =>
   new Promise(resolve => {
@@ -59,25 +59,24 @@ const generate = async img => {
   return new Chartist[chart.type](img.parentNode, chart.data, chart.options);
 };
 
-export default lazyLoad.then(promises =>
-  promises.map(loading =>
-    loading.then(async img => {
-      let src = img.src;
-      if (src.endsWith(".json") || src.startsWith("data:application/json,")) {
-        img.hidden = true;
-        return await generate(img);
-      } else if (src.endsWith(".csv") || src.startsWith("data:text/csv,")) {
-        img.hidden = true;
-        return parseCSV(src, /%0A/.test(src)).then(
-          chartData =>
-            new Chartist.Line(img.parentNode, {
-              labels: Object.keys(chartData[0]),
-              series: chartData.map(line => Object.values(line)),
-            })
-        );
-      } else {
-        return img;
-      }
-    })
-  )
+registerImageHandler(
+  src => src.endsWith(".json") || src.startsWith("data:application/json,"),
+  img => {
+    img.hidden = true;
+    return generate(img);
+  }
+);
+
+registerImageHandler(
+  src => src.endsWith(".csv") || src.startsWith("data:text/csv,"),
+  img => {
+    img.hidden = true;
+    return parseCSV(img.src, /%0A/.test(img.src)).then(
+      chartData =>
+        new Chartist.Line(img.parentNode, {
+          labels: Object.keys(chartData[0]),
+          series: chartData.map(line => Object.values(line)),
+        })
+    );
+  }
 );

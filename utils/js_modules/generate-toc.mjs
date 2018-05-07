@@ -1,5 +1,5 @@
 import xivmap from "./xivmap.mjs";
-import waitForLazyLoad from "./chart.mjs";
+import waitForLazyLoad from "./lazyload.mjs";
 
 /**
  * Based on the [Stuart Langridge script](https://kryogenix.org/code/browser/generated-toc/generated_toc.js)

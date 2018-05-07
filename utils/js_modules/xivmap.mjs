@@ -1,4 +1,4 @@
-import waitForLazyLoad from "./chart.mjs";
+import waitForLazyLoad from "./lazyload.mjs";
 
 // The viewport height, updated at each resize
 let viewPortHeight = window.innerHeight;

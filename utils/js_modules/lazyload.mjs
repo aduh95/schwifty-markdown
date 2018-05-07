@@ -1,20 +1,36 @@
 let promiseResolver;
-const promise = new Promise(resolve => (promiseResolver = resolve));
 
 const promises = [];
+
+const imageHandlers = [];
+
+/**
+ * @param {(string)=>boolean} filter  The function used to filter image when giving a source in argument
+ * @param {(HTMLImageElement)=>Promise<>} callback The handler
+ */
+export const registerImageHandler = (filter, callback) => {
+  imageHandlers.push({ filter, callback });
+};
 
 const init = function() {
   const pictures = document.querySelectorAll("noscript.img");
 
-  for (let noscript of pictures) {
-    let picture = document.createElement("picture");
+  for (const noscript of pictures) {
+    const picture = document.createElement("picture");
 
     picture.innerHTML = noscript.textContent;
     noscript.parentNode.insertBefore(picture, noscript);
-    promises.push(
-      new Promise(resolve => {
-        let img = picture.querySelector("img");
-        if (img) {
+
+    const img = picture.querySelector("img");
+
+    const handlers = imageHandlers.filter(({ filter }) => filter(img.src));
+
+    if (handlers.length) {
+      promises.push(handlers.map(({ callback }) => callback(img)));
+    } else {
+      // Load classic image
+      promises.push(
+        new Promise(resolve => {
           img.onload = function() {
             resolve(this);
           };
@@ -22,19 +38,22 @@ const init = function() {
             console.warn(e);
             resolve(this);
           };
-        }
-      })
-    );
+        })
+      );
+    }
+
     noscript.remove();
   }
 
   promiseResolver(promises);
 };
 
-if (window.document.readyState === "loading") {
-  window.document.addEventListener("DOMContentLoaded", init);
-} else {
-  init.apply(window.document);
-}
-
-export default promise;
+export default new Promise(resolve => {
+  promiseResolver = resolve;
+  if (window.document.readyState === "loading") {
+    window.document.addEventListener("DOMContentLoaded", init);
+  } else {
+    // Wait for image handler registration
+    window.requestAnimationFrame(() => window.requestAnimationFrame(init));
+  }
+});
