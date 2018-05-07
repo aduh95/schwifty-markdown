@@ -131,7 +131,8 @@ const imagesHandler = (document, file) => {
           break;
         case "csv":
           img.src =
-            "data:text/csv," + encodeURIComponent(codeElement.textContent);
+            "data:text/csv," +
+            encodeURIComponent(codeElement.textContent.trim());
           break;
 
         case "mermaid":
