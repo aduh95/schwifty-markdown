@@ -117,10 +117,33 @@ const imagesHandler = (document, file) => {
   const images = document.querySelectorAll("img");
 
   for (const img of images) {
-    let parent = img.parentNode;
-    let picture = document.createElement("noscript");
+    const parent = img.parentNode;
+    const picture = document.createElement("noscript");
     picture.setAttribute("class", "img");
-    if (isRelativePath(img.src)) {
+    if ("about:blank#inline" === img.src) {
+      const codeElement = parent.nextElementSibling.firstElementChild;
+      const language = codeElement.className.substr(5);
+      switch (language) {
+        case "json":
+          img.src =
+            "data:application/json," +
+            encodeURIComponent(codeElement.textContent);
+          break;
+        case "csv":
+          img.src =
+            "data:text/csv," + encodeURIComponent(codeElement.textContent);
+          break;
+
+        case "plantuml":
+          img.src =
+            PLANTUML_GET_URL + encodeURIComponent(codeElement.textContent);
+          break;
+        case "yuml":
+          img.src = YUML_GET_URL + encodeURIComponent(codeElement.textContent);
+          break;
+      }
+      codeElement.parentNode.remove();
+    } else if (isRelativePath(img.src)) {
       let url;
 
       if (img.src.endsWith(PLANTUML_EXTENSION)) {
@@ -142,8 +165,8 @@ const imagesHandler = (document, file) => {
       !picture.previousSibling &&
       !picture.nextSibling
     ) {
-      let figure = document.createElement("figure");
-      let figcaption = document.createElement("figcaption");
+      const figure = document.createElement("figure");
+      const figcaption = document.createElement("figcaption");
       figcaption.appendChild(document.createTextNode(img.alt));
 
       figure.appendChild(picture);

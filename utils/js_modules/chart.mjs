@@ -63,7 +63,7 @@ export default lazyLoad.then(promises =>
   promises.map(loading =>
     loading.then(async img => {
       let src = img.src;
-      if (src.endsWith(".json") || src.startsWith("data:text/json,")) {
+      if (src.endsWith(".json") || src.startsWith("data:application/json,")) {
         img.hidden = true;
         return await generate(img);
       } else if (src.endsWith(".csv") || src.startsWith("data:text/csv,")) {
