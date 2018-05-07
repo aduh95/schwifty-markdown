@@ -227,6 +227,17 @@ Monday,Tuesday,Wednesday,Thursday,Friday
 5,6,1,2,3
 ```
 
+If you don't need a separate file to host the graph data, you can inline it:
+
+````markdown
+![Legend](#inline)
+
+```csv
+# No header line, a range will be used
+1;4;3
+```
+````
+
 If you need more customization, you can use a JSON file:
 
 ```json
@@ -240,40 +251,56 @@ If you need more customization, you can use a JSON file:
 }
 ```
 
-There are 3 types supported:
+There are 3 `type`s supported:
 
 * Line
 * Pie
 * Bar
 
-The list of available options is described on the
+In the `data` field, you can either provide:
+
+* a `string`, as a path to a `CSV` data file
+* an object that needs to consist of a `labels` array and a `series` (either as
+  an array or as a `string` path to a `CSV` data file)
+
+Then, the `options` field ; the list of available options is described on the
 [Chartist documentation](//gionkunz.github.io/chartist-js/api-documentation.html).
 
-You can combine the two methods by having a JSON file for the customization and
-a CSV file for the data:
-
-```markdown
-![Title of the chart](./chart.json)
-```
-
-```json
-{
-  "type": "Bar",
-  "data": "./data.csv"
-}
-```
+> You can combine the three methods by having an inline JSON for the
+> customization and a CSV file for the data:
+>
+> ````markdown
+> ![Title of the chart](#inline)
+>
+> ```json
+> {
+>   "type": "Bar",
+>   "data": "./data.csv"
+> }
+> ```
+> ````
 
 _The rendering is done locally using a fork of
 [Chartist](https://gionkunz.github.io/chartist-js/)._
 
 #### yUML usage
 
-Schwifty Markdown can render on-the-fly your PlantUML diagrams, just insert it
-as an image, it will render as an SVG.
+Schwifty Markdown can render on-the-fly your yUML diagrams, just insert it as an
+image, it will render as an SVG.
 
 ```markdown
 ![Legend](./diagram.yuml)
 ```
+
+> You can also inline them:
+>
+> ````markdown
+> ![Legend](#inline)
+>
+> ```yuml
+> // Your yUML code here
+> ```
+> ````
 
 The syntax is described on this
 [wiki page](https://github.com/jaime-olivares/vscode-yuml/wiki).
@@ -291,6 +318,16 @@ as an image, it will render as an SVG.
 ```markdown
 ![Legend](./diagram.pu)
 ```
+
+> You can also inline them:
+>
+> ````markdown
+> ![Legend](#inline)
+>
+> ```plantuml
+> ' Your PlantUML code here
+> ```
+> ````
 
 The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
@@ -318,6 +355,26 @@ enough).
 is why Schwifty disables them by default. If you use the `--plantuml-config`
 option to set a custom config file for PlantUML, you might want to add the line
 `skinparam shadowing false`.
+
+#### mermaid usage (experimental)
+
+Schwifty Markdown have a limited support for
+[mermaid diagrams](https://mermaidjs.github.io/).
+
+* Use dynamic JS `import()` (only supported by Chrome 63+)
+* Use CDN-hosted version => network access is required
+
+````markdown
+![Legend](#inline)
+
+```mermaid
+gantt
+    title A Gantt Diagram
+    dateFormat  YYYY-MM-DD
+    section Section
+    A task           :a1, 2014-01-01, 30d
+```
+````
 
 #### Metadata
 
