@@ -4,6 +4,17 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.8.0(WIP)
+
+* Add support for yUML sequence diagrams
+* Add support for inline charts and UML diagrams
+* Remove `fs-extra` dependency in favor of `fs/promises`
+* Improve package API access
+
+### v1.7.1(2018-03-08)
+
+* Fix bug on Node 8.10
+
 ### v1.7.0(2018-02-19)
 
 * Add CLI flag `--output` to output a PDF
