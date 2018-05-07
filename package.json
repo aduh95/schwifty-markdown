@@ -40,7 +40,7 @@
     "temp": "^0.8.3",
     "websocket": "^1.0.24",
     "yargs": "^10.0.1",
-    "yuml2svg": "4.0.0-beta6"
+    "yuml2svg": "4.0.0-beta7"
   },
   "scripts": {
     "start": "node src/checkDependencies.js && node --experimental-modules bin/schwifty.mjs",
