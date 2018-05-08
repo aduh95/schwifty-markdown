@@ -51,7 +51,8 @@ registerImageHandler(
       .then(response => response.text())
       .then(renderDiagram)
       .then(svgText => {
-        img.parentNode.innerHTML = svgText;
+        img.src = "data:image/svg+xml;base64," + btoa(svgText);
+        img.classList.add(MERMAID_CODE_CLASS);
       })
 );
 

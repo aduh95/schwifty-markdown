@@ -19,6 +19,7 @@ footer {
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   line-height: 1.5;
   color: #24292e;
   font-family: -apple-system, BlinkMacSystemFont, segoe ui, Helvetica, Arial,
@@ -134,6 +135,7 @@ footer {
 .markdown-body a {
   background-color: transparent;
   -webkit-text-decoration-skip: objects;
+  text-decoration-skip: objects;
 }
 .markdown-body a:active,
 .markdown-body a:hover {
@@ -148,9 +150,6 @@ footer {
 .markdown-body h1 {
   font-size: 2em;
   margin: 0.67em 0;
-}
-.markdown-body img {
-  border-style: none;
 }
 .markdown-body svg:not(:root) {
   overflow: hidden;
@@ -501,6 +500,10 @@ footer {
   max-width: 100%;
   box-sizing: content-box;
   background-color: #fff;
+  border-style: none;
+}
+.markdown-body img.lang-mermaid {
+  width: 100%;
 }
 .markdown-body code {
   padding: 0;
