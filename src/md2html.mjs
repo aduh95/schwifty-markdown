@@ -36,7 +36,7 @@ const mediaServerication = (file, path) =>
   isRelativePath(path) ? pathServerication(file, path, MEDIA_GET_URL) : path;
 
 const setCharset = document => {
-  let charset = document.createElement("meta");
+  const charset = document.createElement("meta");
   charset.setAttribute("charset", CHARSET);
   document.head.appendChild(charset);
 };
@@ -51,14 +51,14 @@ const setTitle = (document, file) => {
 
 const headerAndFooterHandler = document => {
   const headers = document.querySelectorAll("header");
-  for (let header of headers) {
+  for (const header of headers) {
     if (!header.id) {
       header.id = "pageHeader";
     }
     document.body.insertBefore(header, document.body.firstChild);
   }
   const footers = document.querySelectorAll("footer");
-  for (let footer of footers) {
+  for (const footer of footers) {
     if (!footer.id) {
       footer.id = "pageFooter";
     }
@@ -67,31 +67,31 @@ const headerAndFooterHandler = document => {
 };
 
 const addDependencies = document => {
-  for (let cssFile of CSS_FILES) {
-    let style = document.createElement("link");
+  for (const cssFile of CSS_FILES) {
+    const style = document.createElement("link");
     style.href = cssFile;
     style.rel = "stylesheet";
     document.head.appendChild(style);
   }
 
-  for (let jsFile of JS_MODULES) {
-    let script = document.createElement("script");
+  for (const jsFile of JS_MODULES) {
+    const script = document.createElement("script");
     script.type = "module";
     script.src = jsFile;
     script.setAttribute("async", "async");
     document.head.appendChild(script);
   }
 
-  for (let jsFile of JS_SCRIPTS) {
-    let script = document.createElement("link");
+  for (const jsFile of JS_SCRIPTS) {
+    const script = document.createElement("link");
     script.rel = "preload";
     script.setAttribute("as", "script");
     script.href = jsFile;
     document.head.appendChild(script);
   }
 
-  for (let jsFile of JS_NO_MODULES_FALLBACK) {
-    let script = document.createElement("script");
+  for (const jsFile of JS_NO_MODULES_FALLBACK) {
+    const script = document.createElement("script");
     script.setAttribute("nomodule", "nomodule");
     script.src = jsFile;
     document.head.appendChild(script);
@@ -102,8 +102,8 @@ const fixSharedID = document => {
   // Force IDs to be different in the titles
   const titles = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
   const known_titles = [];
-  let title_nb = 0;
-  for (let title of titles) {
+  const title_nb = 0;
+  for (const title of titles) {
     if (known_titles.includes(title.id)) {
       title.id += "-" + title_nb++;
     } else {
@@ -227,8 +227,8 @@ const nonBreakingSpaces = (document, file) => {
 
 const linksHandler = (document, file) => {
   // Handle links to redirect local link to be rendered
-  let links = document.querySelectorAll("a");
-  for (let link of links) {
+  const links = document.querySelectorAll("a");
+  for (const link of links) {
     if (isRelativePath(link.href)) {
       link.setAttribute(
         "data-original-href",
@@ -247,8 +247,8 @@ const linksHandler = (document, file) => {
 };
 
 const codeBlockHandler = document => {
-  let codeBlocks = document.querySelectorAll("code");
-  for (let code of codeBlocks) {
+  const codeBlocks = document.querySelectorAll("code");
+  for (const code of codeBlocks) {
     if (
       /^lang-/.test(code.className) &&
       code.parentNode.nodeName.toLowerCase() === "pre"
@@ -293,7 +293,7 @@ const createUserScriptTag = (file, document, path) => {
 };
 
 const addHTMLHeaders = (file, dom, headers) => {
-  const document = dom.window.document;
+  const { document } = dom.window;
   let titleSet = false;
   setCharset(document);
 

@@ -81,7 +81,7 @@ for (const serverFile of [
     folder: "js_scripts",
   },
 ]) {
-  for (let file of serverFile.files) {
+  for (const file of serverFile.files) {
     app.get(
       file,
       serveMedia.serverFile(

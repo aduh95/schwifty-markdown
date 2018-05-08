@@ -3,7 +3,6 @@ import path from "path";
 import schwifty from "../index";
 import { CONFIG } from "../src/definitions";
 import { startServer } from "../src/server";
-import { watchCounter } from "../src/mdWatcher";
 import opt from "../src/cli-args";
 
 const argv = opt.demandCommand(1, "You must provide a path to listen to!").argv;
