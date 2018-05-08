@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { exec, execFile, spawn } = require("child_process");
 const path = require("path");
 
@@ -5,7 +7,7 @@ let exitCode = 0;
 let waitToRunCypress = true;
 const runCypress = () => {
   console.log("Starting Cypress");
-  let cypress = spawn(
+  const cypress = spawn(
     "npx",
     process.argv.length > 2
       ? ["cypress", "open", "--env", "testDir=" + __dirname]
@@ -47,7 +49,7 @@ server.stderr.on("data", message => {
 });
 
 server.stdout.on("data", data => {
-  let message = data.toString().trim();
+  const message = data.toString().trim();
   console.log(message);
 
   if (waitToRunCypress && message.endsWith("being watched.")) {
