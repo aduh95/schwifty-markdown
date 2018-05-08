@@ -1,18 +1,16 @@
 // Some function of the core fs module are needed
-const { constants, watch, createReadStream } = require("fs");
+const fs = require("fs");
+const { constants, watch, createReadStream } = fs;
 
-try {
-  if (!("finally" in Promise.prototype)) {
-    // Node-Chakracore embeds fs/promises but crashes depending of Promise.finally support
-    throw new Error();
-  }
-  module.exports = require("fs/promises");
-} catch (e) {
-  // Polyfill for Node.js not supporting fs/promises
-  const fs = require("fs");
+if ("finally" in Promise.prototype && "promises" in fs) {
+  // Node-Chakracore embeds fs.promises but crashes depending of Promise.finally support
+
+  module.exports = fs.promises;
+} else {
+  // Polyfill for Node.js not supporting fs.promises
   const { promisify } = require("util");
 
-  // Methods available in fs/promises as of Node 10
+  // Methods available in fs.promises as of Node 10
   const promisedMethods = [
     "access",
     "copyFile",
@@ -51,7 +49,7 @@ try {
 
   console.error(
     "Warning",
-    "The fs/promises API is not supported by this version of Node"
+    "The fs.promises API is not supported by this version of Node"
   );
 
   module.exports = promisedMethods.reduce((fsPromises, methodName) => {
