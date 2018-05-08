@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "exitzero": "^1.0.1",
-    "express": "expressjs/express#5.0",
+    "express": "^4.16.3",
     "is-port-available": "^0.1.5",
     "is-windows": "^1.0.1",
     "js-yaml": "^3.10.0",
