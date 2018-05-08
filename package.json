@@ -54,7 +54,7 @@
     "node": ">=8.5.0"
   },
   "devDependencies": {
-    "cypress": "^1.1.0"
+    "cypress": "^2.1.0"
   },
   "yargs": {
     "boolean-negation": false
