@@ -31,21 +31,39 @@ describe("Test SVG generation", function() {
       });
   });
 
-  it("Tests yUML rendering", function() {
+  it("Tests diagram rendering", function() {
+    const checkSVGReception = response => {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(response.body, "text/xml");
+
+      cy.wrap(xmlDoc.rootElement.nodeName).should("eq", "svg");
+    };
+
     cy.request(
       Cypress.env("host") +
         "md/" +
         encodeURIComponent(Cypress.env("testDir") + "/yuml.md")
     );
-    cy
-      .visit(Cypress.env("host"))
-      .then(() => cy.get("img").invoke("attr", "src"))
-      .then(src => cy.request(Cypress.env("host") + src.substring(1)))
-      .then(response => {
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(response.body, "text/xml");
-
-        cy.wrap(xmlDoc.rootElement.nodeName).should("eq", "svg");
-      });
+    cy.visit(Cypress.env("host")).then(() => {
+      cy
+        .get("img")
+        .each(img => {
+          const src = img.attr("src");
+          if (src.startsWith("data:text/mermaid")) {
+            // Mermaid diagram case
+            cy
+              .wrap(img.parent())
+              .get("img.lang-mermaid")
+              .invoke("attr", "src");
+            /** @see https://github.com/cypress-io/cypress/issues/1688 */
+            // .then(url => cy.request({ url }))
+            // .then(checkSVGReception);
+          } else {
+            cy.request(src).then(checkSVGReception);
+          }
+        })
+        .its("length")
+        .should("eq", 5);
+    });
   });
 });
