@@ -102,7 +102,7 @@ const fixSharedID = document => {
   // Force IDs to be different in the titles
   const titles = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
   const known_titles = [];
-  const title_nb = 0;
+  let title_nb = 0;
   for (const title of titles) {
     if (known_titles.includes(title.id)) {
       title.id += "-" + title_nb++;
