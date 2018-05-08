@@ -33,7 +33,6 @@
     "js-yaml": "^3.10.0",
     "jsdom": "^11.4.0",
     "marked": "^0.3.6",
-    "mime": "^2.0.3",
     "node-plantuml": "^0.5.0",
     "open": "^0.0.5",
     "papaparse": "^4.3.6",
