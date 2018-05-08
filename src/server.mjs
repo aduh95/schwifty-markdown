@@ -46,10 +46,14 @@ export const tmpFile = temp.path({ suffix: ".html" });
 const app = express();
 
 app.get("/", function(req, res) {
-  res.set("Content-Type", "text/html");
   fs
-    .readFile(tmpFile)
-    .then(result => res.send(result))
+    .access(tmpFile, fs.R_OK)
+    .then(
+      () =>
+        new Promise((resolve, reject) =>
+          res.sendFile(tmpFile, err => (err ? reject(err) : resolve()))
+        )
+    )
     .catch(
       err => (
         console.error(err),
