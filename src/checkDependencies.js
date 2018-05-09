@@ -3,7 +3,7 @@ var exec = require("child_process").exec;
 var version = process.version;
 var isWin = require("is-windows")();
 
-var missingDep = "MISSING DEPENDENCY:";
+var missingDep = "MissingDependencyWarning";
 var checkProgramInPath = function(bin) {
   return isWin
     ? 'powershell -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "Get-Command ' +
@@ -20,9 +20,9 @@ if (version < "v10.0.0" && version < "v8.5.0" && version < "v8.10.0") {
 if (!process.env.SCHWIFTY_DISABLE_JAVA) {
   exec(checkProgramInPath("java"), function(err, stdout, stderr) {
     if (err !== null) {
-      console.warn(
-        missingDep,
-        "Warning, Java is required for plantuml diagram rendering (Set environment variable `SCHWIFTY_DISABLE_JAVA` at true to disable this warning)"
+      process.emitWarning(
+        "Java is required for plantuml diagram rendering (Set environment variable `SCHWIFTY_DISABLE_JAVA` at true to disable this warning)",
+        missingDep
       );
     }
   });
