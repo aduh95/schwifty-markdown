@@ -80,10 +80,19 @@ schwifty --help
 #### Browser support
 
 Schwifty Markdown uses HTML5; if your browser support it, it should work just
-fine. You might want to pay attention if your browser supports these features:
+fine. At the time of writing, all major browser\* in their latest version
+support Schwifty. If Schwifty detects that your browser doesn't support / has
+disabled some features it uses, it will display a warning and try to render your
+document the best it can.
 
-* [ES6 Modules](//caniuse.com/#feat=es6-module)
-* [Resource Hints: preload](//caniuse.com/#feat=link-rel-preload)
+> \*Major browsers where Schwifty had been tested: Google Chrome, Microsoft
+> Edge, Mozilla Firefox.
+>
+> On Firefox, the following flags may need to be activated in `about:config`:
+>
+> * `dom.moduleScripts.enabled`
+> * `network.preload`
+> * `dom.allow_scripts_to_close_windows` [optional]
 
 #### Output as PDF
 
@@ -352,8 +361,8 @@ option to set a custom config file for PlantUML, you might want to add the line
 Schwifty Markdown have a limited support for
 [mermaid diagrams](https://mermaidjs.github.io/).
 
-* Use dynamic JS `import()` (only supported by Chrome 63+)
-* Use CDN-hosted version => network access is required
+* Chrome 63+ (uses dynamic JS `import()`)
+* Network access is required (uses a CDN-hosted version)
 
 ````markdown
 ![Legend](#inline)
