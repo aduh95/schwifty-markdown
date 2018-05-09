@@ -47,8 +47,7 @@ if ("finally" in Promise.prototype && "promises" in fs) {
     "readFile",
   ];
 
-  console.error(
-    "Warning",
+  process.emitWarning(
     "The fs.promises API is not supported by this version of Node"
   );
 
