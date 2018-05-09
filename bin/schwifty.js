@@ -1,15 +1,9 @@
 #!/usr/bin/env node
 
+require("../src/checkDependencies");
 const fs = require("../src/fs-promises");
 const path = require("path");
-const { exec } = require("child_process");
-
-const shellescape = cmd =>
-  Number.isInteger(cmd)
-    ? cmd
-    : cmd === true
-      ? ""
-      : `"${cmd.replace(/(["\s'$`\\])/g, "\\$1")}"`;
+const { exec, spawn } = require("child_process");
 
 const argv = require("../src/cli-args")
   .usage("Usage: $0 [--port=3000] [--browser=firefox] [--no-browser] <path>")
@@ -44,87 +38,85 @@ const argv = require("../src/cli-args")
   .help("h")
   .alias("h", "help").argv;
 
-const NODE = "node";
 const FLAGS = "--experimental-modules";
 
 const WORKING_DIR = path.resolve(path.join(__dirname, ".."));
+
+const EXEC_FILE = path.join(WORKING_DIR, "bin", "schwifty.mjs");
 const PACKAGE_FILE = path.join(WORKING_DIR, "package.json");
 
 const watchable = path.resolve(argv._.pop() || ".");
 
 if (argv.u) {
   console.log("Updating plantUML");
-  fs.readFile(PACKAGE_FILE).then(json => {
-    let data = JSON.parse(json);
-
-    exec(
-      data.scripts.updateDependencies,
-      {
-        cwd: WORKING_DIR,
-      },
-      (err, stdout) => {
-        if (err) {
-          console.error(err);
-        } else {
-          try {
-            let result = JSON.parse(stdout);
-            switch (result.statusCode) {
-              case 200:
-                console.log("Done!");
-                break;
-
-              case 304:
-                console.log("Already up-to-date");
-                break;
-
-              default:
-                console.error("Something went wrong", result);
-            }
-          } catch (err) {
+  fs
+    .readFile(PACKAGE_FILE)
+    .then(JSON.parse)
+    .then(data => {
+      exec(
+        data.scripts.updateDependencies,
+        {
+          cwd: WORKING_DIR,
+        },
+        (err, stdout) => {
+          if (err) {
             console.error(err);
+          } else {
+            try {
+              const result = JSON.parse(stdout);
+              switch (result.statusCode) {
+                case 200:
+                  console.log("Done!");
+                  break;
+
+                case 304:
+                  console.log("Already up-to-date");
+                  break;
+
+                default:
+                  console.error("Something went wrong", result);
+              }
+            } catch (err) {
+              console.error(err);
+            }
           }
         }
-      }
-    );
-  });
+      );
+    });
 } else {
   const [FgRed, FgYellow, FgReset] = ["\x1b[31m", "\x1b[33m", "\x1b[0m"];
 
   fs
     .access(watchable, fs.constants.R_OK)
     .then(() => require("is-port-available")(argv.p))
-    .then(() => fs.readFile(PACKAGE_FILE))
-    .then(JSON.parse)
     .then(data => {
-      const options = [];
-      for (let option in argv) {
-        if (
-          option === "_" ||
-          option.length > 1 ||
-          argv[option] === false ||
-          argv[option] === undefined
+      const options = [FLAGS, EXEC_FILE];
+      Object.keys(argv)
+        .filter(
+          option =>
+            option !== "_" &&
+            option.length <= 1 &&
+            argv[option] !== false &&
+            argv[option] !== undefined
         )
-          continue;
-        try {
-          options.push(`-${option} ${shellescape(argv[option])}`);
-        } catch (e) {
-          console.error(e);
-          console.log(option, argv[option]);
-        }
-      }
-      options.push(shellescape(watchable));
+        .forEach(option => {
+          try {
+            options.push(`-${option}`);
+            options.push(argv[option]);
+          } catch (e) {
+            console.error(e);
+            console.log(option, argv[option]);
+          }
+        });
 
-      if (argv.j) {
-        const isWin = require("is-windows")();
+      options.push(watchable);
 
-        data.scripts.start =
-          (isWin ? "SET " : "") +
-          "SCHWIFTY_DISABLE_JAVA=true " +
-          data.scripts.start;
-      }
-
-      const subprocess = exec(data.scripts.start + " " + options.join(" "), {
+      const subprocess = spawn(process.argv[0], options, {
         cwd: WORKING_DIR,
+        env: {
+          SCHWIFTY_DISABLE_JAVA: argv.j,
+        },
+        windowsHide: true,
       });
 
       subprocess.on("error", err => console.error(err));
@@ -132,10 +124,12 @@ if (argv.u) {
       if (!argv.q) {
         subprocess.stderr.on("data", data =>
           console.error(
-            (/warning/i.test(data) ? FgYellow : FgRed) + data.trim() + FgReset
+            (/warning/i.test(data) ? FgYellow : FgRed) +
+              data.toString().trim() +
+              FgReset
           )
         );
-        subprocess.stdout.on("data", data => console.log(data.trim()));
+        subprocess.stdout.pipe(process.stdout);
       }
     })
     .catch(err => console.error(FgRed + err + FgReset));
