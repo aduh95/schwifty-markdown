@@ -7,7 +7,7 @@ const RATIO_CSS_VAR = "--ratio";
 const XIVMAP_MASK_CLASS = "xivmap-viewport";
 
 // Animation frame called when scrolling
-let updateViewportAnimationFrame;
+let updateViewportAnimationFrame = 0;
 
 // Options object
 const o = {};
@@ -74,7 +74,7 @@ const updateDom = function() {
   const viewport =
     '<div class="' + XIVMAP_MASK_CLASS + '" style="top:0"><div></div></div>';
   let html = "";
-  for (let el of elements) {
+  for (const el of elements) {
     // Exclude fixed elements and invisible elements from the minimap
     if (
       !isElementFixed(el) &&
@@ -127,24 +127,22 @@ const resizeViewport = function() {
  * Should probably be used when scrolling.
  */
 const updateViewport = function() {
-  const topDistance = window.scrollY;
-  const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
-  // const viewportHeight = window.innerHeight / ratio;
-  // console.log(viewportHeight, topDistance, ratio);
-  if (updateViewportAnimationFrame) {
-    cancelAnimationFrame(updateViewportAnimationFrame);
-  }
-  updateViewportAnimationFrame = requestAnimationFrame(() => {
-    const viewportMask = o.minimap.querySelector("." + XIVMAP_MASK_CLASS);
-    viewportMask.style.transform = `translateY(${topDistance * ratio}px)`;
-    const translation =
-      viewPortHeight - viewportMask.offsetHeight * 2 - topDistance * ratio;
+  if (updateViewportAnimationFrame === 0) {
+    const topDistance = window.scrollY;
+    const ratio = parseFloat(o.minimap.style.getPropertyValue(RATIO_CSS_VAR));
 
-    if (translation < 0) {
-      o.minimap.style.transform = `translateY(${translation}px)`;
-    }
-    updateViewportAnimationFrame = null;
-  });
+    updateViewportAnimationFrame = requestAnimationFrame(() => {
+      const viewportMask = o.minimap.querySelector("." + XIVMAP_MASK_CLASS);
+      viewportMask.style.transform = `translateY(${topDistance * ratio}px)`;
+      const translation =
+        viewPortHeight - viewportMask.offsetHeight * 2 - topDistance * ratio;
+
+      if (translation < 0) {
+        o.minimap.style.transform = `translateY(${translation}px)`;
+      }
+      updateViewportAnimationFrame = 0;
+    });
+  }
 };
 
 /**
@@ -168,9 +166,13 @@ const showMomentarily = function() {
 const beginDragTracking = function(e) {
   updateScrollPosition(e);
   o.minimap.addEventListener("mousemove", updateScrollPosition);
-  once(window, "mouseup", function() {
-    o.minimap.removeEventListener("mousemove", updateScrollPosition);
-  });
+  window.addEventListener(
+    "mouseup",
+    function() {
+      o.minimap.removeEventListener("mousemove", updateScrollPosition);
+    },
+    { once: true, passive: true }
+  );
 };
 
 /**
@@ -275,9 +277,10 @@ const makeAccurateRectangle = function(element, ratio) {
   range.selectNodeContents(element);
 
   const rects = range.getClientRects();
-  if (rects.length) {
+  const { length } = rects;
+  if (length) {
     let html = "";
-    for (let i = 0; i < rects.length; i++) {
+    for (let i = 0; i < length; i++) {
       html += makeRectangle(
         clientRectAbsolutePosition(rects.item(i)),
         ratio,
@@ -294,15 +297,15 @@ const makeAccurateRectangle = function(element, ratio) {
  * Converts a client rectangle to one with positions
  * calculated from the top of the document
  *
- * @param clientRect
+ * @param {DOMRect} clientRect
  * @returns {{top: number, left: number, width: number, height: number}}
  */
-const clientRectAbsolutePosition = function(clientRect) {
+const clientRectAbsolutePosition = function({ top, left, width, height }) {
   return {
-    top: clientRect.top + window.pageYOffset,
-    left: clientRect.left + window.pageXOffset,
-    width: clientRect.width,
-    height: clientRect.height,
+    top: top + window.pageYOffset,
+    left: left + window.pageXOffset,
+    width,
+    height,
   };
 };
 
@@ -339,7 +342,7 @@ const mouseDistanceFromTopOfTarget = function(e) {
  */
 const isElementFixed = function(element) {
   while (element) {
-    let styles = getComputedStyle(element);
+    const styles = getComputedStyle(element);
     if (styles.getPropertyValue("position") === "fixed") return true;
     element = element.parentElement;
   }
@@ -371,22 +374,21 @@ const isElementVisible = function(el) {
  * @returns {{left: number, top: number, width: number, height: number}}
  */
 const position = function(element, ancestor) {
-  const pos = { left: 0, top: 0, width: 0, height: 0 };
   if (ancestor) {
-    const thisPos = position(element);
+    const { top, left, width, height } = position(element);
     const ancestorPos = position(ancestor);
-    pos.left = thisPos.left - ancestorPos.left;
-    pos.top = thisPos.top - ancestorPos.top;
-    pos.width = thisPos.width;
-    pos.height = thisPos.height;
+
+    return {
+      top: top - ancestorPos.top,
+      left: left - ancestorPos.left,
+      width,
+      height,
+    };
   } else {
-    const rect = element.getBoundingClientRect();
-    pos.top = rect.top + window.pageYOffset;
-    pos.left = rect.left; // + window.pageXOffset - o.bodyWidth;
-    pos.width = rect.width;
-    pos.height = rect.height;
+    const { top, left, width, height } = element.getBoundingClientRect();
+
+    return { top: top + window.pageYOffset, left, width, height };
   }
-  return pos;
 };
 
 /**
@@ -419,21 +421,6 @@ const debounce = function(func, wait, immediate) {
       context = args = null;
     }
     return result;
-  };
-};
-
-/**
- * Registers an event on 'node' and removes it once it fires
- *
- * @param {EventTarget | object} node
- * @param {string} type
- * @param {function} callback
- */
-const once = function(node, type, callback) {
-  node.addEventListener(type, handler);
-  const handler = function() {
-    node.removeEventListener(type, handler);
-    callback.apply(this, arguments);
   };
 };
 
