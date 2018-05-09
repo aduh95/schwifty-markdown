@@ -110,12 +110,12 @@ if (argv.u) {
         });
 
       options.push(watchable);
+      if (process.env.SCHWIFTY_DISABLE_JAVA) {
+        options.push("-j");
+      }
 
       const subprocess = spawn(process.argv[0], options, {
         cwd: WORKING_DIR,
-        env: {
-          SCHWIFTY_DISABLE_JAVA: argv.j,
-        },
         windowsHide: true,
       });
 
