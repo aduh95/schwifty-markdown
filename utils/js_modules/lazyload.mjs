@@ -1,7 +1,3 @@
-let promiseResolver;
-
-const promises = [];
-
 const imageHandlers = [];
 
 /**
@@ -12,48 +8,49 @@ export const registerImageHandler = (filter, callback) => {
   imageHandlers.push({ filter, callback });
 };
 
-const init = function() {
-  const pictures = document.querySelectorAll("noscript.img");
+const init = promiseResolver =>
+  function() {
+    const promises = [];
+    const pictures = document.querySelectorAll("noscript.img");
 
-  for (const noscript of pictures) {
-    const picture = document.createElement("picture");
+    for (const noscript of pictures) {
+      const picture = document.createElement("picture");
 
-    picture.innerHTML = noscript.textContent;
-    noscript.parentNode.insertBefore(picture, noscript);
+      picture.innerHTML = noscript.textContent;
+      noscript.parentNode.replaceChild(picture, noscript);
 
-    const img = picture.querySelector("img");
+      const img = picture.querySelector("img");
 
-    const handlers = imageHandlers.filter(({ filter }) => filter(img.src));
+      const handlers = imageHandlers.filter(({ filter }) => filter(img.src));
 
-    if (handlers.length) {
-      promises.push(handlers.map(({ callback }) => callback(img)));
-    } else {
-      // Load classic image
-      promises.push(
-        new Promise(resolve => {
-          img.onload = function() {
-            resolve(this);
-          };
-          img.onerror = function(e) {
-            console.warn(e);
-            resolve(this);
-          };
-        })
-      );
+      if (handlers.length) {
+        promises.push(...handlers.map(({ callback }) => callback(img)));
+      } else {
+        // Load classic image
+        promises.push(
+          new Promise(resolve => {
+            img.onload = function() {
+              resolve(this);
+            };
+            img.onerror = function(e) {
+              console.warn(e);
+              resolve(this);
+            };
+          })
+        );
+      }
     }
 
-    noscript.remove();
-  }
-
-  promiseResolver(promises);
-};
+    promiseResolver(promises);
+  };
 
 export default new Promise(resolve => {
-  promiseResolver = resolve;
   if (window.document.readyState === "loading") {
-    window.document.addEventListener("DOMContentLoaded", init);
+    window.document.addEventListener("DOMContentLoaded", init(resolve));
   } else {
     // Wait for image handler registration
-    window.requestAnimationFrame(() => window.requestAnimationFrame(init));
+    window.requestAnimationFrame(() =>
+      window.requestAnimationFrame(init(resolve))
+    );
   }
 });
