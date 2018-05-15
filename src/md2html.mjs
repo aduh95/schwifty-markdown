@@ -42,11 +42,11 @@ const setCharset = document => {
   document.head.appendChild(charset);
 };
 
-const setTitle = (document, file) => {
+const setTitle = (document, title) => {
   if (!document.head.querySelector("title")) {
-    const title = document.createElement("title");
-    title.appendChild(document.createTextNode(path.basename(file)));
-    document.head.appendChild(title);
+    const titleElement = document.createElement("title");
+    titleElement.appendChild(document.createTextNode(title));
+    document.head.appendChild(titleElement);
   }
 };
 
@@ -287,7 +287,6 @@ const createUserScriptTag = (file, document, path) => {
 
 const addHTMLHeaders = (file, dom, headers) => {
   const { document } = dom.window;
-  let titleSet = false;
   setCharset(document);
 
   document.documentElement.setAttribute(
@@ -300,7 +299,6 @@ const addHTMLHeaders = (file, dom, headers) => {
     switch (key) {
       case "title":
         setTitle(document, headers[key]);
-        titleSet = true;
         break;
 
       case "lang":
@@ -345,13 +343,15 @@ const addHTMLHeaders = (file, dom, headers) => {
     tag && document.head.appendChild(tag);
   });
 
-  if (!titleSet) {
-    const firstHeading = document.querySelector(
-      ".markdown-body>h1:first-child"
-    );
+  const firstHeading = document.querySelector(
+    ".markdown-body>h1:first-of-type"
+  );
 
-    setTitle(document, firstHeading ? firstHeading.textContent : file);
-  }
+  setTitle(
+    document,
+    firstHeading ? firstHeading.textContent : path.basename(file)
+  );
+
   return Promise.resolve(dom);
 };
 
