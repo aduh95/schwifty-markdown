@@ -28,7 +28,7 @@ your path:
 * [Node (v8.5+)](//nodejs.org)
 * [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
 
-> If you want schwifty to render PlantUML diagrams, you also need:
+> If you want Schwifty to render PlantUML diagrams, you also need:
 >
 > * [Java](//java.com)
 > * _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
@@ -36,7 +36,7 @@ your path:
 >
 > If you don't want to use those features, you can set an environment variable
 > `SCHWIFTY_DISABLE_JAVA` at true or use the `--no-java` flag when running
-> schwifty to disable the warning on startup.
+> `schwifty` to disable the warning on startup.
 
 Then, you need to download the package dependencies using `yarn` (you might need
 to use `sudo`):
@@ -60,9 +60,10 @@ schwifty path/to/directory/to/listen
 ```
 
 Schwifty is going to listen for changes in all the markdown files within the
-`path/to/directory/to/listen` and its subdirectories. As soon a `.md` file is
-saved, your default browser should open at
-[localhost:3000](http://localhost:3000) or reload to render your document.
+`path/to/directory/to/listen` and its subdirectories. As soon as you touch a
+`.md` file (E.G.: pressing the save button of your editor), your default browser
+should open at [localhost:3000](http://localhost:3000) or reload to render your
+document.
 
 You can also watch only one file if that is more convenient to you:
 
@@ -79,8 +80,8 @@ schwifty --help
 
 #### Browser support
 
-Schwifty Markdown uses HTML5; if your browser support it, it should work just
-fine. At the time of writing, all major browser\* in their latest version
+Schwifty Markdown uses HTML5; if your browser supports it, it should work just
+fine. At the time of writing, all major browsers\* in their latest version
 support Schwifty. If Schwifty detects that your browser doesn't support / has
 disabled some features it uses, it will display a warning and try to render your
 document the best it can.
@@ -116,7 +117,7 @@ automate the process :
 schwifty ./myFile.md --browser=chromium-browser -o ./dist/myOutput.pdf
 ```
 
-> If you want to render in parallel several files, you mmust specify a different
+> If you want to render in parallel several files, you must specify a different
 > port for each command (with the `--port` flag).
 
 #### Syntax highlighting
@@ -125,8 +126,10 @@ You can insert snippet of code in your document:
 
 ````markdown
 ```c
+#include <stdio.h>
+
 int main(int argc, char* argv) {
-    printf("Hello Wolrld!\n);
+    printf("Hello World!\n);
     return 0;
 }
 ```
@@ -141,9 +144,9 @@ network access is required to perform the syntax highlighting.
 
 #### Automatic Table Of Content
 
-If the file you are editing in huge, the need to index your headings and have a
-table of contents linking to the different parts of the document. You can have
-this by using this tag in your markdown file:
+As your document is becoming bigger and bigger, the need to index your headings
+and have a table of contents linking to the different parts of the document will
+increase. You can have this by using this tag in your markdown file:
 
 ```html
 <nav id="toc"></nav>
@@ -199,6 +202,9 @@ figcaption{
 }
 </style>
 ```
+
+> You can also provide an external CSS file to your document, see
+> [Metadata](#metadata) section.
 
 #### Charts
 
@@ -345,11 +351,11 @@ be the last version available. You can update it manually by typing
 think I should add support more file extensions, please raise an issue or submit
 a pull request.
 
-**N.B.:** If you use [preprocessing includes](preprocessing) in your diagrams,
-you might have trouble with the cache of your navigator. Most browser won't ask
-schwifty to re-generate the SVG unless the target file has changed. You can
-either empty your cache or modify the target file (adding a new empty line is
-enough).
+**N.B.:** If you use [preprocessing includes](http://plantuml.com/preprocessing)
+in your diagrams, you might have trouble with the cache of your navigator. Most
+browser won't ask schwifty to re-generate the SVG unless the target file has
+changed. You can either empty your cache or modify the target file (adding a new
+empty line is enough).
 
 **N.B.:** Some browser have trouble exporting vector images with shadow, which
 is why Schwifty disables them by default. If you use the `--plantuml-config`
@@ -363,6 +369,7 @@ Schwifty Markdown have a limited support for
 
 * Chrome 63+ (uses dynamic JS `import()`)
 * Network access is required (uses a CDN-hosted version)
+* External files not supported
 
 ````markdown
 ![Legend](#inline)
@@ -382,7 +389,7 @@ You can add YAML metadata at the beginning of your markdown files:
 
 ```markdown
 ---
-title: Hardcoded title
+title: Custom title # By default, Schwifty uses the first heading as title
 lang: en
 date: 1970-01-01
 
