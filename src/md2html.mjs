@@ -28,7 +28,8 @@ const NON_BREAKING_SPACE = "\u00A0"; // @see https://en.wikipedia.org/wiki/Non-b
 const pathServerication = (file, relativePath, prefix) =>
   prefix + encodeURIComponent(getLocalAbsolutePath(file, relativePath));
 
-const isRelativePath = path => !/^((?:(?:[a-z]+:)?\/\/)|data:)/i.test(path);
+const isRelativePath = path =>
+  !/^((?:(?:[a-z]+:)?\/\/)|data:|about:)/i.test(path);
 const getLocalAbsolutePath = (file, relativePath) =>
   path.resolve(path.join(path.dirname(file), relativePath));
 
