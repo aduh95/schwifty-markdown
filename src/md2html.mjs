@@ -83,14 +83,6 @@ const addDependencies = document => {
     document.head.appendChild(script);
   }
 
-  for (const jsFile of JS_SCRIPTS) {
-    const script = document.createElement("link");
-    script.rel = "preload";
-    script.setAttribute("as", "script");
-    script.href = jsFile;
-    document.head.appendChild(script);
-  }
-
   for (const jsFile of JS_NO_MODULES_FALLBACK) {
     const script = document.createElement("script");
     script.setAttribute("nomodule", "nomodule");
