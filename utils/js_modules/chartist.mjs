@@ -1,6 +1,6 @@
 /**
  * This is a fork of [Chartist](git+https://github.com/gionkunz/chartist-js)
- * The package is not published on npm at time of writting
+ * The package is not published on npm at time of writing
  * I modified it to use ES6 Modules
  */
 
