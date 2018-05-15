@@ -120,12 +120,17 @@ export const refreshBrowser = () => {
     wsConnection.send("refresh");
   } else if (CONFIG.getItem("AUTO_OPEN_BROWSER") && !waitForBrowserToOpen) {
     console.log("Opening browser");
-    open("http://localhost:" + CONFIG.getItem("PORT_NUMBER"), {
-      app: CONFIG.getItem("BROWSER_NAME"),
-    });
-    waitForBrowserToOpen = setTimeout(() => {
-      waitForBrowserToOpen = null;
-    }, WAIT_FOR_BROWSER_TO_OPEN);
+    import("open")
+      .then(module => module.default)
+      .then(open => {
+        open(
+          "http://localhost:" + CONFIG.getItem("PORT_NUMBER"),
+          CONFIG.getItem("BROWSER_NAME")
+        );
+        waitForBrowserToOpen = setTimeout(() => {
+          waitForBrowserToOpen = null;
+        }, WAIT_FOR_BROWSER_TO_OPEN);
+      });
   } else if (CONFIG.getItem("PRINT_TO_PDF")) {
     console.log("Generating PDF " + CONFIG.getItem("PRINT_TO_PDF"));
     try {

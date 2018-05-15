@@ -1,9 +1,8 @@
 import fs from "./fs-promises";
 import path from "path";
 import hashFile from "./hashFile";
-import plantumlCompile from "node-plantuml";
-import yumlCompile from "yuml2svg";
 import renderMarkdown from "./md-file-to-html";
+import renderMarkdown from "./md2html";
 import { AUTO_REFRESH_MODULE } from "./server";
 import { CONFIG } from "./definitions";
 
@@ -36,11 +35,13 @@ export const yuml = () => (req, res) => {
 
   generateIfNotCached(req, res, media, () => {
     console.log("Generating yUML graph");
-    return fs
-      .access(media, fs.constants.R_OK)
-      .then(
-        () => yumlCompile(fs.createReadStream(media)),
-        () => yumlCompile(media) // If a yUML string is requested
+    return import("yuml2svg")
+      .then(module => module.default)
+      .then(yumlCompile =>
+        fs.access(media, fs.constants.R_OK).then(
+          () => yumlCompile(fs.createReadStream(media)),
+          () => yumlCompile(media) // If a yUML string is requested
+        )
       )
       .then(svg => res.send(svg));
   });
@@ -54,13 +55,15 @@ export const plantuml = () => (req, res) => {
     if (CONFIG.getItem("JAVA_ENABLED")) {
       console.log("Generating plantuml SVG");
 
-      plantumlCompile
-        .generate(media, {
-          format: "svg",
-          include: path.dirname(media),
-          config: CONFIG.getItem("PLANTUML_CONFIG"),
-        })
-        .out.pipe(res);
+      import("node-plantuml").then(module =>
+        module.default
+          .generate(media, {
+            format: "svg",
+            include: path.dirname(media),
+            config: CONFIG.getItem("PLANTUML_CONFIG"),
+          })
+          .out.pipe(res)
+      );
     } else {
       throw new Error("Warning: Java has been disabled by flags!");
     }

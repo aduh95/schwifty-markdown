@@ -1,5 +1,4 @@
 import path from "path";
-import DOM from "jsdom";
 
 import parseMarkdown from "./mdParser";
 import {
@@ -169,10 +168,14 @@ const imagesHandler = (document, file) => {
           break;
 
         case "plantuml":
+          // lazyload plantuml module
+          import("node-plantuml");
           img.src =
             PLANTUML_GET_URL + encodeURIComponent(codeElement.textContent);
           break;
         case "yuml":
+          // lazyload yuml module
+          import("yuml2svg");
           img.src = YUML_GET_URL + encodeURIComponent(codeElement.textContent);
           break;
       }
@@ -181,8 +184,12 @@ const imagesHandler = (document, file) => {
       let url;
 
       if (img.src.endsWith(PLANTUML_EXTENSION)) {
+        // lazyload plantuml module
+        import("node-plantuml");
         url = PLANTUML_GET_URL;
       } else if (img.src.endsWith(YUML_EXTENSION)) {
+        // lazyload yuml module
+        import("yuml2svg");
         url = YUML_GET_URL;
       } else {
         url = MEDIA_GET_URL;
@@ -433,10 +440,10 @@ const normalizeHTML = (file, dom) => {
 };
 
 const parseHTML = ({ headers, html }) =>
-  Promise.resolve({
+  import("jsdom").then(module => ({
     headers,
-    dom: new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`),
-  });
+    dom: new module.default.JSDOM(`<main class='markdown-body'>${html}</main>`),
+  }));
 
 /**
  * @param {string} mdContent A string representation of the markdown

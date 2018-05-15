@@ -22,6 +22,8 @@ schwifty(path.resolve(argv._.pop()))
   .then(result => {
     if (result === false) {
       console.info("Hint: Edit a markdown file to render it in your browser.");
+      // Lazy load jsdom to be ready for the next parsing
+      import("jsdom");
     } else if (result === 0) {
       console.error(
         "No Markdown file found. Please make sure you are using a supported extension."
