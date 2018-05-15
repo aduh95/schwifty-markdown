@@ -11,6 +11,9 @@
 * Add support for mermaid diagrams (experimental)
 * Remove `fs-extra` dependency in favor of `fs/promises`
 * Improve package API access
+* Fix bug on metadata with Windows-like EOL
+* Improve performance of yUML diagrams rendering (x10)
+* Add preview for yUML and PlantUML inlined code
 
 ### v1.7.1(2018-03-08)
 

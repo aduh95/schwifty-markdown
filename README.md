@@ -338,7 +338,7 @@ as an image, it will render as an SVG.
 The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
 **N.B.:** As PlantUML rendering requires to call a Java dependency, the process
-might be slow depending of your machine (about 4.87 times slower than yUML
+might be slow depending of your machine (about 47 times slower than yUML
 rendering on my computer). All the rendering is done locally, you don't need a
 network access to work with your diagrams.
 
