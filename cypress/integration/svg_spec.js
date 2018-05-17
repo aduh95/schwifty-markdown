@@ -9,8 +9,7 @@ describe("Test SVG generation", function() {
       .visit(Cypress.env("host"))
       .then(() => cy.wait(500))
       .then(() => {
-        let $img = cy.get("img");
-        $img.each($img => {
+        cy.get("img").each($img => {
           cy
             .wrap($img)
             .invoke("prop", "hidden")

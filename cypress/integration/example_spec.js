@@ -6,12 +6,12 @@ describe("Test HTML rendering", function() {
         encodeURIComponent(Cypress.env("testDir") + "/example.md")
     );
     cy.visit(Cypress.env("host"));
-    cy.title().should("eq", "example.md");
+    cy.title().should("eq", "Title of the document");
 
     cy
       .get("h1")
       .its("length")
-      .should("eq", 1);
+      .should("eq", 2);
 
     cy
       .get("h2")

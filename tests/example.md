@@ -2,6 +2,10 @@
 This is an example document for Schwifty Markdown
 </header>
 
+# Title of the document
+
+The first `<h1>` is used as the title document (except override by the metadata).
+
 # An h1 header
 
 Paragraphs are separated by a blank line.

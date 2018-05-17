@@ -9,14 +9,14 @@ describe("Test HTML rendering", function() {
       .visit(Cypress.env("host"))
       .then(() => cy.get("#toc"))
       .then($toc => {
-        let toc = $toc[0];
+        const toc = $toc[0];
         cy
           .wrap(toc.firstElementChild.nodeName.toLowerCase())
           .should("eq", "details");
 
-        let select = toc.firstElementChild.lastElementChild;
-        let list = select.previousElementSibling;
-        let listChildren = list.children;
+        const select = toc.firstElementChild.lastElementChild;
+        const list = select.previousElementSibling;
+        const listChildren = list.children;
         cy.wrap(list.nodeName.toLowerCase()).should("eq", "ol");
 
         // Main list should contain 3 items (Because doc has 3 h1 below the nav)
@@ -57,16 +57,16 @@ describe("Test HTML rendering", function() {
       .visit(Cypress.env("host"))
       .then(() => cy.get("#toc"))
       .then($toc => {
-        let toc = $toc[0];
+        const toc = $toc[0];
         cy
           .wrap(toc.firstElementChild.nodeName.toLowerCase())
           .should("eq", "details");
 
-        let select = toc.firstElementChild.lastElementChild;
+        const select = toc.firstElementChild.lastElementChild;
         cy.wrap(select.nodeName.toLowerCase()).should("eq", "select");
 
-        let list = select.previousElementSibling;
-        let listChildren = list.children;
+        const list = select.previousElementSibling;
+        const listChildren = list.children;
         cy.wrap(list.nodeName.toLowerCase()).should("eq", "ol");
 
         // Main list should contain 3 items (Because doc has 3 h1 below the nav)
