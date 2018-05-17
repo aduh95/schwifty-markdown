@@ -4,7 +4,7 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
-### v1.8.0(WIP)
+### v1.8.0(2018-05-17)
 
 * Add support for yUML sequence diagrams
 * Add support for inline charts and UML diagrams
@@ -12,7 +12,8 @@
 * Remove `fs-extra` dependency in favor of `fs/promises`
 * Improve package API access
 * Fix bug on metadata with Windows-like EOL
-* Improve performance of yUML diagrams rendering (x10)
+* Improve performance of yUML diagrams rendering (lazy-load to improve startup
+  time, rendering 10 times faster)
 * Add preview for yUML and PlantUML inlined code
 
 ### v1.7.1(2018-03-08)
