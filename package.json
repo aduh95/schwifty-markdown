@@ -38,8 +38,8 @@
     "papaparse": "^4.3.6",
     "temp": "^0.8.3",
     "ws": "^5.1.1",
-    "yargs": "^10.0.1",
-    "yuml2svg": "4.0.0-beta7"
+    "yargs": "^11.0.0",
+    "yuml2svg": "^4.0.0"
   },
   "scripts": {
     "start": "node --experimental-modules bin/schwifty.mjs",

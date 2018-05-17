@@ -1914,9 +1914,9 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-viz.js@2.0.0-pre.8:
-  version "2.0.0-pre.8"
-  resolved "https://registry.yarnpkg.com/viz.js/-/viz.js-2.0.0-pre.8.tgz#cf9a3a256cfd04c3458d39ba46a4a8f11fed7634"
+viz.js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/viz.js/-/viz.js-2.0.0.tgz#d34aa8e68f3b4eb7107f16ea6d1530a77109f315"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"
@@ -1996,15 +1996,15 @@ yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
 
-yargs-parser@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-8.1.0.tgz#f1376a33b6629a5d063782944da732631e966950"
+yargs-parser@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-9.0.2.tgz#9ccf6a43460fe4ed40a9bb68f48d43b8a68cc077"
   dependencies:
     camelcase "^4.1.0"
 
-yargs@^10.0.1:
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-10.1.2.tgz#454d074c2b16a51a43e2fb7807e4f9de69ccb5c5"
+yargs@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-11.0.0.tgz#c052931006c5eee74610e5fc0354bedfd08a201b"
   dependencies:
     cliui "^4.0.0"
     decamelize "^1.1.1"
@@ -2017,7 +2017,7 @@ yargs@^10.0.1:
     string-width "^2.0.0"
     which-module "^2.0.0"
     y18n "^3.2.1"
-    yargs-parser "^8.1.0"
+    yargs-parser "^9.0.2"
 
 yauzl@2.4.1:
   version "2.4.1"
@@ -2032,10 +2032,10 @@ yauzl@2.8.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.0.1"
 
-yuml2svg@4.0.0-beta7:
-  version "4.0.0-beta7"
-  resolved "https://registry.yarnpkg.com/yuml2svg/-/yuml2svg-4.0.0-beta7.tgz#0c433d67c77d385ac79a159104434932670e6961"
+yuml2svg@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/yuml2svg/-/yuml2svg-4.0.0.tgz#d7d1e7d2e784b63dd057858244275a973f45dd34"
   dependencies:
     color "^3.0.0"
     jsdom "^11.6.2"
-    viz.js "2.0.0-pre.8"
+    viz.js "^2.0.0"
