@@ -6,7 +6,9 @@
 var exec = require("child_process").exec;
 
 var version = process.version;
-var isWin = require("is-windows")();
+var isWin =
+  process &&
+  (process.platform === "win32" || /^(msys|cygwin)$/.test(process.env.OSTYPE));
 
 var missingDep = "MissingDependencyWarning";
 var checkProgramInPath = function(bin) {
