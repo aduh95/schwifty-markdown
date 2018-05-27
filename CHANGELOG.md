@@ -4,6 +4,12 @@
 
 * Integrate into VSCode (like Instant Markdown)
 
+### v1.8.1(2018-05-28)
+
+* Install does not fail on unsupported Node version anymore
+* Update `yuml2svg` dependency
+* Remove usage of `is-windows` package to improve perf
+
 ### v1.8.0(2018-05-17)
 
 * Add support for yUML sequence diagrams
