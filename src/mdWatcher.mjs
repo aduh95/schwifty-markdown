@@ -27,11 +27,14 @@ const fileWatcher = file => evType => {
 const dirWatcher = dir => (eventType, filename = "") => {
   // @see https://nodejs.org/docs/latest/api/fs.html#fs_fs_watch_filename_options_listener
   // Note that on most platforms, 'rename' is emitted whenever a filename appears or disappears in the directory.
-  if (eventType === "rename" && filename.endsWith(MARKDOWN_EXTENSION)) {
+  if (
+    eventType === "rename" &&
+    filename.toLowerCase().endsWith(MARKDOWN_EXTENSION)
+  ) {
     const file = path.join(dir, filename);
-    fs
-      .access(file, fs.constants.R_OK)
-      .then(() => fs.watch(file, fileWatcher(file)));
+    fs.access(file, fs.constants.R_OK).then(() =>
+      fs.watch(file, fileWatcher(file))
+    );
   }
 };
 
@@ -49,7 +52,7 @@ const watchFile = file =>
     .then(stat => {
       if (stat.isDirectory()) {
         return watchDirRecursive(file);
-      } else if (file.endsWith(MARKDOWN_EXTENSION)) {
+      } else if (file.toLowerCase().endsWith(MARKDOWN_EXTENSION)) {
         fs.watch(file, fileWatcher(file));
         return Promise.resolve(++watchCounter);
       }
