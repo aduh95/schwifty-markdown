@@ -1,77 +1,76 @@
 #!/usr/bin/env node
 
-const { exec, execFile, spawn } = require("child_process");
+const { exec, execFile } = require("child_process");
 const path = require("path");
+
+// Current working directory for schwifty
+const cwd = path.resolve(__dirname + path.sep + "..");
 
 let exitCode = 0;
 let waitToRunCypress = true;
+
 const runCypress = () => {
   console.log("Starting Cypress");
-  const cypress = spawn(
-    "npx",
-    process.argv.length > 2
-      ? ["cypress", "open", "--env", "testDir=" + __dirname]
-      : [
-          "cypress",
-          "run",
-          "--browser",
-          "chromium",
-          "--env",
-          "testDir=" + __dirname,
-        ],
-    {
-      cwd: path.resolve(__dirname + path.sep + ".."),
-    }
+
+  const { bin } = require("cypress/package.json");
+  const cypress = execFile(
+    require.resolve("cypress/" + bin.cypress),
+    [
+      ...(process.argv.length > 2
+        ? ["open"]
+        : ["run", "--browser", "chromium"]),
+      "--env",
+      "testDir=" + __dirname,
+    ],
+    { cwd }
   );
 
+  cypress.stderr.pipe(process.stderr);
+  cypress.stdout.pipe(process.stdout);
+
   cypress.on("error", err => console.error(err));
-
-  cypress.stderr.on("data", message => {
-    console.error(message.toString().trim());
-  });
-
-  cypress.stdout.on("data", data => {
-    console.log(data.toString().trim());
-  });
-
   cypress.on("close", exitTests);
+
+  return cypress;
 };
 
-console.log("Starting Schwifty (watching tests dir)");
+const startSchwifty = () => {
+  console.log("Starting Schwifty (watching tests dir)");
 
-const server = execFile(path.join(__dirname, "..", "bin", "schwifty.js"), [
-  "-n",
-  path.resolve(__dirname),
-]);
+  const { bin } = require("../package.json");
+  const server = execFile(path.join(cwd, bin.schwifty), ["-n", __dirname]);
 
-server.stderr.on("data", message => {
-  console.error(message.toString().trim());
-});
+  server.stderr.pipe(process.stderr);
 
-server.stdout.on("data", data => {
-  const message = data.toString().trim();
-  console.log(message);
+  server.stdout.on("data", data => {
+    const message = data.toString().trim();
+    console.log("Schwifty info:", message);
 
-  if (waitToRunCypress && message.endsWith("being watched.")) {
-    waitToRunCypress = false;
-    runCypress();
-  }
-});
-
-server.on("error", err => console.error(err));
-
-server.on("exit", () => console.log("exiting..."));
-server.on("close", () => {
-  console.log("closing...");
-
-  exec("netstat -tulpn | grep :3000", (err, stdout) => {
-    err
-      ? console.error(err)
-      : exec("kill " + stdout.match(/(\d+)\/node/)[1], err => {
-          err ? console.error(err) : process.exit(exitCode);
-        });
+    if (waitToRunCypress && message.endsWith("being watched.")) {
+      waitToRunCypress = false;
+      runCypress();
+    }
   });
-});
+
+  server.on("error", err => console.error(err));
+
+  server.on("exit", () => console.log("exiting..."));
+  server.on("close", () => {
+    console.log("closing...");
+
+    exec("netstat -tulpn | grep :3000", (err, stdout) => {
+      err
+        ? console.error(err)
+        : exec("kill " + stdout.match(/(\d+)\/node/)[1], err => {
+            err ? console.error(err) : process.exit(exitCode);
+          });
+    });
+  });
+
+  return server;
+};
+
+const server = startSchwifty();
 
 const exitTests = code => {
   if (code != 0) {
