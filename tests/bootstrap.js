@@ -73,9 +73,12 @@ const startSchwifty = () => {
 const server = startSchwifty();
 
 const exitTests = code => {
-  if (code != 0) {
+  if (code !== 0) {
     console.log("Tests terminated not successfully");
   }
   exitCode = code;
   server.kill("SIGINT");
 };
+
+// If Cypress test was never launched
+process.on("exit", () => waitToRunCypress && process.exit((exitCode = -1)));
