@@ -115,7 +115,7 @@ const imagesHandler = (document, file) => {
     picture.setAttribute("class", "img");
     if ("about:blank#inline" === img.src) {
       const codeElement = parent.nextElementSibling.firstElementChild;
-      const language = codeElement.className.substr(5);
+      const language = codeElement.className.substr(9); // Removes "language-"
       switch (language) {
         case "json":
           img.src =
