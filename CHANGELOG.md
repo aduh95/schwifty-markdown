@@ -4,6 +4,11 @@
 
 - Integrate into VSCode (like Instant Markdown)
 
+### v1.8.3(2018-08-18)
+
+- Update dependencies
+- Fix a bug with inline charts
+
 ### v1.8.2(2018-08-15)
 
 - Add support for uppercase markdown extension
