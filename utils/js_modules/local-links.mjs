@@ -85,7 +85,10 @@ const init = () => {
   }
 };
 
-window.addEventListener("popstate", ev => loadOtherDocument(ev.state.index));
+window.addEventListener(
+  "popstate",
+  ev => ev.state && loadOtherDocument(ev.state.index)
+);
 
 if (window.document.readyState === "loading") {
   window.document.addEventListener("DOMContentLoaded", init);
