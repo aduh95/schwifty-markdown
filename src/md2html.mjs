@@ -243,7 +243,7 @@ const codeBlockHandler = document => {
   const codeBlocks = document.querySelectorAll("code");
   for (const code of codeBlocks) {
     if (
-      /^lang-/.test(code.className) &&
+      code.className.startsWith("language-") &&
       code.parentNode.nodeName.toLowerCase() === "pre"
     ) {
       code.parentElement.classList.add("sourceCode");

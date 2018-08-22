@@ -36,7 +36,7 @@ const awaitHighlight = (codes, index) => {
       code.innerHTML = event.data;
       awaitHighlight(codes, index + 1);
     };
-    worker.postMessage([code.className.substr(5), code.textContent]);
+    worker.postMessage([code.className.substr(9), code.textContent]);
   } else {
     worker.postMessage("Terminate worker");
     worker.terminate();
