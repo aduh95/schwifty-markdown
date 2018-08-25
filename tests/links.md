@@ -11,3 +11,9 @@ This file is here to test the link transformation of Schwifty
 [This link is global](https://github.com/aduh95/schwifty-markdown "global-absolute")
 
 [This link is global protocol-relative](//github.com/aduh95/schwifty-markdown "global-protocol-relative")
+
+[This link is hash link](#test "local-with-hash")
+
+[This link is local-relative with hash](./empty.md#test "local-relative-with-hash")
+
+[This link is global protocol-relative with hash](//github.com/aduh95/schwifty-markdown#test "protocol-relative-with-hash")

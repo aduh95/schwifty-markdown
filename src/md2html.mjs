@@ -25,8 +25,27 @@ import {
 const TEXT_NODE = 3; // @see https://developer.mozilla.org/fr/docs/Web/API/Node/nodeType
 const NON_BREAKING_SPACE = "\u00A0"; // @see https://en.wikipedia.org/wiki/Non-breaking_space
 
-const pathServerication = (file, relativePath, prefix) =>
-  prefix + encodeURIComponent(getLocalAbsolutePath(file, relativePath));
+/**
+ * Extracts the hash part of the URL
+ * @param {string} relativePath
+ */
+const extractHash = url => {
+  if (url.includes("#")) {
+    const hashOffset = url.lastIndexOf("#");
+    return {
+      url: url.substring(0, hashOffset),
+      hash: url.substring(hashOffset),
+    };
+  } else {
+    return { url, hash: "" };
+  }
+};
+const pathServerication = (file, relativePath, prefix) => (
+  (relativePath = extractHash(relativePath)),
+  prefix +
+    encodeURIComponent(getLocalAbsolutePath(file, relativePath.url)) +
+    relativePath.hash
+);
 
 const isRelativePath = path =>
   !/^((?:(?:[a-z]+:)?\/\/)|data:|about:)/i.test(path);

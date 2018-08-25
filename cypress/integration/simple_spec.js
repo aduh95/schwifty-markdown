@@ -8,8 +8,7 @@ describe("Test HTML rendering", function() {
     cy.visit(Cypress.env("host"));
 
     cy.title().should("eq", "empty.md");
-    cy
-      .document()
+    cy.document()
       .its("body")
       .invoke("text")
       .should("eq", "");
@@ -35,8 +34,7 @@ describe("Test HTML rendering", function() {
       cy.location("origin").should("not.eq", $link.prop("origin"));
     });
 
-    cy
-      .get("a[title='dead-link']")
+    cy.get("a[title='dead-link']")
       .click()
       .then($link => {
         cy.wait(500).then(() => {
@@ -44,19 +42,34 @@ describe("Test HTML rendering", function() {
         });
       });
 
-    cy
-      .get("a[title='local-relative']")
+    cy.get("a[title='local-relative']")
       .click()
       .then($link => {
         cy.title().should("eq", "empty.md");
       });
 
     cy.go("back").then(() => cy.title().should("eq", "links.md"));
-    cy
-      .get("a[title='local-relative-parent']>:first")
+    cy.get("a[title='local-relative-parent']>:first")
       .click()
       .then($link => {
         cy.title().should("eq", "empty.md");
+      });
+
+    cy.go("back").then(() => cy.title().should("eq", "links.md"));
+    cy.get("a[title='local-relative-with-hash']:first").then($link => {
+      cy.wrap($link.prop("hash")).should("eq", "#test");
+    });
+
+    cy.get("a[title='protocol-relative-with-hash']:first").then($link => {
+      cy.location("origin").should("not.eq", $link.prop("origin"));
+      cy.wrap($link.prop("hash")).should("eq", "#test");
+    });
+
+    cy.get("a[title='local-with-hash']:first")
+      .click()
+      .then($link => {
+        cy.title().should("eq", "links.md");
+        cy.hash().should("eq", "#test");
       });
   });
 });
