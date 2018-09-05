@@ -4,6 +4,12 @@
 
 - Integrate into VSCode (like Instant Markdown)
 
+### v1.8.4(2018-09-05)
+
+- Fix a bug with code highlighting
+- Fix a bug with links internal to a document
+- Update dependencies for Node 11
+
 ### v1.8.3(2018-08-18)
 
 - Update dependencies
