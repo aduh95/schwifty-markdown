@@ -6,7 +6,6 @@ import parseMarkdown from "./mdParser";
 import {
   JS_MODULES,
   JS_NO_MODULES_FALLBACK,
-  JS_SCRIPTS,
   CSS_FILES,
   MEDIA_GET_URL,
   MARKDOWN_GET_URL,
@@ -55,12 +54,19 @@ const getLocalAbsolutePath = (file, relativePath) =>
 const mediaServerication = (file, path) =>
   isRelativePath(path) ? pathServerication(file, path, MEDIA_GET_URL) : path;
 
+/**
+ * @param {Document} document
+ */
 const setCharset = document => {
   const charset = document.createElement("meta");
   charset.setAttribute("charset", CHARSET);
   document.head.appendChild(charset);
 };
 
+/**
+ * @param {Document} document
+ * @param {string} title
+ */
 const setTitle = (document, title) => {
   if (!document.head.querySelector("title")) {
     const titleElement = document.createElement("title");
@@ -69,6 +75,9 @@ const setTitle = (document, title) => {
   }
 };
 
+/**
+ * @param {Document} document
+ */
 const headerAndFooterHandler = document => {
   const headers = document.querySelectorAll("header");
   for (const header of headers) {
@@ -86,6 +95,9 @@ const headerAndFooterHandler = document => {
   }
 };
 
+/**
+ * @param {Document} document
+ */
 const addDependencies = document => {
   for (const cssFile of CSS_FILES) {
     const style = document.createElement("link");
@@ -110,6 +122,9 @@ const addDependencies = document => {
   }
 };
 
+/**
+ * @param {Document} document
+ */
 const fixSharedID = document => {
   // Force IDs to be different in the titles
   const titles = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
@@ -124,8 +139,12 @@ const fixSharedID = document => {
   }
 };
 
+/**
+ * Handles images and yUML / plantUML diagram
+ * @param {Document} document
+ * @param {string} file
+ */
 const imagesHandler = (document, file) => {
-  // Handle images and yUML / plantUML diagram
   const images = document.querySelectorAll("img");
 
   for (const img of images) {
@@ -196,8 +215,8 @@ const imagesHandler = (document, file) => {
 
 /**
  * Replaces spaces by non-breaking spaces when it is relevant
- * @param document {Document} The current document
- * @param file {string} The path of the current markdown file
+ * @param {Document} document The current document
+ * @param {string} file The path of the current markdown file
  */
 const nonBreakingSpaces = (document, file) => {
   const regexSpaceBefore = / [\?!:;»%€]/g;
@@ -237,8 +256,12 @@ const nonBreakingSpaces = (document, file) => {
     );
 };
 
+/**
+ * Handles links to redirect local link to be rendered
+ * @param {Document} document The current document
+ * @param {string} file The path of the current markdown file
+ */
 const linksHandler = (document, file) => {
-  // Handle links to redirect local link to be rendered
   const links = document.querySelectorAll("a");
   for (const link of links) {
     if (isRelativePath(link.href)) {
@@ -258,6 +281,9 @@ const linksHandler = (document, file) => {
   }
 };
 
+/**
+ * @param {Document} document The current document
+ */
 const codeBlockHandler = document => {
   const codeBlocks = document.querySelectorAll("code");
   for (const code of codeBlocks) {
@@ -270,6 +296,9 @@ const codeBlockHandler = document => {
   }
 };
 
+/**
+ * @param {Document} document The current document
+ */
 const noJSFallback = document => {
   const wrapper = document.createElement("div");
   const INPUT_ID = "fallback-message-ctrl";
@@ -294,6 +323,11 @@ const noJSFallback = document => {
   document.body.appendChild(wrapper);
 };
 
+/**
+ * @param {string} file
+ * @param {Document} document
+ * @param {string} path
+ */
 const createUserScriptTag = (file, document, path) => {
   const script = document.createElement("script");
 
@@ -304,6 +338,12 @@ const createUserScriptTag = (file, document, path) => {
   return script;
 };
 
+/**
+ *
+ * @param {string} file
+ * @param {{window: Window}} dom
+ * @param {Object.<string,string>} headers
+ */
 const addHTMLHeaders = (file, dom, headers) => {
   const { document } = dom.window;
   setCharset(document);
@@ -374,6 +414,12 @@ const addHTMLHeaders = (file, dom, headers) => {
   return Promise.resolve(dom);
 };
 
+/**
+ * Executes transformation to the HTML to add Schwifty specific features
+ * @param {string} file
+ * @param {DOM} dom
+ * @returns {Promise<string>}
+ */
 const normalizeHTML = (file, dom) => {
   [
     addDependencies,
@@ -384,7 +430,7 @@ const normalizeHTML = (file, dom) => {
     codeBlockHandler,
     nonBreakingSpaces,
     noJSFallback,
-  ].map(fct => fct.call(this, dom.window.document, file));
+  ].forEach(fct => fct.call(this, dom.window.document, file));
 
   return Promise.resolve("<!DOCTYPE html>\n" + dom.serialize());
 };
@@ -395,6 +441,11 @@ const parseHTML = ({ headers, html }) =>
     dom: new DOM.JSDOM(`<main class='markdown-body'>${html}</main>`),
   });
 
+/**
+ * @param {string} file File path
+ * @returns {Promise<>} Fulfills when the HTML document is written to FS and a
+ *                      refresh message has been sent
+ */
 const generate = file =>
   fs
     .readFile(file)
