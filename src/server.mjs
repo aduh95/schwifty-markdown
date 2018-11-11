@@ -1,5 +1,5 @@
 import temp from "temp";
-import open from "open";
+import open from "opn";
 import path from "path";
 import fs from "./fs-promises";
 import express from "express";
