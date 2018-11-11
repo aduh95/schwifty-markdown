@@ -1,6 +1,6 @@
 import { watchCounter } from "./src/mdWatcher";
 import addWatcher from "./src/mdWatcher";
-import md2html from "./src/md2html";
+import _md2html from "./src/md2html";
 
 /**
  * Entry point of the package.
@@ -17,7 +17,9 @@ const schwifty = async target => {
       " being watched."
   );
 
-  return watchCounter && watcher === watchCounter && (await md2html(target));
+  return watchCounter && watcher === watchCounter && (await _md2html(target));
 };
+
+export const md2html = _md2html;
 
 export default schwifty;
