@@ -4,7 +4,7 @@ import path from "path";
 import express from "express";
 import webSocket from "ws";
 import * as serveMedia from "./mediaHandler";
-import { getRenderedHTML } from "./md2html";
+import { getRenderedHTML } from "./md-html-to-file";
 import { CONFIG } from "./definitions";
 import child_process from "child_process";
 

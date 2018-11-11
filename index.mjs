@@ -1,5 +1,6 @@
 import { watchCounter } from "./src/mdWatcher";
 import addWatcher from "./src/mdWatcher";
+import renderFile from "./src/md-file-to-html";
 import _md2html from "./src/md2html";
 
 /**
@@ -17,7 +18,7 @@ const schwifty = async target => {
       " being watched."
   );
 
-  return watchCounter && watcher === watchCounter && (await _md2html(target));
+  return watchCounter && watcher === watchCounter && (await renderFile(target));
 };
 
 export const md2html = _md2html;

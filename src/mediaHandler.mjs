@@ -3,7 +3,7 @@ import crypto from "crypto";
 import path from "path";
 import plantumlCompile from "node-plantuml";
 import yumlCompile from "yuml2svg";
-import renderMarkdown from "./md2html";
+import renderMarkdown from "./md-file-to-html";
 import { AUTO_REFRESH_MODULE } from "./server";
 import { CONFIG } from "./definitions";
 

@@ -1,7 +1,5 @@
 import path from "path";
 import DOM from "jsdom";
-import fs from "./fs-promises";
-import sessionStorage from "./session-storage";
 
 import parseMarkdown from "./mdParser";
 import {
@@ -12,7 +10,6 @@ import {
   MARKDOWN_GET_URL,
   PLANTUML_GET_URL,
   YUML_GET_URL,
-  refreshBrowser,
 } from "./server";
 import {
   CHARSET,
@@ -20,10 +17,6 @@ import {
   PLANTUML_EXTENSION,
   MARKDOWN_EXTENSION,
 } from "./definitions.mjs";
-
-const HTML_RENDERED_STORAGE_KEY = "md2html:html";
-export const getRenderedHTML = html =>
-  sessionStorage.getItem(HTML_RENDERED_STORAGE_KEY, html);
 
 const TEXT_NODE = 3; // @see https://developer.mozilla.org/fr/docs/Web/API/Node/nodeType
 const NON_BREAKING_SPACE = "\u00A0"; // @see https://en.wikipedia.org/wiki/Non-breaking_space
@@ -446,19 +439,14 @@ const parseHTML = ({ headers, html }) =>
   });
 
 /**
- * @param {string} file File path
- * @returns {Promise<>} Fulfills when the HTML document is written to FS and a
- *                      refresh message has been sent
+ * @param {string} mdContent A string representation of the markdown
+ * @param {string} filePath The path of the file to resolve image paths
+ * @returns {Promise<string>}
  */
-const generate = file =>
-  fs
-    .readFile(file)
-    .then(parseMarkdown)
+export const md2html = (mdContent, filePath = "/") =>
+  parseMarkdown(mdContent)
     .then(parseHTML)
-    .then(({ headers, dom }) => addHTMLHeaders(file, dom, headers))
-    .then(dom => normalizeHTML(file, dom))
-    .then(html => sessionStorage.setItem(HTML_RENDERED_STORAGE_KEY, html))
-    .then(refreshBrowser)
-    .catch(err => console.error(err));
+    .then(({ headers, dom }) => addHTMLHeaders(filePath, dom, headers))
+    .then(dom => normalizeHTML(file, dom));
 
-export default generate;
+export default md2html;
