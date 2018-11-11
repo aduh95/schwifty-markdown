@@ -4,6 +4,10 @@
 
 - Integrate into VSCode (like Instant Markdown)
 
+### v1.8.5(2018-11-10)
+
+- Update dependencies
+
 ### v1.8.4(2018-09-05)
 
 - Fix a bug with code highlighting
