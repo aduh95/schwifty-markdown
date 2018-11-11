@@ -7,13 +7,15 @@ import opt from "../src/cli-args";
 
 const argv = opt.demandCommand(1, "You must provide a path to listen to!").argv;
 
-CONFIG.PORT_NUMBER = argv.p;
-CONFIG.AUTO_OPEN_BROWSER = !argv.n && !argv.o;
-CONFIG.PRINT_TO_PDF = argv.o ? path.resolve(argv.o) : false;
-CONFIG.BROWSER_NAME = argv.b || undefined;
-CONFIG.JAVA_ENABLED = !argv.j;
-CONFIG.PLANTUML_CONFIG =
-  argv.c || path.resolve("./utils/plantuml-ressources/no-shadow.pu");
+CONFIG.setItem("PORT_NUMBER", argv.p);
+!argv.n && !argv.o && CONFIG.setItem("AUTO_OPEN_BROWSER", true);
+argv.o && CONFIG.setItem("PRINT_TO_PDF", path.resolve(argv.o));
+argv.b && CONFIG.setItem("BROWSER_NAME", argv.b);
+argv.j || CONFIG.setItem("JAVA_ENABLED", true);
+CONFIG.setItem(
+  "PLANTUML_CONFIG",
+  argv.c || path.resolve("./utils/plantuml-ressources/no-shadow.pu")
+);
 
 startServer();
 schwifty(path.resolve(argv._.pop()))

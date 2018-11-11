@@ -1,15 +1,12 @@
-import temp from "temp";
 import open from "opn";
 import path from "path";
-import fs from "./fs-promises";
+
 import express from "express";
 import webSocket from "ws";
 import * as serveMedia from "./mediaHandler";
+import { getRenderedHTML } from "./md2html";
 import { CONFIG } from "./definitions";
 import child_process from "child_process";
-
-// Automatically track and cleanup files at exit
-temp.track();
 
 const WAIT_FOR_BROWSER_TO_OPEN = 2500;
 let waitForBrowserToOpen = null;
@@ -41,31 +38,22 @@ export const JS_MODULES = [
   "/xivmap.mjs",
 ];
 export const JS_SCRIPTS = ["/highlight-worker.js", "/papaparse.min.js"];
-export const tmpFile = temp.path({ suffix: ".html" });
 
 const app = express();
 
 app.get("/", function(req, res) {
-  fs
-    .access(tmpFile, fs.R_OK)
-    .then(
-      () =>
-        new Promise((resolve, reject) =>
-          res.sendFile(tmpFile, err => (err ? reject(err) : resolve()))
-        )
-    )
-    .catch(
-      err => (
-        console.error(err),
-        res
-          .status(503)
-          .send(
-            "<script type=module src='" +
-              AUTO_REFRESH_MODULE +
-              "'></script><p>No markdown modified</p>"
-          )
-      )
-    );
+  const html = getRenderedHTML();
+  if (html) {
+    res.header("Content-Type", "text/html").send(html);
+  } else {
+    res
+      .status(503)
+      .send(
+        "<script type=module src='" +
+          AUTO_REFRESH_MODULE +
+          "'></script><p>No markdown modified</p>"
+      );
+  }
 });
 
 for (const serverFile of [
@@ -108,9 +96,15 @@ app.get(MARKDOWN_GET_URL + ":media", serveMedia.markdown());
 let wsConnection = null;
 
 export const startServer = () => {
-  const server = app.listen(CONFIG.PORT_NUMBER, "localhost", function() {
-    console.log(`Server started on http://localhost:${CONFIG.PORT_NUMBER}`);
-  });
+  const server = app.listen(
+    CONFIG.getItem("PORT_NUMBER"),
+    "localhost",
+    function() {
+      console.log(
+        `Server started on http://localhost:${CONFIG.getItem("PORT_NUMBER")}`
+      );
+    }
+  );
   new webSocket.Server({ server }).on("connection", connection => {
     wsConnection && wsConnection.close();
     wsConnection = connection;
@@ -124,20 +118,22 @@ export const refreshBrowser = () => {
   if (wsConnection && wsConnection.readyState === OPEN) {
     console.log("Sending socket to refresh browser");
     wsConnection.send("refresh");
-  } else if (CONFIG.AUTO_OPEN_BROWSER && !waitForBrowserToOpen) {
+  } else if (CONFIG.getItem("AUTO_OPEN_BROWSER") && !waitForBrowserToOpen) {
     console.log("Opening browser");
-    open("http://localhost:" + CONFIG.PORT_NUMBER, CONFIG.BROWSER_NAME);
+    open("http://localhost:" + CONFIG.getItem("PORT_NUMBER"), {
+      app: CONFIG.getItem("BROWSER_NAME"),
+    });
     waitForBrowserToOpen = setTimeout(() => {
       waitForBrowserToOpen = null;
     }, WAIT_FOR_BROWSER_TO_OPEN);
-  } else if (CONFIG.PRINT_TO_PDF) {
-    console.log("Generating PDF " + CONFIG.PRINT_TO_PDF);
+  } else if (CONFIG.getItem("PRINT_TO_PDF")) {
+    console.log("Generating PDF " + CONFIG.getItem("PRINT_TO_PDF"));
     try {
       child_process
-        .spawn(CONFIG.BROWSER_NAME, [
+        .spawn(CONFIG.getItem("BROWSER_NAME"), [
           "--headless",
-          "--print-to-pdf=" + CONFIG.PRINT_TO_PDF,
-          "http://localhost:" + CONFIG.PORT_NUMBER,
+          "--print-to-pdf=" + CONFIG.getItem("PRINT_TO_PDF"),
+          "http://localhost:" + CONFIG.getItem("PORT_NUMBER"),
         ])
         .on("close", function(errCode) {
           console.log("Browser has closed, closing Schwifty...");

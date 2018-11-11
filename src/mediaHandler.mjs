@@ -11,8 +11,7 @@ const sha1file = fileOrString =>
   new Promise((resolve, reject) => {
     const hash = crypto.createHash("sha1");
 
-    fs
-      .access(fileOrString, fs.constants.R_OK)
+    fs.access(fileOrString, fs.constants.R_OK)
       .then(() => {
         const input = fs.createReadStream(fileOrString);
 
@@ -73,14 +72,14 @@ export const plantuml = () => (req, res) => {
   res.set("Content-Type", "image/svg+xml");
 
   generateIfNotCached(req, res, media, () => {
-    if (CONFIG.JAVA_ENABLED) {
+    if (CONFIG.getItem("JAVA_ENABLED")) {
       console.log("Generating plantuml SVG");
 
       plantumlCompile
         .generate(media, {
           format: "svg",
           include: path.dirname(media),
-          config: CONFIG.PLANTUML_CONFIG,
+          config: CONFIG.getItem("PLANTUML_CONFIG"),
         })
         .out.pipe(res);
     } else {
@@ -92,8 +91,7 @@ export const plantuml = () => (req, res) => {
 export const markdown = () => (req, res) => {
   const { media } = req.params;
 
-  fs
-    .access(media, fs.constants.R_OK)
+  fs.access(media, fs.constants.R_OK)
     .then(() => {
       // Rendering Markdown asynchronously
       renderMarkdown(media);
@@ -107,7 +105,8 @@ export const markdown = () => (req, res) => {
             "'></script><p>Redirection…</p>"
         );
     })
-    .catch(() => {
+    .catch(err => {
+      console.warn(err);
       res
         .status(404)
         .send(

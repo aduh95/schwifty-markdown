@@ -1,6 +1,7 @@
 import path from "path";
 import DOM from "jsdom";
 import fs from "./fs-promises";
+import sessionStorage from "./session-storage";
 
 import parseMarkdown from "./mdParser";
 import {
@@ -12,7 +13,6 @@ import {
   PLANTUML_GET_URL,
   YUML_GET_URL,
   refreshBrowser,
-  tmpFile,
 } from "./server";
 import {
   CHARSET,
@@ -20,6 +20,10 @@ import {
   PLANTUML_EXTENSION,
   MARKDOWN_EXTENSION,
 } from "./definitions.mjs";
+
+const HTML_RENDERED_STORAGE_KEY = "md2html:html";
+export const getRenderedHTML = html =>
+  sessionStorage.getItem(HTML_RENDERED_STORAGE_KEY, html);
 
 const TEXT_NODE = 3; // @see https://developer.mozilla.org/fr/docs/Web/API/Node/nodeType
 const NON_BREAKING_SPACE = "\u00A0"; // @see https://en.wikipedia.org/wiki/Non-breaking_space
@@ -453,7 +457,7 @@ const generate = file =>
     .then(parseHTML)
     .then(({ headers, dom }) => addHTMLHeaders(file, dom, headers))
     .then(dom => normalizeHTML(file, dom))
-    .then(html => fs.writeFile(tmpFile, html))
+    .then(html => sessionStorage.setItem(HTML_RENDERED_STORAGE_KEY, html))
     .then(refreshBrowser)
     .catch(err => console.error(err));
 
