@@ -70,29 +70,20 @@ export const plantuml = () => (req, res) => {
 export const markdown = () => (req, res) => {
   const { media } = req.params;
 
+  const temporaryResponse = text =>
+    `<script type='module' src='${AUTO_REFRESH_MODULE}'></script><p>${text}</p>`;
+
   fs.access(media, fs.constants.R_OK)
     .then(() => {
       // Rendering Markdown asynchronously
       renderMarkdown(media);
 
       // Sending a temporary response to the browser
-      res
-        .status(202)
-        .send(
-          "<script type=module src='" +
-            AUTO_REFRESH_MODULE +
-            "'></script><p>Redirection…</p>"
-        );
+      res.status(202).send(temporaryResponse("Redirection…"));
     })
     .catch(err => {
       console.warn(err);
-      res
-        .status(404)
-        .send(
-          "<script type=module src='" +
-            AUTO_REFRESH_MODULE +
-            "'></script><p>Not Found</p>"
-        );
+      res.status(404).send(temporaryResponse("Not Found"));
     });
 };
 
