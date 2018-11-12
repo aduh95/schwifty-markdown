@@ -1,40 +1,19 @@
 import fs from "./fs-promises";
-import crypto from "crypto";
 import path from "path";
+import hashFile from "./hashFile";
 import plantumlCompile from "node-plantuml";
 import yumlCompile from "yuml2svg";
 import renderMarkdown from "./md-file-to-html";
 import { AUTO_REFRESH_MODULE } from "./server";
 import { CONFIG } from "./definitions";
 
-const sha1file = fileOrString =>
-  new Promise((resolve, reject) => {
-    const hash = crypto.createHash("sha1");
-
-    fs.access(fileOrString, fs.constants.R_OK)
-      .then(() => {
-        const input = fs.createReadStream(fileOrString);
-
-        input.on("error", err => reject(err));
-        input.on("data", data => hash.update(data));
-        input.on("end", () => {
-          resolve(hash.digest("hex"));
-        });
-      })
-      .catch(() => {
-        // Plain string handling
-        hash.update(fileOrString);
-        resolve(hash.digest("hex"));
-      });
-  });
-
 const generateIfNotCached = (req, res, media, generate) =>
-  sha1file(media)
-    .then(sha1 => {
-      if (req.get("If-None-Match") === sha1) {
+  hashFile(media)
+    .then(hash => {
+      if (req.get("If-None-Match") === hash) {
         res.sendStatus(304);
       } else {
-        res.set("ETag", sha1);
+        res.set("ETag", hash);
         return generate();
       }
     })
