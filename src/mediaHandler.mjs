@@ -22,8 +22,8 @@ const generateIfNotCached = (req, res, media, generate) =>
       res
         .status(500)
         .end(
-          "<svg xmlns='http://www.w3.org/2000/svg' width='400' height='30'>" +
-            "<text fill='red' text-anchor='middle' x='200' y='22'>" +
+          "<svg xmlns='http://www.w3.org/2000/svg' width='400' height='40'>" +
+            "<text fill='red' dominant-baseline='middle' text-anchor='middle' font-size='16' x='200' y='20'>" +
             "Rendering failed, see console for more info!" +
             "</text>" +
             "</svg>"
