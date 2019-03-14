@@ -1,10 +1,9 @@
-import fs from "./fs-promises";
+import fs from "./fs-promises.js";
 import path from "path";
-import hashFile from "./hashFile";
-import renderMarkdown from "./md-file-to-html";
-import renderMarkdown from "./md2html";
-import { AUTO_REFRESH_MODULE } from "./server";
-import { CONFIG } from "./definitions";
+import hashFile from "./hashFile.mjs";
+import renderMarkdown from "./md2html.mjs";
+import { AUTO_REFRESH_MODULE } from "./server.mjs";
+import { CONFIG } from "./definitions.mjs";
 
 const generateIfNotCached = (req, res, media, generate) =>
   hashFile(media)

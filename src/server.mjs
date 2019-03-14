@@ -1,11 +1,10 @@
-import open from "opn";
 import path from "path";
 
 import express from "express";
 import webSocket from "ws";
-import * as serveMedia from "./mediaHandler";
-import { getRenderedHTML } from "./md-html-to-file";
-import { CONFIG } from "./definitions";
+import * as serveMedia from "./mediaHandler.mjs";
+import { getRenderedHTML } from "./md-file-to-html.mjs";
+import { CONFIG } from "./definitions.mjs";
 import child_process from "child_process";
 
 const WAIT_FOR_BROWSER_TO_OPEN = 2500;

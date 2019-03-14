@@ -1,7 +1,7 @@
 import path from "path";
-import fs from "./fs-promises";
+import fs from "./fs-promises.js";
 
-import md2html from "./md-file-to-html";
+import md2html from "./md-file-to-html.mjs";
 import { MARKDOWN_EXTENSION } from "./definitions.mjs";
 
 /**

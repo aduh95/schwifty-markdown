@@ -1,8 +1,8 @@
-import fs from "./fs-promises";
-import sessionStorage from "./session-storage";
-import md2html from "md2html";
+import fs from "./fs-promises.js";
+import sessionStorage from "./session-storage.mjs";
+import md2html from "./md2html.mjs";
 
-import { refreshBrowser } from "./server";
+import { refreshBrowser } from "./server.mjs";
 
 const HTML_RENDERED_STORAGE_KEY = "md2html:html";
 export const getRenderedHTML = html =>

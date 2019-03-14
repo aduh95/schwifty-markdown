@@ -1,6 +1,6 @@
 import path from "path";
 
-import parseMarkdown from "./mdParser";
+import parseMarkdown from "./mdParser.mjs";
 import {
   JS_MODULES,
   JS_NO_MODULES_FALLBACK,

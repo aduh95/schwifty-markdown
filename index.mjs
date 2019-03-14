@@ -1,7 +1,6 @@
-import { watchCounter } from "./src/mdWatcher";
-import addWatcher from "./src/mdWatcher";
-import renderFile from "./src/md-file-to-html";
-import _md2html from "./src/md2html";
+import addWatcher, { watchCounter } from "./src/mdWatcher.mjs";
+import renderFile from "./src/md-file-to-html.mjs";
+import _md2html from "./src/md2html.mjs";
 
 /**
  * Entry point of the package.

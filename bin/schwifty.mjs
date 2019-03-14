@@ -1,9 +1,9 @@
 import path from "path";
 
-import schwifty from "../index";
-import { CONFIG } from "../src/definitions";
-import { startServer } from "../src/server";
-import opt from "../src/cli-args";
+import schwifty from "../index.mjs";
+import { CONFIG } from "../src/definitions.mjs";
+import { startServer } from "../src/server.mjs";
+import opt from "../src/cli-args.js";
 
 const argv = opt.demandCommand(1, "You must provide a path to listen to!").argv;
 

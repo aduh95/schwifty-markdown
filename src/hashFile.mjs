@@ -1,4 +1,4 @@
-import fs from "./fs-promises";
+import fs from "./fs-promises.js";
 import crypto from "crypto";
 
 export default fileOrString =>
