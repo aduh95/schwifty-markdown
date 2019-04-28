@@ -31,13 +31,13 @@
     "is-port-available": "^0.1.5",
     "js-yaml": "^3.10.0",
     "jsdom": "^13.0.0",
-    "marked": "^0.5.0",
+    "marked": "^0.6.2",
     "node-plantuml": "^0.5.0",
-    "opn": "^5.4.0",
+    "open": "^6.2.0",
     "papaparse": "^4.3.6",
     "ws": "^6.0.0",
     "yargs": "^12.0.2",
-    "yuml2svg": "^4.0.0"
+    "yuml2svg": "^5.0.0-beta.2"
   },
   "scripts": {
     "start": "node --experimental-modules bin/schwifty.mjs",
