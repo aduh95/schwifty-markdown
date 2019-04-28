@@ -129,7 +129,8 @@ export const refreshBrowser = () => {
         waitForBrowserToOpen = setTimeout(() => {
           waitForBrowserToOpen = null;
         }, WAIT_FOR_BROWSER_TO_OPEN);
-      });
+      })
+      .catch(console.error);
   } else if (CONFIG.getItem("PRINT_TO_PDF")) {
     console.log("Generating PDF " + CONFIG.getItem("PRINT_TO_PDF"));
     try {
