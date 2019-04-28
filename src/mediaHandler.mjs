@@ -1,7 +1,7 @@
 import fs from "./fs-promises.js";
 import path from "path";
 import hashFile from "./hashFile.mjs";
-import renderMarkdown from "./md2html.mjs";
+import renderMarkdown from "./md-file-to-html.mjs";
 import { AUTO_REFRESH_MODULE } from "./server.mjs";
 import { CONFIG } from "./definitions.mjs";
 

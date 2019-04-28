@@ -9,7 +9,7 @@ import {
   MARKDOWN_GET_URL,
   PLANTUML_GET_URL,
   YUML_GET_URL,
-} from "./server";
+} from "./server.mjs";
 import {
   CHARSET,
   YUML_EXTENSION,
@@ -454,6 +454,6 @@ export const md2html = (mdContent, filePath = "/") =>
   parseMarkdown(mdContent)
     .then(parseHTML)
     .then(({ headers, dom }) => addHTMLHeaders(filePath, dom, headers))
-    .then(dom => normalizeHTML(file, dom));
+    .then(dom => normalizeHTML(filePath, dom));
 
 export default md2html;
