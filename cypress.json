@@ -1,6 +1,6 @@
 {
+  "baseUrl": "http://localhost:3000",
   "env": {
-    "host": "http://localhost:3000/",
     "testDir": "./tests"
   }
 }

@@ -1,27 +1,21 @@
 describe("Test SVG generation", function() {
   it("Test chart creation", function() {
     cy.request(
-      Cypress.env("host") +
-        "md/" +
-        encodeURIComponent(Cypress.env("testDir") + "/charts.md")
+      "/md/" + encodeURIComponent(Cypress.env("testDir") + "/charts.md")
     );
-    cy
-      .visit(Cypress.env("host"))
+    cy.visit("/")
       .then(() => cy.wait(500))
       .then(() => {
         cy.get("img").each($img => {
-          cy
-            .wrap($img)
+          cy.wrap($img)
             .invoke("prop", "hidden")
             .should("eq", true);
 
-          cy
-            .wrap($img.next())
+          cy.wrap($img.next())
             .invoke("is", "svg")
             .should("eq", true);
 
-          cy
-            .wrap($img.next())
+          cy.wrap($img.next())
             .invoke("find", ".ct-series")
             .its("length")
             .should("gt", 0);
@@ -39,19 +33,15 @@ describe("Test SVG generation", function() {
     };
 
     cy.request(
-      Cypress.env("host") +
-        "md/" +
-        encodeURIComponent(Cypress.env("testDir") + "/yuml.md")
+      "/md/" + encodeURIComponent(Cypress.env("testDir") + "/yuml.md")
     );
-    cy.visit(Cypress.env("host")).then(() => {
-      cy
-        .get("img")
+    cy.visit("/").then(() => {
+      cy.get("img")
         .each(img => {
           const src = img.attr("src");
           if (src.startsWith("data:text/mermaid")) {
             // Mermaid diagram case
-            cy
-              .wrap(img.parent())
+            cy.wrap(img.parent())
               .get("img.lang-mermaid")
               .invoke("attr", "src");
             /** @see https://github.com/cypress-io/cypress/issues/1688 */

@@ -1,11 +1,9 @@
 describe("Test HTML rendering", function() {
   it("Visits the empty file", function() {
     cy.request(
-      Cypress.env("host") +
-        "md/" +
-        encodeURIComponent(Cypress.env("testDir") + "/empty.md")
+      "/md/" + encodeURIComponent(Cypress.env("testDir") + "/empty.md")
     );
-    cy.visit(Cypress.env("host"));
+    cy.visit("/");
 
     cy.title().should("eq", "empty.md");
     cy.document()
@@ -16,11 +14,9 @@ describe("Test HTML rendering", function() {
 
   it("Try clicking on some links", function() {
     cy.request(
-      Cypress.env("host") +
-        "md/" +
-        encodeURIComponent(Cypress.env("testDir") + "/links.md")
+      "/md/" + encodeURIComponent(Cypress.env("testDir") + "/links.md")
     );
-    cy.visit(Cypress.env("host"));
+    cy.visit("/");
 
     cy.get("a[title='local-absolute']").each($link => {
       cy.location("origin").should("eq", $link.prop("origin"));
