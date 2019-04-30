@@ -42,9 +42,9 @@
   "scripts": {
     "start": "node --experimental-modules bin/schwifty.mjs",
     "test": "node tests/bootstrap.js",
-    "preinstall": "node src/checkDependencies.js",
+    "preinstall": "node bin/checkDependencies.js",
     "postinstall": "exitzero node bin/schwifty.js -u",
-    "updateDependencies": "node --experimental-modules src/updateDependencies.mjs",
+    "updateDependencies": "node --experimental-modules bin/updateDependencies.mjs",
     "preversion": "yarn test",
     "postversion": "git push && git push --tags"
   },

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-require("../src/checkDependencies");
-const fs = require("../src/fs-promises");
+require("./checkDependencies.js");
+const fs = require("../src/fs-promises.js");
 const path = require("path");
-const { exec, spawn } = require("child_process");
+const { spawn } = require("child_process");
 
 const argv = require("../src/cli-args")
   .usage("Usage: $0 [--port=3000] [--browser=firefox] [--no-browser] <path>")
@@ -43,53 +43,51 @@ const FLAGS = "--experimental-modules";
 const WORKING_DIR = path.resolve(path.join(__dirname, ".."));
 
 const EXEC_FILE = path.join(WORKING_DIR, "bin", "schwifty.mjs");
-const PACKAGE_FILE = path.join(WORKING_DIR, "package.json");
+const UPDATE_FILE = path.join(WORKING_DIR, "bin", "updateDependencies.mjs");
 
 const watchable = path.resolve(argv._.pop() || ".");
 
 if (argv.u) {
   console.log("Updating plantUML");
-  fs
-    .readFile(PACKAGE_FILE)
-    .then(JSON.parse)
-    .then(data => {
-      exec(
-        data.scripts.updateDependencies,
-        {
-          cwd: WORKING_DIR,
-        },
-        (err, stdout) => {
-          if (err) {
-            console.error(err);
-          } else {
-            try {
-              const result = JSON.parse(stdout);
-              switch (result.statusCode) {
-                case 200:
-                  console.log("Done!");
-                  break;
 
-                case 304:
-                  console.log("Already up-to-date");
-                  break;
+  const options = [FLAGS, UPDATE_FILE];
+  const subprocess = spawn(process.argv0, options, {
+    cwd: WORKING_DIR,
+    windowsHide: true,
+  });
 
-                default:
-                  console.error("Something went wrong", result);
-              }
-            } catch (err) {
-              console.error(err);
-            }
-          }
-        }
-      );
-    });
+  const stdout = [];
+
+  subprocess.on("error", err => console.error(err));
+  subprocess.on("close", exitCode => {
+    if (exitCode) {
+      console.log("An error occurred!", exitCode);
+      stdout.forEach(data => process.stdout.write(data));
+    } else {
+      const result = JSON.parse(Buffer.concat(stdout));
+      switch (result.statusCode) {
+        case 200:
+          console.log("Done!");
+          break;
+
+        case 304:
+          console.log("Already up-to-date");
+          break;
+
+        default:
+          console.error("Something went wrong", result);
+      }
+    }
+  });
+
+  subprocess.stdout.on("data", data => stdout.push(data));
+  subprocess.stderr.pipe(process.stderr);
 } else {
   const [FgRed, FgYellow, FgReset] = ["\x1b[31m", "\x1b[33m", "\x1b[0m"];
 
-  fs
-    .access(watchable, fs.constants.R_OK)
+  fs.access(watchable, fs.constants.R_OK)
     .then(() => require("is-port-available")(argv.p))
-    .then(data => {
+    .then(() => {
       const options = [FLAGS, EXEC_FILE];
       Object.keys(argv)
         .filter(
@@ -114,7 +112,7 @@ if (argv.u) {
         options.push("-j");
       }
 
-      const subprocess = spawn(process.argv[0], options, {
+      const subprocess = spawn(process.argv0, options, {
         cwd: WORKING_DIR,
         windowsHide: true,
       });
