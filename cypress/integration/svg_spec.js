@@ -38,8 +38,8 @@ describe("Test SVG generation", function() {
     cy.visit("/").then(() => {
       cy.get("img")
         .each(img => {
-          const src = img.attr("src");
-          if (src.startsWith("data:text/mermaid")) {
+          const url = img.attr("src");
+          if (url.startsWith("data:text/mermaid")) {
             // Mermaid diagram case
             cy.wrap(img.parent())
               .get("img.lang-mermaid")
@@ -47,8 +47,13 @@ describe("Test SVG generation", function() {
             /** @see https://github.com/cypress-io/cypress/issues/1688 */
             // .then(url => cy.request({ url }))
             // .then(checkSVGReception);
+          } else if (url.startsWith("data:image/svg+xml")) {
+            /** @see https://github.com/cypress-io/cypress/issues/1688 */
+            // cy.request({ url }).then(checkSVGReception);
           } else {
-            cy.request(src).then(checkSVGReception);
+            cy.request({ url, failOnStatusCode: false }).then(
+              checkSVGReception
+            );
           }
         })
         .its("length")
