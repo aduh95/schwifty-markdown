@@ -32,8 +32,7 @@ describe("Test HTML rendering", function() {
         );
 
         return cy
-          .wrap(listChildren.item(1).lastElementChild.children)
-          .last()
+          .wrap(listChildren.item(1).lastElementChild.lastElementChild)
           .find("a")
           .last()
           .invoke("attr", "href");
