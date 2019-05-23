@@ -4,6 +4,13 @@
 
 - Integrate into VSCode (like Instant Markdown)
 
+### v2.0.0 (not released)
+
+- BREAKING: use dynamic imports to improve parallel processing (requires node
+  10+)
+- export md2html function for external API usage
+- Update dependencies
+
 ### v1.8.5(2018-11-10)
 
 - Update dependencies
