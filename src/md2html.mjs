@@ -226,11 +226,9 @@ const nonBreakingSpaces = (document, file) => {
   const regexSpaceBefore = / [\?!:;»%€]/g;
   const regexSpaceAfter = /« /g;
 
-  const textNodes = [
-    ...document.querySelectorAll(
-      "p,h1,h2,h3,h4,h5,h6,a,strong,em,li,figcaption"
-    ),
-  ]
+  const textNodes = Array.from(
+    document.querySelectorAll("p,h1,h2,h3,h4,h5,h6,a,strong,em,li,figcaption")
+  )
     .reduce(
       (array, textContainer) => (
         array.push(...textContainer.childNodes), array
@@ -289,15 +287,13 @@ const linksHandler = (document, file) => {
  * @param {Document} document The current document
  */
 const codeBlockHandler = document => {
-  const codeBlocks = document.querySelectorAll("code");
-  for (const code of codeBlocks) {
-    if (
-      code.className.startsWith("language-") &&
-      code.parentNode.nodeName.toLowerCase() === "pre"
-    ) {
-      code.parentElement.classList.add("sourceCode");
-    }
-  }
+  Array.from(document.querySelectorAll("code"))
+    .filter(
+      code =>
+        code.className.startsWith("language-") &&
+        code.parentNode.nodeName.toLowerCase() === "pre"
+    )
+    .forEach(code => code.parentElement.classList.add("sourceCode"));
 };
 
 /**
