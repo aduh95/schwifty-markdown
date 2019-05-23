@@ -1,4 +1,9 @@
 module.exports = require("yargs")
+  .parserConfiguration({
+    configuration: {
+      "boolean-negation": false,
+    },
+  })
   .number("p")
   .alias("p", "port")
   .default("p", 3000)
