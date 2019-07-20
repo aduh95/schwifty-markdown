@@ -1,37 +1,37 @@
 # Schwifty Markdown
 
 [![NPM version](https://img.shields.io/npm/v/schwifty-markdown.svg)](https://www.npmjs.org/package/schwifty-markdown)
-[![Node >=8.5](https://img.shields.io/node/v/schwifty-markdown.svg)](https://nodejs.org)
+[![Node >=12.3](https://img.shields.io/node/v/schwifty-markdown.svg)](https://nodejs.org)
 [![License MIT](https://img.shields.io/npm/l/schwifty-markdown.svg)](https://github.com/aduh95/schwifty-markdown/blob/master/LICENCE)
 
 This library allows you to generate Markdown files to HTML in your browser.
 
 ### Features
 
-* Renders markdown files to HTML using Github CSS.
-* Indexes your figures.
-* Generates a table of contents for your Markdown file if you add the following
+- Renders markdown files to HTML using Github CSS.
+- Indexes your figures.
+- Generates a table of contents for your Markdown file if you add the following
   tag:
 
   ```html
   <nav id="toc" data-label="Table of contents"></nav>
   ```
 
-* Generates SVG charts in the browser.
-* Renders yUML and PlantUML diagrams to SVG on the fly.
+- Generates SVG charts in the browser.
+- Renders yUML and PlantUML diagrams to SVG on the fly.
 
 ### Install locally
 
 First, you have to ensure that these dependencies are installed and available on
 your path:
 
-* [Node (v8.5+)](//nodejs.org)
-* [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
+- [Node (v10 LTS or v12.3.0+)](//nodejs.org)
+- [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
 
 > If you want Schwifty to render PlantUML diagrams, you also need:
 >
-> * [Java](//java.com)
-> * _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
+> - [Java](//java.com)
+> - _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
 >   types)
 >
 > If you don't want to use those features, you can set an environment variable
@@ -91,9 +91,9 @@ document the best it can.
 >
 > On Firefox, the following flags may need to be activated in `about:config`:
 >
-> * `dom.moduleScripts.enabled`
-> * `network.preload`
-> * `dom.allow_scripts_to_close_windows` [optional]
+> - `dom.moduleScripts.enabled`
+> - `network.preload`
+> - `dom.allow_scripts_to_close_windows` [optional]
 
 #### Output as PDF
 
@@ -184,9 +184,9 @@ behavior, you can add the following code in your document:
 <!-- Remove the figure counter -->
 
 <style>
-figcaption::before{
-    display:none;
-}
+  figcaption::before {
+    display: none;
+  }
 </style>
 ```
 
@@ -197,9 +197,9 @@ use the following:
 <!-- Remove all the figure captions -->
 
 <style>
-figcaption{
-    display:none;
-}
+  figcaption {
+    display: none;
+  }
 </style>
 ```
 
@@ -259,14 +259,14 @@ If you need more customization, you can use a JSON file:
 
 There are 3 `type`s supported:
 
-* Line
-* Pie
-* Bar
+- Line
+- Pie
+- Bar
 
 In the `data` field, you can either provide:
 
-* a `string`, as a path to a `CSV` data file
-* an object that needs to consist of a `labels` array and a `series` (either as
+- a `string`, as a path to a `CSV` data file
+- an object that needs to consist of a `labels` array and a `series` (either as
   an array or as a `string` path to a `CSV` data file)
 
 Then, the `options` field ; the list of available options is described on the
@@ -367,9 +367,9 @@ option to set a custom config file for PlantUML, you might want to add the line
 Schwifty Markdown have a limited support for
 [mermaid diagrams](https://mermaidjs.github.io/).
 
-* Chrome 63+ (uses dynamic JS `import()`)
-* Network access is required (uses a CDN-hosted version)
-* External files not supported
+- Chrome 63+ (uses dynamic JS `import()`)
+- Network access is required (uses a CDN-hosted version)
+- External files not supported
 
 ````markdown
 ![Legend](#inline)
@@ -396,16 +396,17 @@ date: 1970-01-01
 application-name: Schwifty
 keywords: test,schwifty,cypress
 description:
-    This file set a lot of metadata which should be inserted into HTML by Schwifty.
+  This file set a lot of metadata which should be inserted into HTML by
+  Schwifty.
 
 # Adding JS && CSS files
 script:
-    - script.js
-    - //code.jquery.com/jquery.js
-    - ./empty.mjs # should be added as ES module
+  - script.js
+  - //code.jquery.com/jquery.js
+  - ./empty.mjs # should be added as ES module
 
 style:
-    - //code.jquery.com/jquery.css
-    - myCSS.css
+  - //code.jquery.com/jquery.css
+  - myCSS.css
 ---
 ```
