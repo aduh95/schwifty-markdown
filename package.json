@@ -52,7 +52,8 @@
     "node": ">=8.5.0"
   },
   "devDependencies": {
-    "cypress": "^3.1.0"
+    "cypress": "^3.1.0",
+    "puppeteer": "^1.18.1"
   },
   "resolutions": {
     "lodash": "4.17.14"

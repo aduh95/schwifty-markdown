@@ -10,6 +10,8 @@ const cwd = path.resolve(__dirname + path.sep + "..");
 let exitCode = 0;
 let waitToRunCypress = true;
 
+const getChromiumPath = () => require("puppeteer").executablePath();
+
 const runCypress = () => {
   console.log("Starting Cypress");
 
@@ -19,7 +21,7 @@ const runCypress = () => {
     [
       ...(process.argv.length > 2
         ? ["open"]
-        : ["run", "--browser", "chromium"]),
+        : ["run", "--browser", getChromiumPath()]),
       "--env",
       "testDir=" + __dirname,
     ],
