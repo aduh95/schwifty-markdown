@@ -3,6 +3,17 @@ import fs from "./fs-promises.js";
 const HASH_ALGORITHM = "sha1";
 const HASH_OUTPUT = "hex";
 
+const hashExistingFile = (hash, path) =>
+  new Promise((resolve, reject) => {
+    const input = fs.createReadStream(path);
+
+    input.on("error", err => reject(err));
+    input.on("data", data => hash.update(data));
+    input.on("end", () => {
+      resolve(hash.digest(HASH_OUTPUT));
+    });
+  });
+
 export default fileOrString =>
   import("crypto")
     .then(module => module.default)
@@ -10,18 +21,10 @@ export default fileOrString =>
     .then(hash =>
       fs
         .access(fileOrString, fs.constants.R_OK)
-        .then(() => {
-          const input = fs.createReadStream(fileOrString);
-
-          input.on("error", err => reject(err));
-          input.on("data", data => hash.update(data));
-          input.on("end", () => {
-            resolve(hash.digest(HASH_OUTPUT));
-          });
-        })
+        .then(hashExistingFile(hash, fileOrString))
         .catch(() => {
           // Plain string handling
           hash.update(fileOrString);
-          resolve(hash.digest(HASH_OUTPUT));
+          return hash.digest(HASH_OUTPUT);
         })
     );
