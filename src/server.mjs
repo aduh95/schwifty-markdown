@@ -94,6 +94,7 @@ const createServer = express => {
 };
 
 let wsConnection = null;
+let serverTCPPort;
 
 export const startServer = () =>
   Promise.all([import("express"), import("ws")])
@@ -103,11 +104,8 @@ export const startServer = () =>
         CONFIG.getItem("PORT_NUMBER"),
         "localhost",
         function() {
-          console.log(
-            `Server started on http://localhost:${CONFIG.getItem(
-              "PORT_NUMBER"
-            )}`
-          );
+          serverTCPPort = server.address().port;
+          console.log(`Server started on http://localhost:${serverTCPPort}`);
         }
       );
 
@@ -130,7 +128,7 @@ export const refreshBrowser = () => {
       .then(module => module.default)
       .then(open => {
         open(
-          "http://localhost:" + CONFIG.getItem("PORT_NUMBER"),
+          "http://localhost:" + serverTCPPort,
           CONFIG.getItem("BROWSER_NAME")
         );
         waitForBrowserToOpen = setTimeout(() => {
@@ -147,7 +145,7 @@ export const refreshBrowser = () => {
           spawn(CONFIG.getItem("BROWSER_NAME"), [
             "--headless",
             "--print-to-pdf=" + CONFIG.getItem("PRINT_TO_PDF"),
-            "http://localhost:" + CONFIG.getItem("PORT_NUMBER"),
+            "http://localhost:" + serverTCPPort,
           ]).on("close", function(errCode) {
             console.log("Browser has closed, closing Schwifty...");
             process.exit(errCode);

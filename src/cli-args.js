@@ -6,7 +6,7 @@ module.exports = require("yargs")
   })
   .number("p")
   .alias("p", "port")
-  .default("p", 3000)
+  .default("p", 0)
   .string("o")
   .alias("o", "output")
   .describe(
