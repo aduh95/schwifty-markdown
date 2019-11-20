@@ -127,10 +127,10 @@ export const refreshBrowser = () => {
     import("open")
       .then(module => module.default)
       .then(open => {
-        open(
-          "http://localhost:" + serverTCPPort,
-          CONFIG.getItem("BROWSER_NAME")
-        );
+        open("http://localhost:" + serverTCPPort, {
+          app: CONFIG.getItem("BROWSER_NAME"),
+          url: true,
+        });
         waitForBrowserToOpen = setTimeout(() => {
           waitForBrowserToOpen = null;
         }, WAIT_FOR_BROWSER_TO_OPEN);
