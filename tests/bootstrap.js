@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { exec, execFile } = require("child_process");
+const { execFile } = require("child_process");
 const path = require("path");
 const checkProgramOnPath = require("../bin/checkDependencies.js");
 
@@ -10,21 +10,13 @@ const cwd = path.resolve(__dirname + path.sep + "..");
 let exitCode = 0;
 let waitToRunCypress = true;
 
-const getChromiumPath = () => require("puppeteer").executablePath();
-
 const runCypress = () => {
   console.log("Starting Cypress");
 
   const { bin } = require("cypress/package.json");
   const cypress = execFile(
     require.resolve("cypress/" + bin.cypress),
-    [
-      ...(process.argv.length > 2
-        ? ["open"]
-        : ["run", "--browser", getChromiumPath()]),
-      "--env",
-      "testDir=" + __dirname,
-    ],
+    [process.argv.length > 2 ? "open" : "run", "--env", "testDir=" + __dirname],
     { cwd }
   );
 
@@ -41,7 +33,7 @@ const startSchwifty = async () => {
   console.log("Starting Schwifty (watching tests dir)");
 
   const { bin } = require("../package.json");
-  const options = ["-n", __dirname];
+  const options = ["-n", __dirname, "--port=3000"];
   if (!(await new Promise(done => checkProgramOnPath("java", done)))) {
     console.warn("Java not detected on path, disabling Java related tests.");
     options.push("-j");
@@ -63,17 +55,6 @@ const startSchwifty = async () => {
   server.on("error", err => console.error(err));
 
   server.on("exit", () => console.log("exiting..."));
-  server.on("close", () => {
-    console.log("closing...");
-
-    exec("netstat -tulpn | grep :3000", (err, stdout) => {
-      err
-        ? console.error(err)
-        : exec("kill " + stdout.match(/(\d+)\/node/)[1], err => {
-            err ? console.error(err) : process.exit(exitCode);
-          });
-    });
-  });
 
   return server;
 };
