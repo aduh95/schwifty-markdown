@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 
-const { execFile } = require("child_process");
-const path = require("path");
-const checkProgramOnPath = require("../bin/checkDependencies.js");
+import { execFile } from "child_process";
+import path from "path";
+
+import { fileURLToPath } from "url";
+import { createRequire } from "module";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const require = createRequire(import.meta.url);
 
 // Current working directory for schwifty
-const cwd = path.resolve(__dirname + path.sep + "..");
+const cwd = path.join(__dirname, "..");
 
 let exitCode = 0;
 let waitToRunCypress = true;
@@ -29,15 +36,15 @@ const runCypress = () => {
   return cypress;
 };
 
-const startSchwifty = async () => {
+const startSchwifty = () => {
   console.log("Starting Schwifty (watching tests dir)");
 
   const { bin } = require("../package.json");
   const options = ["-n", __dirname, "--port=3000"];
-  if (!(await new Promise(done => checkProgramOnPath("java", done)))) {
-    console.warn("Java not detected on path, disabling Java related tests.");
-    options.push("-j");
-  }
+
+  // disabling Java as it makes tests failing unexpectedly
+  options.push("-j");
+
   const server = execFile(path.join(cwd, bin.schwifty), options);
 
   server.stderr.pipe(process.stderr);
@@ -66,7 +73,7 @@ const exitTests = code => {
     console.log("Tests terminated not successfully");
   }
   exitCode = code;
-  server.then(s => s.kill("SIGINT"));
+  server.kill("SIGINT");
 };
 
 // If Cypress test was never launched

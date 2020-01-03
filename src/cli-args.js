@@ -1,4 +1,6 @@
-module.exports = require("yargs")
+import yargs from "yargs";
+
+export default yargs
   .parserConfiguration({
     configuration: {
       "boolean-negation": false,

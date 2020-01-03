@@ -23,12 +23,11 @@
     "url": "https://github.com/aduh95/schwifty-markdown/issues"
   },
   "bin": {
-    "schwifty": "bin/schwifty.js"
+    "schwifty": "bin/schwifty"
   },
   "dependencies": {
     "exitzero": "^1.0.1",
     "express": "^4.16.3",
-    "is-port-available": "^0.1.5",
     "js-yaml": "^3.10.0",
     "jsdom": "^15.1.0",
     "marked": "^0.8.0",
@@ -40,16 +39,14 @@
     "yuml2svg": "^5.0.0-beta.2"
   },
   "scripts": {
-    "start": "node --experimental-modules bin/schwifty.mjs",
+    "start": "node bin/schwifty",
     "test": "node tests/bootstrap.js",
-    "preinstall": "node bin/checkDependencies.js",
-    "postinstall": "exitzero node bin/schwifty.js -u",
-    "updateDependencies": "node --experimental-modules bin/updateDependencies.mjs",
     "preversion": "yarn test",
     "postversion": "git push && git push --tags"
   },
+  "type": "module",
   "engines": {
-    "node": ">=10.0.0 <10.15.3 || ^10.17.0 || >=12.3.0"
+    "node": ">=13.2.0"
   },
   "devDependencies": {
     "cypress": "^3.1.0"

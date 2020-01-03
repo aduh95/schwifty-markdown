@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import path from "path";
 
 import schwifty from "../index.mjs";
@@ -5,7 +6,30 @@ import { CONFIG } from "../src/definitions.mjs";
 import { startServer } from "../src/server.mjs";
 import opt from "../src/cli-args.js";
 
-const argv = opt.demandCommand(1, "You must provide a path to listen to!").argv;
+const { argv } = opt
+  .usage("Usage: $0 [--port=3000] [--browser=firefox] [--no-browser] <path>")
+  .example(
+    "$0 .",
+    "Starts Schwifty server and listen on all changes on markdown files of the current directory and its subdirectories"
+  )
+  .example(
+    "$0 /dir",
+    "Starts Schwifty server and listen to all changes on markdown files in `/dir` and its subdirectories"
+  )
+  .example(
+    "$0 file.md",
+    "Starts Schwifty server and listen to all changes on `file.md`"
+  )
+  .example(
+    "$0 --no-browser file.md",
+    "Ask Schwifty not to open the default browser"
+  )
+  .example(
+    "$0 --browser=firefox file.md",
+    "Ask Schwifty to open Firefox rather than the default browser"
+  )
+  .help("h")
+  .alias("h", "help");
 
 CONFIG.setItem("PORT_NUMBER", argv.p);
 !argv.n && !argv.o && CONFIG.setItem("AUTO_OPEN_BROWSER", true);
@@ -22,7 +46,7 @@ schwifty(path.resolve(argv._.pop()))
   .then(result => {
     if (result === false) {
       console.info("Hint: Edit a markdown file to render it in your browser.");
-      // Lazy load jsdom to be ready for the next parsing
+      // Cache jsdom to be ready for the next parsing
       import("jsdom");
     } else if (result === 0) {
       console.error(
