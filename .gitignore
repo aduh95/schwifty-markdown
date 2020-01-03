@@ -1,6 +1,8 @@
 node_modules/
 package-lock.json
 /cypress/screenshots
+/cypress/videos
+/cypress/fixtures
 cypress.env.json
 /utils/js_scripts/papaparse.min.js
 /parts
