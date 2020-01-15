@@ -6,6 +6,8 @@ import { CONFIG } from "../src/definitions.mjs";
 import { startServer } from "../src/server.mjs";
 import opt from "../src/cli-args.js";
 
+import UTIL_FOLDER_PATH from "../utils/path.mjs";
+
 const { argv } = opt
   .usage("Usage: $0 [--port=3000] [--browser=firefox] [--no-browser] <path>")
   .example(
@@ -38,7 +40,7 @@ argv.b && CONFIG.setItem("BROWSER_NAME", argv.b);
 argv.j || CONFIG.setItem("JAVA_ENABLED", true);
 CONFIG.setItem(
   "PLANTUML_CONFIG",
-  argv.c || path.resolve("./utils/plantuml-ressources/no-shadow.pu")
+  argv.c || path.join(UTIL_FOLDER_PATH, "plantuml-ressources", "no-shadow.pu")
 );
 
 startServer();
