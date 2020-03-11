@@ -29,7 +29,7 @@
     "exitzero": "^1.0.1",
     "express": "^4.16.3",
     "js-yaml": "^3.10.0",
-    "jsdom": "^15.1.0",
+    "jsdom": "^16.2.1",
     "marked": "^0.8.0",
     "node-plantuml": "^0.9.0",
     "open": "^7.0.0",
@@ -49,6 +49,6 @@
     "node": ">=13.2.0"
   },
   "devDependencies": {
-    "cypress": "^3.1.0"
+    "cypress": "^4.1.0"
   }
 }

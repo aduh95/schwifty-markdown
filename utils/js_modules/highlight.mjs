@@ -18,7 +18,7 @@ const initHighlight = function() {
   if (codes.length) {
     awaitHighlight(codes, 0);
     preloadCSS(
-      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css"
+      "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/atom-one-light.min.css"
     );
   }
 };
