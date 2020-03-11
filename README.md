@@ -1,7 +1,7 @@
 # Schwifty Markdown
 
 [![NPM version](https://img.shields.io/npm/v/schwifty-markdown.svg)](https://www.npmjs.org/package/schwifty-markdown)
-[![Node >=12.3](https://img.shields.io/node/v/schwifty-markdown.svg)](https://nodejs.org)
+[![Node >=13.2](https://img.shields.io/node/v/schwifty-markdown.svg)](https://nodejs.org)
 [![License MIT](https://img.shields.io/npm/l/schwifty-markdown.svg)](https://github.com/aduh95/schwifty-markdown/blob/master/LICENCE)
 
 This library allows you to generate Markdown files to HTML in your browser.
@@ -22,10 +22,12 @@ This library allows you to generate Markdown files to HTML in your browser.
 
 ### Install locally
 
+> _It's time to get schwifty!_ – Richard Sanchez (C-137)
+
 First, you have to ensure that these dependencies are installed and available on
 your path:
 
-- [Node (v10 LTS or v12.3.0+)](//nodejs.org)
+- [Node (v13.2.0+)](//nodejs.org)
 - [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
 
 > If you want Schwifty to render PlantUML diagrams, you also need:
@@ -87,11 +89,10 @@ disabled some features it uses, it will display a warning and try to render your
 document the best it can.
 
 > \*Major browsers where Schwifty had been tested: Google Chrome, Microsoft
-> Edge, Mozilla Firefox.
+> Edge, Mozilla Firefox, Safari.
 >
 > On Firefox, the following flags may need to be activated in `about:config`:
 >
-> - `dom.moduleScripts.enabled`
 > - `network.preload`
 > - `dom.allow_scripts_to_close_windows` [optional]
 
@@ -251,7 +252,11 @@ If you need more customization, you can use a JSON file:
   "type": "Line",
   "data": {
     "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
-    "series": [[8, 5, 6, 2, 3], [5, 6, 8, 4, 3], [5, 6, 1, 2, 3]]
+    "series": [
+      [8, 5, 6, 2, 3],
+      [5, 6, 8, 4, 3],
+      [5, 6, 1, 2, 3]
+    ]
   },
   "options": {}
 }
@@ -338,14 +343,9 @@ as an image, it will render as an SVG.
 The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
 **N.B.:** As PlantUML rendering requires to call a Java dependency, the process
-might be slow depending of your machine (about 47 times slower than yUML
+might be slow depending of your machine (about 20 times slower than yUML
 rendering on my computer). All the rendering is done locally, you don't need a
 network access to work with your diagrams.
-
-**N.B.:** The PlantUML project is not published on `npm`, which means Schwifty
-must embed a JAR archive of the project, and this archive is not guaranteed to
-be the last version available. You can update it manually by typing
-`schwifty --update-dependencies`.
 
 **N.B.:** The only supported extension for PlantUML diagrams is `.pu`. If you
 think I should add support more file extensions, please raise an issue or submit
@@ -357,7 +357,7 @@ browser won't ask schwifty to re-generate the SVG unless the target file has
 changed. You can either empty your cache or modify the target file (adding a new
 empty line is enough).
 
-**N.B.:** Some browser have trouble exporting vector images with shadow, which
+**N.B.:** Some browsers have trouble exporting vector images with shadow, which
 is why Schwifty disables them by default. If you use the `--plantuml-config`
 option to set a custom config file for PlantUML, you might want to add the line
 `skinparam shadowing false`.
@@ -367,7 +367,6 @@ option to set a custom config file for PlantUML, you might want to add the line
 Schwifty Markdown have a limited support for
 [mermaid diagrams](https://mermaidjs.github.io/).
 
-- Chrome 63+ (uses dynamic JS `import()`)
 - Network access is required (uses a CDN-hosted version)
 - External files not supported
 
@@ -392,6 +391,8 @@ You can add YAML metadata at the beginning of your markdown files:
 title: Custom title # By default, Schwifty uses the first heading as title
 lang: en
 date: 1970-01-01
+
+# This is a YAML comment
 
 application-name: Schwifty
 keywords: test,schwifty,cypress
