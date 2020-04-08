@@ -23,7 +23,7 @@
     "url": "https://github.com/aduh95/schwifty-markdown/issues"
   },
   "bin": {
-    "schwifty": "bin/schwifty"
+    "schwifty": "bin/schwifty.js"
   },
   "dependencies": {
     "exitzero": "^1.0.1",
@@ -39,7 +39,7 @@
     "yuml2svg": "^5.0.0-beta.2"
   },
   "scripts": {
-    "start": "node bin/schwifty",
+    "start": "node bin/schwifty.js",
     "test": "node tests/bootstrap.js",
     "preversion": "yarn test",
     "postversion": "git push && git push --tags"
