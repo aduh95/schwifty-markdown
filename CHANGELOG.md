@@ -6,9 +6,14 @@
 
 ### v2.0.0 (not released)
 
-- BREAKING: use dynamic imports to improve parallel processing (requires node
-  10+)
+- BREAKING: drop support for Node.js 8, 9, 10, and 11. Support for Node.js 12
+  LTS (pending) and Node.js 13.2.0+.
+- BREAKING: use dynamic imports (lazy-loading) to improve parallel processing
+  (requires node 10+)
+- No more child process spawning
+- Remove use of paths relative to cwd
 - export md2html function for external API usage
+- Improve SVG error visibility
 - Update dependencies
 
 ### v1.8.5(2018-11-10)
