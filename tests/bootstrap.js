@@ -14,7 +14,6 @@ const require = createRequire(import.meta.url);
 // Current working directory for schwifty
 const cwd = path.join(__dirname, "..");
 
-let exitCode = 0;
 let waitToRunCypress = true;
 
 const runCypress = () => {
@@ -30,7 +29,7 @@ const runCypress = () => {
   cypress.stderr.pipe(process.stderr);
   cypress.stdout.pipe(process.stdout);
 
-  cypress.on("error", err => console.error(err));
+  cypress.on("error", console.error);
   cypress.on("close", exitTests);
 
   return cypress;
@@ -49,7 +48,7 @@ const startSchwifty = () => {
 
   server.stderr.pipe(process.stderr);
 
-  server.stdout.on("data", data => {
+  server.stdout.on("data", (data) => {
     const message = data.toString().trim();
     console.log("Schwifty info:", message);
 
@@ -59,8 +58,7 @@ const startSchwifty = () => {
     }
   });
 
-  server.on("error", err => console.error(err));
-
+  server.on("error", console.error);
   server.on("exit", () => console.log("exiting..."));
 
   return server;
@@ -68,13 +66,15 @@ const startSchwifty = () => {
 
 const server = startSchwifty();
 
-const exitTests = code => {
+const exitTests = (code) => {
   if (code !== 0) {
     console.log("Tests terminated not successfully");
   }
-  exitCode = code;
+  process.exitCode = code;
   server.kill("SIGINT");
 };
 
 // If Cypress test was never launched
-process.on("exit", () => waitToRunCypress && process.exit((exitCode = -1)));
+process.on("exit", () => {
+  if (waitToRunCypress) process.exitCode = -1;
+});
