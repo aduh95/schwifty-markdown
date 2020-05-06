@@ -8,6 +8,11 @@ const HTML_RENDERED_STORAGE_KEY = "md2html:html";
 export const getRenderedHTML = html =>
   sessionStorage.getItem(HTML_RENDERED_STORAGE_KEY, html);
 
+export const serveMarkdown = (md, file = "/") =>
+  md2html(md, file)
+    .then(html => sessionStorage.setItem(HTML_RENDERED_STORAGE_KEY, html))
+    .then(refreshBrowser);
+
 /**
  * @param {string} file File path
  * @returns {Promise<>} Fulfills when the HTML document is written to FS and a
@@ -16,7 +21,5 @@ export const getRenderedHTML = html =>
 export default file =>
   fs
     .readFile(file)
-    .then(md => md2html(md, file))
-    .then(html => sessionStorage.setItem(HTML_RENDERED_STORAGE_KEY, html))
-    .then(refreshBrowser)
+    .then(md => serveMarkdown(md, file))
     .catch(err => console.error(err));

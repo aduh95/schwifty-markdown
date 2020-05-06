@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import path from "path";
 
-import schwifty from "../index.mjs";
+import schwifty, { serveMarkdown } from "../index.mjs";
 import { CONFIG } from "../src/definitions.mjs";
 import { startServer } from "../src/server.mjs";
 import opt from "../src/cli-args.js";
@@ -44,7 +44,23 @@ CONFIG.setItem(
 );
 
 startServer();
-schwifty(path.resolve(argv._.pop()))
+
+const launcher = process.stdin.isTTY
+  ? schwifty(path.resolve(argv._.pop()))
+  : new Promise(async (resolve, reject) => {
+      console.warn("Reading from stdin...");
+      const md = [];
+      try {
+        for await (const chunk of process.stdin) {
+          md.push(chunk);
+        }
+      } catch (e) {
+        reject(e);
+      }
+      serveMarkdown(md.join("")).then(resolve, reject);
+    });
+
+launcher
   .then(result => {
     if (result === false) {
       console.info("Hint: Edit a markdown file to render it in your browser.");
