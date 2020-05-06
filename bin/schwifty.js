@@ -48,7 +48,7 @@ startServer();
 const launcher = process.stdin.isTTY
   ? schwifty(path.resolve(argv._.pop()))
   : new Promise(async (resolve, reject) => {
-      console.warn("Reading from stdin...");
+      console.warn("Schwifty: Reading from stdin...");
       const md = [];
       try {
         for await (const chunk of process.stdin) {
@@ -63,12 +63,15 @@ const launcher = process.stdin.isTTY
 launcher
   .then(result => {
     if (result === false) {
-      console.info("Hint: Edit a markdown file to render it in your browser.");
+      console.info(
+        "Schwifty: Edit a markdown file to render it in your browser."
+      );
       // Cache jsdom to be ready for the next parsing
       import("jsdom");
     } else if (result === 0) {
+      console.error("Schwifty: No Markdown file found.");
       console.error(
-        "No Markdown file found. Please make sure you are using a supported extension."
+        "Schwifty: Please make sure you are using a supported extension."
       );
       process.exit(0);
     }

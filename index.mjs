@@ -11,7 +11,8 @@ const schwifty = async target => {
   let watcher = await addWatcher(target);
 
   console.log(
-    watchCounter +
+    "Schwifty: " +
+      watchCounter +
       " markdown file" +
       (watchCounter === 1 ? " is" : "s are") +
       " being watched."

@@ -13,7 +13,10 @@ export default buffer =>
                 headers = import("js-yaml")
                   .then(module => module.default.safeLoad(data))
                   .catch(err => {
-                    console.warn("Warning, YAML metadata parsing failed", err);
+                    console.warn(
+                      "Schwifty: Warning, YAML metadata parsing failed.",
+                      err
+                    );
                     return {};
                   });
                 return "";

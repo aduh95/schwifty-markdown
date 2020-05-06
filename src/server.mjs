@@ -106,7 +106,9 @@ export const startServer = () =>
         "localhost",
         function() {
           serverTCPPort = server.address().port;
-          console.log(`Server started on http://localhost:${serverTCPPort}`);
+          console.log(
+            `Schwifty: Server started on http://localhost:${serverTCPPort}`
+          );
         }
       );
 
@@ -121,10 +123,10 @@ export const startServer = () =>
 export const refreshBrowser = () => {
   const OPEN = 1;
   if (wsConnection && wsConnection.readyState === OPEN) {
-    console.log("Sending socket to refresh browser");
+    console.log("Schwifty: Sending socket to refresh browser.");
     wsConnection.send("refresh");
   } else if (CONFIG.getItem("AUTO_OPEN_BROWSER") && !waitForBrowserToOpen) {
-    console.log("Opening browser");
+    console.log("Schwifty: Opening browser...");
     import("open")
       .then(module => module.default)
       .then(open => {
@@ -138,7 +140,7 @@ export const refreshBrowser = () => {
       })
       .catch(console.error);
   } else if (CONFIG.getItem("PRINT_TO_PDF")) {
-    console.log("Generating PDF " + CONFIG.getItem("PRINT_TO_PDF"));
+    console.log("Schwifty: Generating PDF " + CONFIG.getItem("PRINT_TO_PDF"));
     import("child_process")
       .then(module => module.default)
       .then(({ spawn }) => {
@@ -148,16 +150,19 @@ export const refreshBrowser = () => {
             "--print-to-pdf=" + CONFIG.getItem("PRINT_TO_PDF"),
             "http://localhost:" + serverTCPPort,
           ]).on("close", function(errCode) {
-            console.log("Browser has closed, closing Schwifty...");
+            console.log("Schwifty: Browser has closed, exiting...");
             process.exit(errCode);
           });
         } catch (err) {
-          console.error("Have you forgot to specify the browser to use?", err);
+          console.error(
+            "Schwifty: Did you forget to specify which browser to use?",
+            err
+          );
           process.exit(1);
         }
       });
   } else {
-    console.log("Document ready");
+    console.log("Schwifty: Document ready.");
   }
   return true;
 };

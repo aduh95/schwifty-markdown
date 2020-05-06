@@ -33,7 +33,7 @@ export const yuml = () => (req, res) => {
   res.set("Content-Type", "image/svg+xml");
 
   generateIfNotCached(req, res, media, () => {
-    console.log("Generating yUML graph");
+    console.log("Schwifty: Generating yUML graph.");
     return import("yuml2svg")
       .then(module => module.default)
       .then(yumlCompile =>
@@ -52,7 +52,7 @@ export const plantuml = () => (req, res) => {
 
   generateIfNotCached(req, res, media, () => {
     if (CONFIG.getItem("JAVA_ENABLED")) {
-      console.log("Generating plantuml SVG");
+      console.log("Schwifty: Generating plantuml SVG.");
 
       import("node-plantuml").then(module =>
         module.default
