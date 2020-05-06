@@ -1,5 +1,5 @@
 importScripts(
-  "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/highlight.min.js"
 );
 
 onmessage = ({ data }) =>
