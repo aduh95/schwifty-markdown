@@ -30,6 +30,14 @@ const { argv } = opt
     "$0 --browser=firefox file.md",
     "Ask Schwifty to open Firefox rather than the default browser"
   )
+  .example(
+    "curl -L https://github.com/aduh95/schwifty-markdown/raw/master/README.md | $0",
+    "Reads Markdown from stdin. Links and images may be broken."
+  )
+  .example(
+    "$0 /path/to/file1 < /path/to/file2",
+    "Reads Markdown from file2 and use file1 as reference for relative links."
+  )
   .help("h")
   .alias("h", "help");
 
@@ -57,7 +65,7 @@ const launcher = process.stdin.isTTY
       } catch (e) {
         reject(e);
       }
-      serveMarkdown(md.join("")).then(resolve, reject);
+      serveMarkdown(md.join(""), argv._[0]).then(resolve, reject);
     });
 
 launcher
