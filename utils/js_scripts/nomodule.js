@@ -1,5 +1,5 @@
 // Fallback script for browsers that don't support ES modules
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   try {
     var masks = this.querySelectorAll("noscript.img");
     var picture;
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
       mask.parentNode.insertBefore(picture, mask);
       mask.remove();
     }
-  } catch (e) {
+  } catch (_) {
     // This error will be thrown only by browser that don't
     // support picture element, it can be silently ignored
   }

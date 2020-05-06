@@ -9,7 +9,7 @@ export default buffer =>
           marked(
             buffer
               .toString("utf8")
-              .replace(/^---\r?\n((.*\r?\n)+?)---/, function(m, data) {
+              .replace(/^---\r?\n((.*\r?\n)+?)---/, (_, data) => {
                 headers = import("js-yaml")
                   .then(module => module.default.safeLoad(data))
                   .catch(err => {

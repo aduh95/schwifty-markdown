@@ -44,7 +44,7 @@ export const MARKDOWN_GET_URL = "/md/";
 const createServer = express => {
   const app = express();
 
-  app.get("/", function(req, res) {
+  app.get("/", (_, res) => {
     const html = getRenderedHTML();
     if (html) {
       res.header("Content-Type", "text/html").send(html);
@@ -104,7 +104,7 @@ export const startServer = () =>
       const server = createServer(express).listen(
         CONFIG.getItem("PORT_NUMBER"),
         "localhost",
-        function() {
+        () => {
           serverTCPPort = server.address().port;
           console.log(
             `Schwifty: Server started on http://localhost:${serverTCPPort}`
@@ -149,7 +149,7 @@ export const refreshBrowser = () => {
             "--headless",
             "--print-to-pdf=" + CONFIG.getItem("PRINT_TO_PDF"),
             "http://localhost:" + serverTCPPort,
-          ]).on("close", function(errCode) {
+          ]).on("close", errCode => {
             console.log("Schwifty: Browser has closed, exiting...");
             process.exit(errCode);
           });
