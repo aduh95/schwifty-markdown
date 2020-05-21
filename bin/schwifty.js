@@ -53,20 +53,21 @@ CONFIG.setItem(
 
 startServer();
 
-const launcher = process.stdin.isTTY
-  ? schwifty(path.resolve(argv._.pop()))
-  : new Promise(async (resolve, reject) => {
-      console.warn("Schwifty: Reading from stdin...");
-      const md = [];
-      try {
-        for await (const chunk of process.stdin) {
-          md.push(chunk);
+const launcher =
+  "connecting" in process.stdin
+    ? schwifty(path.resolve(argv._.pop()))
+    : new Promise(async (resolve, reject) => {
+        console.warn("Schwifty: Reading from stdin...");
+        const md = [];
+        try {
+          for await (const chunk of process.stdin) {
+            md.push(chunk);
+          }
+        } catch (e) {
+          reject(e);
         }
-      } catch (e) {
-        reject(e);
-      }
-      serveMarkdown(md.join(""), argv._[0]).then(resolve, reject);
-    });
+        serveMarkdown(md.join(""), argv._[0]).then(resolve, reject);
+      });
 
 launcher
   .then(result => {
