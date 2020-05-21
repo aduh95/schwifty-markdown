@@ -64,8 +64,7 @@ schwifty path/to/directory/to/listen
 Schwifty is going to listen for changes in all the markdown files within the
 `path/to/directory/to/listen` and its subdirectories. As soon as you touch a
 `.md` file (E.G.: pressing the save button of your editor), your default browser
-should open at [localhost:3000](http://localhost:3000) or reload to render your
-document.
+should open or reload to render your document.
 
 You can also watch only one file if that is more convenient to you:
 

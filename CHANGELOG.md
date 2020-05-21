@@ -1,10 +1,6 @@
 # Change log
 
-### Upcoming
-
-- Integrate into VSCode (like Instant Markdown)
-
-### v2.0.0 (not released)
+### v2.0.0 (unreleased)
 
 - BREAKING: drop support for Node.js 8, 9, 10, and 11. Support for Node.js 12
   LTS (pending) and Node.js 13.2.0+.
