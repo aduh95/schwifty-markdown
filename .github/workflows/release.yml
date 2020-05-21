@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+          registry-url: "https://registry.npmjs.org"
       - name: Install GH Actions toolkit
         run: npm install @actions/core --no-save
       - name: Read release info
@@ -43,4 +47,4 @@ jobs:
         id: publish
         run: npm publish ${{ steps.release_info.outputs.NPM_FLAGS }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
