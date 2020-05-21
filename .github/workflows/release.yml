@@ -20,9 +20,13 @@ jobs:
           node -e 'const core = require("@actions/core"); const { join } =
           require("path"); const { readFileSync } = require("fs"); const {
           version } = require(join(process.env.GITHUB_WORKSPACE,
-          "package.json")); const tag = version.match(/alpha|beta|rc/); const [, changes] =
-          readFileSync(join(process.env.GITHUB_WORKSPACE, "CHANGELOG.md"),
-          "utf8").split("\n### "); core.setOutput("VERSION", version); core.setOutput("RELEASE_NOTES", changes.substring(changes.indexOf("\n"))); core.setOutput("IS_PRE_RELEASE", !!tag); core.setOutput("NPM_OPTIONS", tag ? `--tag ${tag[0]}` : "")'
+          "package.json")); const tag = version.match(/alpha|beta|rc/); const [,
+          changes] = readFileSync(join(process.env.GITHUB_WORKSPACE,
+          "CHANGELOG.md"), "utf8").split("\n### "); core.setOutput("VERSION",
+          version); core.setOutput("RELEASE_NOTES",
+          changes.substring(changes.indexOf("\n")));
+          core.setOutput("IS_PRE_RELEASE", !!tag); core.setOutput("NPM_FLAGS",
+          tag ? `--tag ${tag[0]}` : "")'
         id: release_info
       - name: Create Release
         id: create_release
@@ -36,5 +40,5 @@ jobs:
           draft: true
           prerelease: ${{ steps.release_info.outputs.IS_PRE_RELEASE }}
       - name: Publish to NPM
-          id: publish
-          run: npm publish ${{ steps.release_info.outputs.NPM_OPTIONS }}
+        id: publish
+        run: npm publish ${{ steps.release_info.outputs.NPM_FLAGS }}
