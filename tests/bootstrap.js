@@ -41,9 +41,6 @@ const startSchwifty = () => {
   const { bin } = require("../package.json");
   const options = ["-n", __dirname, "--port=3000"];
 
-  // disabling Java as it makes tests failing unexpectedly
-  options.push("-j");
-
   const server = execFile(path.join(cwd, bin.schwifty), options);
 
   server.stderr.pipe(process.stderr);
