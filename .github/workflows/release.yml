@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: "12.x"
           registry-url: "https://registry.npmjs.org"
+          always-auth: true
       - name: Install GH Actions toolkit
         run: npm install @actions/core --no-save
       - name: Read release info
