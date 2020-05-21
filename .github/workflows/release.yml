@@ -26,7 +26,7 @@ jobs:
           version); core.setOutput("RELEASE_NOTES",
           changes.substring(changes.indexOf("\n")));
           core.setOutput("IS_PRE_RELEASE", !!tag); core.setOutput("NPM_FLAGS",
-          tag ? `--tag ${tag[0]}` : "")'
+          tag ? `--tag ${tag[0]}` : "--dry-run")'
         id: release_info
       - name: Create Release
         id: create_release
@@ -42,3 +42,5 @@ jobs:
       - name: Publish to NPM
         id: publish
         run: npm publish ${{ steps.release_info.outputs.NPM_FLAGS }}
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
