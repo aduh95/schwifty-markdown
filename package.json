@@ -1,7 +1,7 @@
 {
   "name": "schwifty-markdown",
   "description": "Convert Markdown documents to HTML on the fly, including yUML and PlantUML diagrams and graph charts rendering.",
-  "version": "2.0.0-alpha.test.ci",
+  "version": "2.0.0-beta.test.ci",
   "keywords": [
     "markdown",
     "toc",

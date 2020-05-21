@@ -16,16 +16,13 @@ jobs:
       - name: Install GH Actions toolkit
         run: npm install @actions/core --no-save
       - name: Read release info
-        run:
+        run: >
           node -e 'const core = require("@actions/core"); const { join } =
           require("path"); const { readFileSync } = require("fs"); const {
           version } = require(join(process.env.GITHUB_WORKSPACE,
-          "package.json")); const [, changes] =
+          "package.json")); const tag = version.match(/alpha|beta|rc/); const [, changes] =
           readFileSync(join(process.env.GITHUB_WORKSPACE, "CHANGELOG.md"),
-          "utf8").split("\n### "); core.setOutput("VERSION", version);
-          core.setOutput("RELEASE_NOTES",
-          changes.substring(changes.indexOf("\n")));
-          core.setOutput("IS_PRE_RELEASE", /alpha|beta|rc/.test(version));'
+          "utf8").split("\n### "); core.setOutput("VERSION", version); core.setOutput("RELEASE_NOTES", changes.substring(changes.indexOf("\n"))); core.setOutput("IS_PRE_RELEASE", !!tag); core.setOutput("NPM_OPTIONS", tag ? `--tag ${tag[0]}` : "")'
         id: release_info
       - name: Create Release
         id: create_release
@@ -38,17 +35,6 @@ jobs:
           body: ${{ steps.release_info.outputs.RELEASE_NOTES }}
           draft: true
           prerelease: ${{ steps.release_info.outputs.IS_PRE_RELEASE }}
-      - name: Download archive from NPM registery
-        run:
-          curl https://registry.npmjs.org/@aduh95/viz.js/-/viz.js-${{
-          steps.release_info.outputs.VERSION }}.tgz > ./release.tgz
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release.tgz
-          asset_name: viz.js.tar.gz
-          asset_content_type: application/gzip
+      - name: Publish to NPM
+          id: publish
+          run: npm publish ${{ steps.release_info.outputs.NPM_OPTIONS }}
