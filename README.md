@@ -35,10 +35,6 @@ your path:
 > - [Java](//java.com)
 > - _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
 >   types)
->
-> If you don't want to use those features, you can set an environment variable
-> `SCHWIFTY_DISABLE_JAVA` at true or use the `--no-java` flag when running
-> `schwifty` to disable the warning on startup.
 
 Then, you need to download the package dependencies using `yarn` (you might need
 to use `sudo`):
@@ -342,7 +338,7 @@ as an image, it will render as an SVG.
 The syntax is described on the [PlantUML website](http://PlantUML.com/).
 
 **N.B.:** As PlantUML rendering requires to call a Java dependency, the process
-might be slow depending of your machine (about 20 times slower than yUML
+might be slow depending of your machine (about 100 times slower than yUML
 rendering on my computer). All the rendering is done locally, you don't need a
 network access to work with your diagrams.
 

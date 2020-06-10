@@ -1,5 +1,4 @@
 import fs from "./fs-promises.js";
-import path from "path";
 import hashFile from "./hashFile.mjs";
 import renderMarkdown from "./md-file-to-html.mjs";
 import { AUTO_REFRESH_MODULE } from "./server.mjs";
@@ -54,14 +53,13 @@ export const plantuml = () => (req, res) => {
     if (CONFIG.getItem("JAVA_ENABLED")) {
       console.log("Schwifty: Generating plantuml SVG.");
 
-      import("node-plantuml").then(module =>
-        module.default
-          .generate(media, {
-            format: "svg",
-            include: path.dirname(media),
-            config: CONFIG.getItem("PLANTUML_CONFIG"),
+      import("./plantuml.mjs").then(module =>
+        module
+          .default(media, error => {
+            console.warn(error);
+            res.sendStatus(500);
           })
-          .out.pipe(res)
+          .pipe(res)
       );
     } else {
       throw new Error("Warning: Java has been disabled by flags!");
