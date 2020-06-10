@@ -3,9 +3,11 @@
 ### v2.0.0 (unreleased)
 
 - BREAKING: drop support for Node.js 8, 9, 10, and 11. Support for Node.js 12
-  LTS (pending) and Node.js 13.2.0+.
+  LTS and Node.js 13.2.0+.
 - BREAKING: use dynamic imports (lazy-loading) to improve parallel processing
   (requires Node.js 10+).
+- BREAKING: use worker_threads for yUML and PlantUML rendering (requires Node.js
+  12+).
 - BREAKING: use unflagged ESM (requires Node.js 12.17+).
 - Can now read Markdown from stdin.
 - No more child process spawning.
