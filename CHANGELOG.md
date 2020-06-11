@@ -1,9 +1,9 @@
 # Change log
 
-### v2.0.0 (unreleased)
+### v2.0.0 (2020-06-11)
 
 - BREAKING: drop support for Node.js 8, 9, 10, and 11. Support for Node.js 12
-  LTS and Node.js 13.2.0+.
+  LTS and Node.js 14+.
 - BREAKING: use dynamic imports (lazy-loading) to improve parallel processing
   (requires Node.js 10+).
 - BREAKING: use worker_threads for yUML and PlantUML rendering (requires Node.js
