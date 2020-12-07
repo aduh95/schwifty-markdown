@@ -53,9 +53,10 @@ CONFIG.setItem(
 
 startServer();
 
+const target = argv._.pop();
 const launcher =
-  "connecting" in process.stdin
-    ? schwifty(path.resolve(argv._.pop()))
+  target !== "-"
+    ? schwifty(path.resolve(target))
     : new Promise(async (resolve, reject) => {
         console.warn("Schwifty: Reading from stdin...");
         const md = [];
