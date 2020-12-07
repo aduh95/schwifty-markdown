@@ -98,27 +98,34 @@ let wsConnection = null;
 let serverTCPPort;
 
 export const startServer = () =>
-  Promise.all([import("express"), import("ws")])
-    .then(_ => _.map(module => module.default))
-    .then(([express, { Server }]) => {
-      const server = createServer(express).listen(
-        CONFIG.getItem("PORT_NUMBER"),
-        "localhost",
-        () => {
-          serverTCPPort = server.address().port;
-          console.log(
-            `Schwifty: Server started on http://localhost:${serverTCPPort}`
-          );
-        }
-      );
+  (serverTCPPort = Promise.all([import("express"), import("ws")]).then(
+    ([
+      { default: express },
+      {
+        default: { Server },
+      },
+    ]) =>
+      new Promise(resolve => {
+        const server = createServer(express).listen(
+          CONFIG.getItem("PORT_NUMBER"),
+          "localhost",
+          () => {
+            const serverTCPPort = server.address().port;
+            console.log(
+              `Schwifty: Server started on http://localhost:${serverTCPPort}`
+            );
+            resolve(serverTCPPort);
+          }
+        );
 
-      new Server({ server }).on("connection", connection => {
-        wsConnection && wsConnection.close();
-        wsConnection = connection;
+        new Server({ server }).on("connection", connection => {
+          wsConnection && wsConnection.close();
+          wsConnection = connection;
 
-        connection.ping(1);
-      });
-    });
+          connection.ping(1);
+        });
+      })
+  ));
 
 export const refreshBrowser = () => {
   const OPEN = 1;
@@ -127,9 +134,8 @@ export const refreshBrowser = () => {
     wsConnection.send("refresh");
   } else if (CONFIG.getItem("AUTO_OPEN_BROWSER") && !waitForBrowserToOpen) {
     console.log("Schwifty: Opening browser...");
-    import("open")
-      .then(module => module.default)
-      .then(open => {
+    Promise.all([import("open"), serverTCPPort || startServer()])
+      .then(([{ default: open }, serverTCPPort]) => {
         open("http://localhost:" + serverTCPPort, {
           app: CONFIG.getItem("BROWSER_NAME"),
           url: true,
