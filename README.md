@@ -27,14 +27,14 @@ This library allows you to generate Markdown files to HTML in your browser.
 First, you have to ensure that these dependencies are installed and available on
 your path:
 
-- [Node (v13.2.0+)](//nodejs.org)
-- [Yarn](//yarnpkg.com) or [npm](//npmjs.com)
+- [Node (v12 LTS or v13.2.0+)](https://nodejs.org)
+- [Yarn](https://yarnpkg.com) or [npm](https://npmjs.com)
 
 > If you want Schwifty to render PlantUML diagrams, you also need:
 >
-> - [Java](//java.com)
-> - _(optional)_ [Graphviz](//graphviz.org) (to generate all PlantUML diagram
->   types)
+> - [Java](https://java.com)
+> - _(optional)_ [Graphviz](https://graphviz.org) (to generate all PlantUML
+>   diagram types)
 
 Then, you need to download the package dependencies using `yarn` (you might need
 to use `sudo`):
@@ -47,6 +47,13 @@ If you want to use `npm`:
 
 ```sh
 npm -g install schwifty-markdown
+```
+
+Alternatively, you can install from the source:
+
+```sh
+yarn install --prod
+yarn link
 ```
 
 ### Run schwifty
