@@ -31,7 +31,7 @@ const { argv } = opt
     "Ask Schwifty to open Firefox rather than the default browser"
   )
   .example(
-    "curl -L https://github.com/aduh95/schwifty-markdown/raw/master/README.md | $0",
+    "curl -L https://github.com/aduh95/schwifty-markdown/raw/master/README.md | $0 -",
     "Reads Markdown from stdin. Links and images may be broken."
   )
   .example(
@@ -54,6 +54,12 @@ CONFIG.setItem(
 startServer();
 
 const target = argv._.pop();
+if (!target) {
+  throw new Error(
+    "You must provide a path to a folder or file to watch, or use `-` to " +
+      "read from stdin. Use `--help` for more info."
+  );
+}
 const launcher =
   target !== "-"
     ? schwifty(path.resolve(target))
