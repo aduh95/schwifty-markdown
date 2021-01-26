@@ -11,7 +11,7 @@ export default buffer =>
               .toString("utf8")
               .replace(/^---\r?\n((.*\r?\n)+?)---/, (_, data) => {
                 headers = import("js-yaml")
-                  .then(module => module.default.safeLoad(data))
+                  .then(module => module.load(data))
                   .catch(err => {
                     console.warn(
                       "Schwifty: Warning, YAML metadata parsing failed.",
