@@ -49,6 +49,6 @@
     "node": "^12.17.0 || >=13.2.0"
   },
   "devDependencies": {
-    "cypress": "^4.1.0"
+    "cypress": "^6.3.0"
   }
 }
